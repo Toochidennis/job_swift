@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/ic_home"
+        android:title="" />
+
+    <item
+        android:id="@+id/insight"
+        android:icon="@drawable/ic_monitoring"
+        android:title="" />
+
+    <item
+        android:id="@+id/create"
+        android:icon="@drawable/ic_add_circle"
+        android:title="" />
+
+    <item
+        android:id="@+id/notification"
+        android:icon="@drawable/ic_notifications"
+        android:title="" />
+
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_settings"
+        android:title="" />
+
+</menu>
