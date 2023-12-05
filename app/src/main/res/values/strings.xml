@@ -1,3 +1,48 @@
 <resources>
-    <string name="app_name">job_swift</string>
+    <string name="app_name">Swift Job</string>
+    <string name="default_web_client_id">"409813508550-l1tio9td84hm979tr4qv57d5eeqdv5f9.apps.googleusercontent.com"</string>
+    <string name="sign_in">Sign in</string>
+    <string name="create_an_account">Create an account</string>
+    <string name="create_new">Create new</string>
+    <string name="account">account</string>
+    <string name="enter_your_password">Password</string>
+    <string name="enter_your_email">Email</string>
+    <string name="firstname">Firstname</string>
+    <string name="lastname">Lastname</string>
+    <string name="phone_number">Phone number</string>
+    <string name="sign_up">Sign up</string>
+    <string name="or">or</string>
+    <string name="sign_up_with_google">Sign up with Google</string>
+    <string name="sign_up_with_facebook">Sign up with facebook</string>
+    <string name="nested_scroll_view">Nested scroll view</string>
+    <string name="sign_up_with">Sign up with</string>
+    <string name="login">Login</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="sign_in_instead">Sign in instead</string>
+    <string name="continue_">Continue</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_logo">App logo</string>
+    <string name="user_icon">user icon</string>
+    <string name="nestedscrollview">NestedScrollView</string>
+    <string name="search_job">Search job</string>
+    <string name="filter">Filter</string>
+    <string name="navigate">Navigate</string>
+    <string name="password_security_personal_details">Password, security, personal details</string>
+    <string name="manage_your_connected_experiences_and_account_settings">Manage your connected experiences and account settings</string>
+    <string name="log_out_of_dennistoochi_gmail_com">Log out of dennistoochi@gmail.com</string>
+    <string name="_0">0</string>
+    <string name="blocked">Blocked</string>
+    <string name="public_">Public</string>
+    <string name="account_privacy">Account privacy</string>
+    <string name="who_can_see_your_content">Who can see your content</string>
+    <string name="accounts_centre">Accounts Centre</string>
+    <string name="your_account">Your account</string>
+    <string name="settings_and_privacy">Settings and privacy</string>
+    <string name="email">dennistoochi@gmail.com</string>
+
+
 </resources>
