@@ -26,274 +26,290 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:padding="@dimen/dimen_16"
+                android:text="@string/your_account"
+                android:textSize="@dimen/text_14" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/dimen_16"
-                    android:text="@string/your_account"
-                    android:textSize="@dimen/text_14" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="@dimen/dimen_16"
-                    android:padding="@dimen/dimen_16"
-                    android:text="Personal details"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_16"
-                    app:drawableEndCompat="@drawable/ic_keyboard_arrow_right"
-                    app:drawableStartCompat="@drawable/ic_account_circle" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="@dimen/dimen_16"
-                    android:padding="@dimen/dimen_16"
-                    android:text="Password and security"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_16"
-                    app:drawableEndCompat="@drawable/ic_keyboard_arrow_right"
-                    app:drawableStartCompat="@drawable/ic_lock" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:foreground="?attr/selectableItemBackground">
-
-                    <ImageView
-                        android:id="@+id/phoneNumberImageView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/dimen_16"
-                        android:contentDescription="@string/user_icon"
-                        android:src="@drawable/ic_email" />
-
-                    <TextView
-                        android:id="@+id/phoneNumberTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@id/phoneNumberImageView"
-                        android:padding="@dimen/dimen_16"
-                        android:text="Phone number"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_16" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="@dimen/dimen_16"
-                        android:layout_marginEnd="@dimen/dimen_10"
-                        android:layout_toStartOf="@id/phoneNumberNavigate"
-                        android:layout_toEndOf="@id/phoneNumberTextView"
-                        android:ellipsize="middle"
-                        android:maxLines="1"
-                        android:text="09036683427"
-                        android:textAlignment="textEnd"
-                        android:textSize="@dimen/text_14" />
-
-                    <ImageView
-                        android:id="@+id/phoneNumberNavigate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/dimen_16"
-                        android:contentDescription="@string/navigate"
-                        android:src="@drawable/ic_keyboard_arrow_right"
-                        app:tint="@android:color/darker_gray" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:foreground="?attr/selectableItemBackground">
-
-                    <ImageView
-                        android:id="@+id/emailImageView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/dimen_16"
-                        android:contentDescription="@string/user_icon"
-                        android:src="@drawable/ic_email" />
-
-                    <TextView
-                        android:id="@+id/emailTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@id/emailImageView"
-                        android:padding="@dimen/dimen_16"
-                        android:text="Email address"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_16" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="@dimen/dimen_16"
-                        android:layout_marginEnd="@dimen/dimen_10"
-                        android:layout_toStartOf="@id/emailNavigate"
-                        android:layout_toEndOf="@id/emailTextView"
-                        android:ellipsize="marquee"
-                        android:maxLines="1"
-                        android:text="@string/email"
-                        android:textAlignment="textEnd"
-                        android:textSize="@dimen/text_14" />
-
-                    <ImageView
-                        android:id="@+id/emailNavigate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/dimen_16"
-                        android:contentDescription="@string/navigate"
-                        android:src="@drawable/ic_keyboard_arrow_right"
-                        app:tint="@android:color/darker_gray" />
-
-                </RelativeLayout>
-
-
-            </LinearLayout>
-
-            <LinearLayout
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/dimen_16">
+                android:elevation="@dimen/dimen_1"
+                app:cardCornerRadius="@dimen/dimen_10">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/dimen_16"
-                    android:text="@string/who_can_see_your_content"
-                    android:textSize="@dimen/text_14" />
-
-                <RelativeLayout
-                    android:id="@+id/accountPrivacyButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:foreground="?attr/selectableItemBackground">
-
-                    <ImageView
-                        android:id="@+id/privacyImageView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/dimen_16"
-                        android:contentDescription="@string/user_icon"
-                        android:src="@drawable/ic_lock" />
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/privacyTextView"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@id/privacyImageView"
+                        android:drawablePadding="@dimen/dimen_16"
                         android:padding="@dimen/dimen_16"
-                        android:text="@string/account_privacy"
+                        android:text="Personal information"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_16" />
+                        android:textSize="@dimen/text_16"
+                        app:drawableEndCompat="@drawable/ic_keyboard_arrow_right"
+                        app:drawableStartCompat="@drawable/ic_account_circle" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/dimen_10"
-                        android:layout_toStartOf="@id/privacyNavigate"
-                        android:layout_toEndOf="@id/privacyTextView"
-                        android:text="@string/public_"
-                        android:textAlignment="textEnd"
-                        android:textSize="@dimen/text_14" />
-
-                    <ImageView
-                        android:id="@+id/privacyNavigate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/dimen_16"
-                        android:contentDescription="@string/navigate"
-                        android:src="@drawable/ic_keyboard_arrow_right" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/blockedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:foreground="?attr/selectableItemBackground">
-
-                    <ImageView
-                        android:id="@+id/blockImageView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/dimen_16"
-                        android:contentDescription="@string/user_icon"
-                        android:src="@drawable/ic_block" />
-
-                    <TextView
-                        android:id="@+id/blockTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@id/blockImageView"
+                        android:drawablePadding="@dimen/dimen_16"
                         android:padding="@dimen/dimen_16"
-                        android:text="@string/blocked"
+                        android:text="@string/password_and_security"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_16" />
+                        android:textSize="@dimen/text_16"
+                        app:drawableEndCompat="@drawable/ic_keyboard_arrow_right"
+                        app:drawableStartCompat="@drawable/ic_security" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/dimen_10"
-                        android:layout_toStartOf="@id/blockNavigate"
-                        android:layout_toEndOf="@id/blockTextView"
-                        android:text="@string/_0"
-                        android:textAlignment="textEnd"
-                        android:textSize="@dimen/text_14" />
+                        android:foreground="?attr/selectableItemBackground">
 
-                    <ImageView
-                        android:id="@+id/blockNavigate"
-                        android:layout_width="wrap_content"
+                        <ImageView
+                            android:id="@+id/phoneNumberImageView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/dimen_16"
+                            android:contentDescription="@string/user_icon"
+                            android:src="@drawable/ic_phone" />
+
+                        <TextView
+                            android:id="@+id/phoneNumberTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@id/phoneNumberImageView"
+                            android:padding="@dimen/dimen_16"
+                            android:text="@string/phone_number"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_16" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/dimen_16"
+                            android:layout_marginEnd="@dimen/dimen_10"
+                            android:layout_toStartOf="@id/phoneNumberNavigate"
+                            android:layout_toEndOf="@id/phoneNumberTextView"
+                            android:ellipsize="middle"
+                            android:maxLines="1"
+                            android:text=""
+                            android:textAlignment="textEnd"
+                            android:textSize="@dimen/text_14" />
+
+                        <ImageView
+                            android:id="@+id/phoneNumberNavigate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/dimen_16"
+                            android:contentDescription="@string/navigate"
+                            android:src="@drawable/ic_keyboard_arrow_right"
+                            app:tint="@android:color/darker_gray" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/dimen_16"
-                        android:contentDescription="@string/navigate"
-                        android:src="@drawable/ic_keyboard_arrow_right" />
+                        android:foreground="?attr/selectableItemBackground">
 
-                </RelativeLayout>
+                        <ImageView
+                            android:id="@+id/emailImageView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/dimen_16"
+                            android:contentDescription="@string/user_icon"
+                            android:src="@drawable/ic_email" />
 
-            </LinearLayout>
+                        <TextView
+                            android:id="@+id/emailTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@id/emailImageView"
+                            android:padding="@dimen/dimen_16"
+                            android:text="@string/email_address"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_16" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/dimen_16"
+                            android:layout_marginEnd="@dimen/dimen_10"
+                            android:layout_toStartOf="@id/emailNavigate"
+                            android:layout_toEndOf="@id/emailTextView"
+                            android:ellipsize="marquee"
+                            android:maxLines="1"
+                            android:text="@string/email"
+                            android:textAlignment="textEnd"
+                            android:textSize="@dimen/text_14" />
+
+                        <ImageView
+                            android:id="@+id/emailNavigate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/dimen_16"
+                            android:contentDescription="@string/navigate"
+                            android:src="@drawable/ic_keyboard_arrow_right"
+                            app:tint="@android:color/darker_gray" />
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_block"
+                android:padding="@dimen/dimen_16"
+                android:text="@string/who_can_see_your_content"
+                android:textSize="@dimen/text_14" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/dimen_1"
+                app:cardCornerRadius="@dimen/dimen_10">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/dimen_16">
+
+                    <RelativeLayout
+                        android:id="@+id/accountPrivacyButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:foreground="?attr/selectableItemBackground">
+
+                        <ImageView
+                            android:id="@+id/privacyImageView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/dimen_16"
+                            android:contentDescription="@string/user_icon"
+                            android:src="@drawable/ic_lock" />
+
+                        <TextView
+                            android:id="@+id/privacyTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@id/privacyImageView"
+                            android:padding="@dimen/dimen_16"
+                            android:text="@string/account_privacy"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_16" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/dimen_10"
+                            android:layout_toStartOf="@id/privacyNavigate"
+                            android:layout_toEndOf="@id/privacyTextView"
+                            android:text="@string/public_"
+                            android:textAlignment="textEnd"
+                            android:textSize="@dimen/text_14" />
+
+                        <ImageView
+                            android:id="@+id/privacyNavigate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/dimen_16"
+                            android:contentDescription="@string/navigate"
+                            android:src="@drawable/ic_keyboard_arrow_right" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/blockedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:foreground="?attr/selectableItemBackground">
+
+                        <ImageView
+                            android:id="@+id/blockImageView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/dimen_16"
+                            android:contentDescription="@string/user_icon"
+                            android:src="@drawable/ic_block" />
+
+                        <TextView
+                            android:id="@+id/blockTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@id/blockImageView"
+                            android:padding="@dimen/dimen_16"
+                            android:text="@string/blocked"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_16" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/dimen_10"
+                            android:layout_toStartOf="@id/blockNavigate"
+                            android:layout_toEndOf="@id/blockTextView"
+                            android:text="@string/_0"
+                            android:textAlignment="textEnd"
+                            android:textSize="@dimen/text_14" />
+
+                        <ImageView
+                            android:id="@+id/blockNavigate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/dimen_16"
+                            android:contentDescription="@string/navigate"
+                            android:src="@drawable/ic_keyboard_arrow_right" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:drawablePadding="@dimen/dimen_16"
                 android:foreground="?attr/selectableItemBackground"
                 android:padding="@dimen/dimen_16"
                 android:text="@string/log_out_of_dennistoochi_gmail_com"
                 android:textColor="@android:color/holo_red_dark"
-                android:textSize="@dimen/text_16" />
+                android:textSize="@dimen/text_16"
+                app:drawableStartCompat="@drawable/ic_logout" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
