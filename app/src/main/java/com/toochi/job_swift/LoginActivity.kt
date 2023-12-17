@@ -13,10 +13,12 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.toochi.job_swift.admin.activity.AdminDashboardActivity
 import com.toochi.job_swift.backend.AuthenticationManager.getGoogleSignInClient
+import com.toochi.job_swift.backend.AuthenticationManager.loginWithEmailAndPassword
 import com.toochi.job_swift.backend.AuthenticationManager.registerUser
 import com.toochi.job_swift.backend.AuthenticationManager.registerWithGoogle
 import com.toochi.job_swift.databinding.ActivityLoginBinding
 import com.toochi.job_swift.model.User
+import com.toochi.job_swift.user.activity.UserDashboardActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -35,44 +37,46 @@ class LoginActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
         }
 
+        val from = getSharedPreferences("login", MODE_PRIVATE).getString("from", "")
+
+        if (from == "sign up") {
+            updateLayoutVisibility(isSignIn = false, isSignUp = true)
+        } else {
+            updateLayoutVisibility(isSignIn = true, isSignUp = false)
+        }
+
         binding.signUpInsteadButton.setOnClickListener {
-            // startActivity(Intent(this, CreateAccountActivity::class.java))
-            binding.signInLayout.isVisible = false
-            binding.signUpLayout.isVisible = true
+            updateLayoutVisibility(isSignIn = false, isSignUp = true)
         }
 
         binding.signInInsteadButton.setOnClickListener {
-            binding.signInLayout.isVisible = true
-            binding.signUpLayout.isVisible = false
+            updateLayoutVisibility(isSignIn = true, isSignUp = false)
         }
 
-        binding.signInButton.setOnClickListener {
-            startActivity(Intent(this, AdminDashboardActivity::class.java))
-            finish()
-        }
 
-        binding.signUpButton.setOnClickListener {
-            signUpWithEmailAndPassword()
-            /*startActivity(Intent(this, AdminDashboardActivity::class.java))
-            finish()*/
-        }
+        signInWithEmailAndPassword()
 
-        binding.googleSignUpButton.setOnClickListener {
-            signUpWithGoogle()
-        }
+        signUpWithEmailAndPassword()
+        signUpWithGoogle()
 
     }
 
     private fun signUpWithEmailAndPassword() {
-        val firstname = binding.firstnameTextInput.editText?.text.toString().trim()
-        val lastname = binding.lastnameTextInput.editText?.text.toString().trim()
-        val password = binding.passwordTextInput.editText?.text.toString().trim()
-        val email = binding.emailTextInput.editText?.text.toString().trim()
+        binding.signUpButton.setOnClickListener {
+            val firstname = binding.firstnameTextInput.editText?.text.toString().trim()
+            val lastname = binding.lastnameTextInput.editText?.text.toString().trim()
+            val password = binding.passwordTextInput.editText?.text.toString().trim()
+            val email = binding.emailTextInput.editText?.text.toString().trim()
 
-        registerUser(
-            User(email, password, firstname, lastname, "admin")
-        ) { response, error ->
-            println("$response, $error")
+            registerUser(
+                User(email, password, firstname, lastname, "admin")
+            ) { success, errorMessage ->
+                if (success) {
+                    launchDashboardActivity("user")
+                } else {
+                    println(errorMessage)
+                }
+            }
         }
     }
 
@@ -85,12 +89,18 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-    private fun signUpWithGoogle() {
-        val googleSignInClient = getGoogleSignInClient(this)
 
-        googleSignInClient.signOut().addOnCompleteListener {
+    private fun signUpWithGoogle() {
+        binding.googleSignUpButton.setOnClickListener {
+            val googleSignInClient = getGoogleSignInClient(this)
+
             val signInIntent = googleSignInClient.signInIntent
             googleSignInLauncher.launch(signInIntent)
+
+            /* googleSignInClient.signOut().addOnCompleteListener {
+                 val signInIntent = googleSignInClient.signInIntent
+                 googleSignInLauncher.launch(signInIntent)
+             }*/
         }
     }
 
@@ -100,15 +110,46 @@ class LoginActivity : AppCompatActivity() {
 
             registerWithGoogle(account!!) { success, errorMessage ->
                 if (success) {
-                    print("Google yeh")
+                    launchDashboardActivity("user")
                 } else {
-                    print("Google waaah $errorMessage")
+                    print("$errorMessage")
                 }
             }
         } catch (e: ApiException) {
             e.printStackTrace()
         }
 
+    }
+
+    private fun signInWithEmailAndPassword() {
+        binding.signInButton.setOnClickListener {
+            val email = binding.signInEmail.editText?.text.toString().trim()
+            val password = binding.signInPassword.editText?.text.toString().trim()
+
+            loginWithEmailAndPassword(email, password) { success, errorMessage ->
+                if (success) {
+                    launchDashboardActivity("admin")
+                } else {
+                    print(errorMessage)
+                }
+
+            }
+        }
+    }
+
+    private fun launchDashboardActivity(who: String) {
+        if (who == "admin") {
+            startActivity(Intent(this, AdminDashboardActivity::class.java))
+        } else {
+            startActivity(Intent(this, UserDashboardActivity::class.java))
+        }
+
+        finish()
+    }
+
+    private fun updateLayoutVisibility(isSignIn: Boolean, isSignUp: Boolean) {
+        binding.signInLayout.isVisible = isSignIn
+        binding.signUpLayout.isVisible = isSignUp
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
