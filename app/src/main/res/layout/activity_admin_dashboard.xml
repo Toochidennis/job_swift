@@ -18,6 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:scrollIndicators="left"
-        app:menu="@menu/menu_admin_bottom_navigation_bar" />
+        app:menu="@menu/menu_user_bottom_navigation_bar" />
 
 </RelativeLayout>
