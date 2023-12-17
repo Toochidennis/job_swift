@@ -14,7 +14,7 @@ import com.toochi.job_swift.R
 import com.toochi.job_swift.model.User
 
 object AuthenticationManager {
-    private val auth = Auth.instance
+    private val auth = UserAuth.instance
 
     fun registerUser(user: User, onComplete: (Boolean, String?) -> Unit) {
         auth.createUserWithEmailAndPassword(user.email, user.password!!)
@@ -35,6 +35,7 @@ object AuthenticationManager {
         onComplete: (Boolean, String?) -> Unit
     ) {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+
         auth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -136,23 +137,6 @@ object AuthenticationManager {
             }
     }
 
-
-    fun updateEmailWithoutReauthentication(
-        user: FirebaseUser,
-        newEmail: String,
-        onComplete: (Boolean, String?) -> Unit
-    ) {
-        user.updateEmail(newEmail)
-            .addOnCompleteListener { updateEmailTask ->
-                if (updateEmailTask.isSuccessful) {
-                    onComplete(true, null)
-                } else {
-                    onComplete(false, updateEmailTask.exception?.message)
-                }
-            }
-    }
-
-
     fun updatePassword(
         user: FirebaseUser,
         newPassword: String,
@@ -186,7 +170,7 @@ object AuthenticationManager {
         onComplete: (Boolean, String?) -> Unit
     ) {
         val profileUpdates = UserProfileChangeRequest.Builder()
-            .setDisplayName("${userData.firstName} ${userData.lastName}")
+            .setDisplayName("${userData.firstname} ${userData.lastname}")
             .setPhotoUri(
                 if (!userData.profilePhotoUrl.isNullOrBlank())
                     Uri.parse(userData.profilePhotoUrl)
@@ -205,24 +189,11 @@ object AuthenticationManager {
             }
     }
 
-    private fun storeUserData(
-        userId: String?,
-        user: User,
-        signInMethod: String = "email/password"
-    ) {
-        val hashMapData = hashMapOf(
-            "email" to user.email,
-            "firstname" to user.firstName,
-            "lastname" to user.lastName,
-            "profilePhotoUrl" to user.profilePhotoUrl,
-            "userType" to user.userType
-        )
-
+    private fun storeUserData(userId: String?, user: User) {
         userId?.let {
             FirestoreDB.instance.collection("users")
                 .document(userId)
-                .set(if (signInMethod == "google") hashMapData else user)
-
+                .set(user)
         }
     }
 
