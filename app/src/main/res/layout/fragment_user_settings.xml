@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".user.fragment.UserSettingsFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimen_16"
+        android:text="@string/settings_and_privacy"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_20" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/light_silver"
+        android:contentDescription="@string/nested_scroll_view"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:elevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/dimen_16">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dimen_16"
+                        android:text="@string/your_account"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_18"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/dimen_16"
+                        android:padding="@dimen/dimen_16"
+                        android:text="Personal information"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_16" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height=".5dp"
+                        android:layout_marginStart="@dimen/dimen_16"
+                        android:background="@color/gray" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/dimen_16"
+                        android:padding="@dimen/dimen_16"
+                        android:text="Contact Information"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_16" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height=".5dp"
+                        android:layout_marginStart="@dimen/dimen_16"
+                        android:background="@color/gray" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/dimen_16"
+                        android:padding="@dimen/dimen_16"
+                        android:text="@string/password_and_security"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_16" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height=".5dp"
+                        android:layout_marginStart="@dimen/dimen_16"
+                        android:background="@color/gray" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:elevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/dimen_16">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dimen_16"
+                        android:text="Your company"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_18"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/dimen_16"
+                        android:padding="@dimen/dimen_16"
+                        android:text="Company informaton"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_16" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height=".5dp"
+                        android:layout_marginStart="@dimen/dimen_16"
+                        android:background="@color/gray" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/dimen_16"
+                        android:padding="@dimen/dimen_16"
+                        android:text="Number of employees"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_16" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height=".5dp"
+                        android:layout_marginStart="@dimen/dimen_16"
+                        android:background="@color/gray" />
+
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/dimen_16">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dimen_16"
+                        android:text="General"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_18"
+                        android:textStyle="bold" />
+
+                    <RelativeLayout
+                        android:id="@+id/accountPrivacyButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:foreground="?attr/selectableItemBackground">
+
+                        <ImageView
+                            android:id="@+id/privacyImageView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/dimen_16"
+                            android:contentDescription="@string/user_icon"
+                            android:src="@drawable/ic_lock" />
+
+                        <TextView
+                            android:id="@+id/privacyTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@id/privacyImageView"
+                            android:padding="@dimen/dimen_16"
+                            android:text="@string/account_privacy"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_16" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/dimen_10"
+                            android:layout_toStartOf="@id/privacyNavigate"
+                            android:layout_toEndOf="@id/privacyTextView"
+                            android:text="@string/public_"
+                            android:textAlignment="textEnd"
+                            android:textSize="@dimen/text_14" />
+
+                        <ImageView
+                            android:id="@+id/privacyNavigate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/dimen_16"
+                            android:contentDescription="@string/navigate"
+                            android:src="@drawable/ic_keyboard_arrow_right" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height=".5dp"
+                        android:layout_marginStart="@dimen/dimen_16"
+                        android:background="@color/gray" />
+
+
+                    <RelativeLayout
+                        android:id="@+id/blockedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:foreground="?attr/selectableItemBackground">
+
+                        <ImageView
+                            android:id="@+id/blockImageView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/dimen_16"
+                            android:contentDescription="@string/user_icon"
+                            android:src="@drawable/ic_block" />
+
+                        <TextView
+                            android:id="@+id/blockTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@id/blockImageView"
+                            android:padding="@dimen/dimen_16"
+                            android:text="@string/blocked"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_16" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/dimen_10"
+                            android:layout_toStartOf="@id/blockNavigate"
+                            android:layout_toEndOf="@id/blockTextView"
+                            android:text="@string/_0"
+                            android:textAlignment="textEnd"
+                            android:textSize="@dimen/text_14" />
+
+                        <ImageView
+                            android:id="@+id/blockNavigate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/dimen_16"
+                            android:contentDescription="@string/navigate"
+                            android:src="@drawable/ic_keyboard_arrow_right" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height=".5dp"
+                        android:layout_marginStart="@dimen/dimen_16"
+                        android:background="@color/gray" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sign out"
+                android:textAllCaps="false"
+                android:textSize="@dimen/text_16"
+                android:layout_margin="@dimen/dimen_16"/>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

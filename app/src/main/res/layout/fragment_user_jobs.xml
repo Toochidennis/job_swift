@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeRefreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".user.fragment.UserJobsFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dimen_16"
+            android:text="@string/timeline"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_20" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:padding="@dimen/dimen_16"
+            android:text="You have no activity yet"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_20" />
+
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true">
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:layout_width="wrap_content"
+                android:id="@+id/postJobButton"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|end"
+                android:layout_marginEnd="@dimen/dimen_16"
+                android:layout_marginBottom="@dimen/dimen_38"
+                android:backgroundTint="@color/shade_green"
+                app:icon="@drawable/ic_add"
+                app:iconTint="@color/white" />
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    </RelativeLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
