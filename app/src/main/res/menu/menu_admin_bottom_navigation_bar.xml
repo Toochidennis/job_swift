@@ -4,7 +4,7 @@
     <item
         android:id="@+id/home"
         android:icon="@drawable/ic_home"
-        android:title="" />
+        android:title="@string/home" />
 
     <item
         android:id="@+id/insight"
@@ -12,18 +12,18 @@
         android:title="" />
 
     <item
-        android:id="@+id/create"
+        android:id="@+id/create_post"
         android:icon="@drawable/ic_add_circle"
-        android:title="" />
+        android:title="@string/create_post" />
 
     <item
-        android:id="@+id/notification"
+        android:id="@+id/notifications"
         android:icon="@drawable/ic_notifications"
-        android:title="" />
+        android:title="@string/notifications" />
 
     <item
         android:id="@+id/settings"
         android:icon="@drawable/ic_settings"
-        android:title="" />
+        android:title="@string/settings" />
 
 </menu>
