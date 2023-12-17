@@ -7,4 +7,23 @@
         <item name="windowSplashScreenAnimationDuration">300</item>
         <item name="postSplashScreenTheme">@style/Theme.JobSwift</item>
     </style>
+
+    <style name="FullScreenDialog" parent="Theme.AppCompat.Light.DialogWhenLarge">
+        <item name="android:windowAnimationStyle">@style/Animation.Design.BottomSheetDialog</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!--// <item name="android:windowBackground">@android:color/transparent</item>-->
+    </style>
+
+    <style name="FullScreenDialog2" parent="Theme.AppCompat.Light.DialogWhenLarge">
+        <item name="android:windowAnimationStyle">@style/DialogAnimationFromRight</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="DialogAnimationFromRight">
+        <item name="android:windowEnterAnimation">@anim/dialog_enter_anim_right</item>
+    </style>
+
+
 </resources>

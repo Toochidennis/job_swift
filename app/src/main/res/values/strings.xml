@@ -28,7 +28,7 @@
     <string name="app_logo">App logo</string>
     <string name="user_icon">user icon</string>
     <string name="nestedscrollview">NestedScrollView</string>
-    <string name="search_job">Search job</string>
+    <string name="search_job">Search job…</string>
     <string name="filter">Filter</string>
     <string name="navigate">Navigate</string>
     <string name="password_security_personal_details">Password, security, personal details</string>
@@ -41,8 +41,17 @@
     <string name="who_can_see_your_content">Who can see your content</string>
     <string name="accounts_centre">Accounts Centre</string>
     <string name="your_account">Your account</string>
-    <string name="settings_and_privacy">Settings and privacy</string>
+    <string name="settings_and_privacy">Settings</string>
     <string name="email">dennistoochi@gmail.com</string>
+    <string name="password_and_security">Change your password</string>
+    <string name="email_address">Email address</string>
+    <string name="home">Home</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="create_post">Create post</string>
+    <string name="notifications">Notifications</string>
+    <string name="profile">Profile</string>
+    <string name="settings">Settings</string>
+    <string name="timeline">Timeline</string>
 
 
 </resources>
