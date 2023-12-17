@@ -2,14 +2,13 @@ package com.toochi.job_swift.admin.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import com.toochi.job_swift.R
 import com.toochi.job_swift.admin.fragment.AdminHomeFragment
 import com.toochi.job_swift.admin.fragment.AdminInsightsFragment
-import com.toochi.job_swift.admin.fragment.AdminNotificationFragment
 import com.toochi.job_swift.admin.fragment.AdminSettingsFragment
+import com.toochi.job_swift.common.fragments.NotificationsFragment
 import com.toochi.job_swift.databinding.ActivityAdminDashboardBinding
+import com.toochi.job_swift.util.Utils.loadFragment
 
 class AdminDashboardActivity : AppCompatActivity() {
 
@@ -21,43 +20,38 @@ class AdminDashboardActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        homeNavigation()
+        bottomBarNavigation()
 
     }
 
-    private fun homeNavigation() {
-        loadFragment(AdminHomeFragment())
+    private fun bottomBarNavigation() {
+        val container = R.id.adminContainer
+        loadFragment(this, AdminHomeFragment(), container)
 
         binding.bottomNavigation.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> {
-                    loadFragment(AdminHomeFragment())
+                    loadFragment(this, AdminHomeFragment(), container)
                     true
                 }
 
                 R.id.insight -> {
-                    loadFragment(AdminInsightsFragment())
+                    loadFragment(this,AdminInsightsFragment(), container)
                     true
                 }
 
-                R.id.notification -> {
-                    loadFragment(AdminNotificationFragment())
+                R.id.notifications -> {
+                    loadFragment(this, NotificationsFragment(), container)
                     true
                 }
 
                 R.id.settings -> {
-                    loadFragment(AdminSettingsFragment())
+                    loadFragment(this,AdminSettingsFragment(), container)
                     true
                 }
 
                 else -> false
             }
-        }
-    }
-
-    private fun loadFragment(fragment: Fragment) {
-        supportFragmentManager.commit {
-            replace(R.id.adminContainer, fragment)
         }
     }
 
