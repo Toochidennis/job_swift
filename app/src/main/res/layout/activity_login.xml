@@ -62,8 +62,7 @@
                     app:boxCornerRadiusTopStart="@dimen/dimen_10"
                     app:boxStrokeColor="@color/blue_green"
                     app:boxStrokeWidth="1dp"
-                    app:endIconMode="clear_text"
-                    app:startIconDrawable="@drawable/ic_email">
+                    app:endIconMode="clear_text">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
@@ -85,8 +84,7 @@
                     app:boxCornerRadiusTopStart="@dimen/dimen_10"
                     app:boxStrokeColor="@color/blue_green"
                     app:boxStrokeWidth="1dp"
-                    app:passwordToggleEnabled="true"
-                    app:startIconDrawable="@drawable/ic_password">
+                    app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
@@ -175,7 +173,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimen_16"
-                    android:layout_marginTop="@dimen/dimen_32"
+                    android:layout_marginTop="@dimen/dimen_38"
                     android:layout_marginEnd="@dimen/dimen_16"
                     android:gravity="center"
                     android:orientation="horizontal">
@@ -204,8 +202,8 @@
                 android:id="@+id/signUpLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="match_parent"
