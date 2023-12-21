@@ -6,6 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
+import com.toochi.job_swift.common.dialogs.CompaniesDialogFragment
+import com.toochi.job_swift.common.dialogs.JobLocationDialogFragment
+import com.toochi.job_swift.common.dialogs.JobTitleDialogFragment
+import com.toochi.job_swift.common.dialogs.JobTypeDialogFragment
+import com.toochi.job_swift.common.dialogs.WorkplaceDialogFragment
 import com.toochi.job_swift.databinding.FragmentAddJobBasicsDialogBinding
 
 
@@ -41,8 +46,32 @@ class AddJobBasicsDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.navigateUp.setOnClickListener {
+            dismiss()
+        }
+
         binding.continueButton.setOnClickListener {
             JobDescriptionDialogFragment().show(parentFragmentManager, "job description")
+        }
+
+        binding.jobTitleButton.setOnClickListener {
+            JobTitleDialogFragment().show(parentFragmentManager, "title")
+        }
+
+        binding.companyButton.setOnClickListener {
+            CompaniesDialogFragment().show(parentFragmentManager, "company")
+        }
+
+        binding.workTypeButton.setOnClickListener {
+            WorkplaceDialogFragment().show(parentFragmentManager, "work place")
+        }
+
+        binding.jobLocationButton.setOnClickListener {
+            JobLocationDialogFragment().show(parentFragmentManager, "location")
+        }
+
+        binding.jobTypeButton.setOnClickListener {
+            JobTypeDialogFragment().show(parentFragmentManager, "type")
         }
     }
 
