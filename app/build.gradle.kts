@@ -54,6 +54,7 @@ dependencies {
 
     implementation("com.jakewharton.timber:timber:5.0.1")
     implementation("com.squareup.picasso:picasso:2.71828")
+    implementation ("jp.wasabeef:richeditor-android:2.0.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20")
@@ -66,7 +67,8 @@ dependencies {
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.annotation:annotation:1.7.0")
+    implementation("androidx.annotation:annotation:1.7.1")
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

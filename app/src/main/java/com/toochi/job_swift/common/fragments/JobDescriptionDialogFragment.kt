@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
+import com.toochi.job_swift.common.dialogs.DatePickerDialogFragment
 import com.toochi.job_swift.databinding.FragmentJobDescriptionDialogBinding
+import com.toochi.job_swift.user.fragment.DescriptionDialogFragment
 
 
 private const val ARG_PARAM1 = "param1"
@@ -14,7 +16,9 @@ private const val ARG_PARAM2 = "param2"
 
 class JobDescriptionDialogFragment : DialogFragment() {
 
-    private lateinit var binding: FragmentJobDescriptionDialogBinding
+    private var _binding: FragmentJobDescriptionDialogBinding? = null
+
+    private val binding get() = _binding!!
 
     private var param1: String? = null
     private var param2: String? = null
@@ -34,16 +38,30 @@ class JobDescriptionDialogFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        binding = FragmentJobDescriptionDialogBinding.inflate(inflater, container, false)
+        _binding = FragmentJobDescriptionDialogBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.descriptionButton.setOnClickListener {
+            DescriptionDialogFragment().show(parentFragmentManager, "")
+        }
+
         binding.continueButton.setOnClickListener {
             PayDialogFragment().show(parentFragmentManager, "Pay")
         }
+
+        binding.deadlineEditText.setOnClickListener {
+            DatePickerDialogFragment().show(parentFragmentManager, "deadline")
+        }
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
