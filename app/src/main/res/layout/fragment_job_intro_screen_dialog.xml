@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:background="@color/pale_silver"
-        app:elevation="0dp"
-        android:theme="@style/Platform.MaterialComponents.Light">
+        android:theme="@style/Platform.MaterialComponents.Light"
+        app:elevation="0dp">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -64,7 +64,6 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_28"
                 android:textStyle="bold" />
-
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -223,16 +222,17 @@
 
             </androidx.cardview.widget.CardView>
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/continueButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_32"
-                android:id="@+id/continueButton"
-                android:layout_marginTop="@dimen/dimen_64"
-                android:layout_marginEnd="@dimen/dimen_32"
-                android:layout_marginBottom="@dimen/dimen_64"
-                android:background="@drawable/drawable_sign_in"
-                android:text="Get started"
+                android:layout_marginStart="@dimen/dimen_16"
+                android:layout_marginTop="@dimen/dimen_32"
+                android:layout_marginEnd="@dimen/dimen_16"
+                android:layout_marginBottom="@dimen/dimen_32"
+                android:backgroundTint="@color/shade_green"
+                android:text="@string/continue_"
+                android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_16" />
