@@ -257,15 +257,19 @@
                 android:inputType="textCapSentences"
                 android:textColor="@color/black" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_16"
-                android:background="@drawable/drawable_sign_in"
+                android:layout_marginStart="@dimen/dimen_16"
+                android:layout_marginTop="@dimen/dimen_32"
+                android:layout_marginEnd="@dimen/dimen_16"
+                android:layout_marginBottom="@dimen/dimen_32"
+                android:backgroundTint="@color/shade_green"
                 android:text="Save"
+                android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_18" />
+                android:textSize="@dimen/text_16" />
 
         </LinearLayout>
 

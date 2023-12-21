@@ -35,8 +35,7 @@
                 android:layout_marginStart="@dimen/dimen_16"
                 android:text="Add experience"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_18"
-                android:textStyle="bold" />
+                android:textSize="@dimen/text_24" />
 
         </LinearLayout>
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,6 +16,7 @@
         android:textSize="@dimen/text_20" />
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/light_silver"
@@ -30,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_10"
-                android:elevation="0dp">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -48,49 +50,59 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/personalInfoButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawablePadding="@dimen/dimen_16"
+                        android:foreground="?android:attr/selectableItemBackground"
                         android:padding="@dimen/dimen_16"
                         android:text="Personal information"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_16" />
+                        android:textSize="@dimen/text_16"
+                        app:drawableStartCompat="@drawable/ic_account_circle" />
 
-                    <View
+                    <include
+                        layout="@layout/separator_layout"
                         android:layout_width="match_parent"
-                        android:layout_height=".5dp"
-                        android:layout_marginStart="@dimen/dimen_16"
-                        android:background="@color/gray" />
+                        android:layout_height="@dimen/dimen_1"
+                        android:layout_marginStart="@dimen/dimen_16" />
+
 
                     <TextView
+                        android:id="@+id/contactInfoButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawablePadding="@dimen/dimen_16"
+                        android:foreground="?android:attr/selectableItemBackground"
                         android:padding="@dimen/dimen_16"
                         android:text="Contact Information"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_16" />
+                        android:textSize="@dimen/text_16"
+                        app:drawableStartCompat="@drawable/ic_phone" />
 
-                    <View
+                    <include
+                        layout="@layout/separator_layout"
                         android:layout_width="match_parent"
-                        android:layout_height=".5dp"
-                        android:layout_marginStart="@dimen/dimen_16"
-                        android:background="@color/gray" />
+                        android:layout_height="@dimen/dimen_1"
+                        android:layout_marginStart="@dimen/dimen_16" />
 
                     <TextView
+                        android:id="@+id/changePasswordButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_security"
                         android:drawablePadding="@dimen/dimen_16"
+                        android:foreground="?android:attr/selectableItemBackground"
                         android:padding="@dimen/dimen_16"
                         android:text="@string/password_and_security"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_16" />
 
-                    <View
+                    <include
+                        layout="@layout/separator_layout"
                         android:layout_width="match_parent"
-                        android:layout_height=".5dp"
-                        android:layout_marginStart="@dimen/dimen_16"
-                        android:background="@color/gray" />
+                        android:layout_height="@dimen/dimen_1"
+                        android:layout_marginStart="@dimen/dimen_16" />
 
                 </LinearLayout>
 
@@ -101,7 +113,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_10"
-                android:elevation="0dp">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -119,45 +131,51 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/companyInfoButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawablePadding="@dimen/dimen_16"
+                        android:foreground="?android:attr/selectableItemBackground"
                         android:padding="@dimen/dimen_16"
                         android:text="Company informaton"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_16" />
+                        android:textSize="@dimen/text_16"
+                        app:drawableStartCompat="@drawable/ic_company" />
 
-                    <View
+                    <include
+                        layout="@layout/separator_layout"
                         android:layout_width="match_parent"
-                        android:layout_height=".5dp"
-                        android:layout_marginStart="@dimen/dimen_16"
-                        android:background="@color/gray" />
+                        android:layout_height="@dimen/dimen_1"
+                        android:layout_marginStart="@dimen/dimen_16" />
+
 
                     <TextView
+                        android:id="@+id/numberOfEmployeeButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawablePadding="@dimen/dimen_16"
+                        android:foreground="?android:attr/selectableItemBackground"
                         android:padding="@dimen/dimen_16"
                         android:text="Number of employees"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_16" />
+                        android:textSize="@dimen/text_16"
+                        app:drawableStartCompat="@drawable/ic_user" />
 
-                    <View
+                    <include
+                        layout="@layout/separator_layout"
                         android:layout_width="match_parent"
-                        android:layout_height=".5dp"
-                        android:layout_marginStart="@dimen/dimen_16"
-                        android:background="@color/gray" />
-
+                        android:layout_height="@dimen/dimen_1"
+                        android:layout_marginStart="@dimen/dimen_16" />
 
                 </LinearLayout>
-
 
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10">
+                android:layout_marginTop="@dimen/dimen_10"
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -224,11 +242,11 @@
 
                     </RelativeLayout>
 
-                    <View
+                    <include
+                        layout="@layout/separator_layout"
                         android:layout_width="match_parent"
-                        android:layout_height=".5dp"
-                        android:layout_marginStart="@dimen/dimen_16"
-                        android:background="@color/gray" />
+                        android:layout_height="@dimen/dimen_1"
+                        android:layout_marginStart="@dimen/dimen_16" />
 
 
                     <RelativeLayout
@@ -281,22 +299,26 @@
 
                     </RelativeLayout>
 
-                    <View
+                    <include
+                        layout="@layout/separator_layout"
                         android:layout_width="match_parent"
-                        android:layout_height=".5dp"
-                        android:layout_marginStart="@dimen/dimen_16"
-                        android:background="@color/gray" />
+                        android:layout_height="@dimen/dimen_1"
+                        android:layout_marginStart="@dimen/dimen_16" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/signOutButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_16"
+                android:backgroundTint="@color/shade_green"
                 android:text="Sign out"
+                android:textAlignment="center"
                 android:textAllCaps="false"
-                android:textSize="@dimen/text_16"
-                android:layout_margin="@dimen/dimen_16"/>
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_16" />
 
         </LinearLayout>
 
