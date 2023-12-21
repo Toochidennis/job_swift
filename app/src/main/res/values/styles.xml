@@ -25,5 +25,13 @@
         <item name="android:windowEnterAnimation">@anim/dialog_enter_anim_right</item>
     </style>
 
+    <style name="BottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomModalStyle</item>
+    </style>
+
+    <style name="BottomModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/dialog_shape</item>
+    </style>
+
 
 </resources>
