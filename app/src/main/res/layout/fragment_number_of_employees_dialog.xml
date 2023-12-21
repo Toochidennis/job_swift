@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".common.dialogs.NumberOfEmployeesDialogFragment">
+
+    <include layout="@layout/divider" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_16"
+        android:layout_marginTop="@dimen/dimen_16"
+        android:layout_marginEnd="@dimen/dimen_16"
+        android:text="Choose a number range"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_16" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:paddingStart="@dimen/dimen_16"
+        android:paddingTop="@dimen/dimen_10"
+        android:paddingEnd="@dimen/dimen_16"
+        android:paddingBottom="@dimen/dimen_10"
+        android:text="1 - 50"
+        android:textSize="@dimen/text_14" />
+
+    <include layout="@layout/separator_layout" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:paddingStart="@dimen/dimen_16"
+        android:paddingTop="@dimen/dimen_10"
+        android:paddingEnd="@dimen/dimen_16"
+        android:paddingBottom="@dimen/dimen_10"
+        android:text="50 - 100"
+        android:textSize="@dimen/text_14" />
+
+    <include layout="@layout/separator_layout" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:paddingStart="@dimen/dimen_16"
+        android:paddingTop="@dimen/dimen_10"
+        android:paddingEnd="@dimen/dimen_16"
+        android:paddingBottom="@dimen/dimen_10"
+        android:text="100 - 150"
+        android:textSize="@dimen/text_14" />
+
+    <include layout="@layout/separator_layout" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:paddingStart="@dimen/dimen_16"
+        android:paddingTop="@dimen/dimen_10"
+        android:paddingEnd="@dimen/dimen_16"
+        android:paddingBottom="@dimen/dimen_10"
+        android:text="150 - 200"
+        android:textSize="@dimen/text_14" />
+
+    <include layout="@layout/separator_layout" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:paddingStart="@dimen/dimen_16"
+        android:paddingTop="@dimen/dimen_10"
+        android:paddingEnd="@dimen/dimen_16"
+        android:paddingBottom="@dimen/dimen_10"
+        android:text="200 - 500"
+        android:textSize="@dimen/text_14" />
+
+
+</LinearLayout>
