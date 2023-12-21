@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".common.fragments.CreateEmployerAccountDialogFragment">
 
@@ -11,16 +11,17 @@
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:background="@color/pale_silver"
-        app:elevation="0dp"
-        android:theme="@style/Platform.MaterialComponents.Light">
+        android:theme="@style/Platform.MaterialComponents.Light"
+        app:elevation="0dp">
 
         <ImageView
+            android:id="@+id/navigateUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_marginTop="6dp"
+            android:background="@drawable/button_bg"
             android:contentDescription="@string/app_logo"
-            android:foreground="?android:attr/selectableItemBackground"
             android:padding="@dimen/dimen_10"
             android:src="@drawable/ic_x" />
 
@@ -66,6 +67,7 @@
                 android:textSize="@dimen/text_14" />
 
             <EditText
+                android:id="@+id/companyNameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -86,6 +88,7 @@
                 android:textSize="@dimen/text_14" />
 
             <EditText
+                android:id="@+id/numberOfEmployeesEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -108,13 +111,14 @@
                 android:textSize="@dimen/text_14" />
 
             <EditText
+                android:id="@+id/phoneNumberEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
                 android:autofillHints="phone"
                 android:drawableEnd="@drawable/ic_phone"
-                android:hint="09036683400"
+                android:hint="090000003400"
                 android:inputType="phone"
                 android:textColor="@color/black" />
 
@@ -129,19 +133,46 @@
                 android:textSize="@dimen/text_14" />
 
             <EditText
+                android:id="@+id/companyDescriptionEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
                 android:autofillHints="phone"
+                android:fadeScrollbars="true"
                 android:hint="Your company is good"
                 android:inputType="textCapSentences|textMultiLine"
+                android:isScrollContainer="true"
+                android:lineSpacingMultiplier="1"
                 android:lines="20"
                 android:maxLength="500"
                 android:minLines="1"
+                android:scrollIndicators="right"
+                android:scrollbars="vertical"
                 android:textColor="@color/black" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16"
+                android:layout_marginTop="@dimen/dimen_32"
+                android:layout_marginEnd="@dimen/dimen_16"
+                android:text="CAC ID*"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_14" />
+
+            <EditText
+                android:id="@+id/cacIdEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16"
+                android:layout_marginEnd="@dimen/dimen_16"
+                android:autofillHints="phone"
+                android:hint="AFDJD"
+                android:inputType="textCapSentences"
+                android:textColor="@color/black" />
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/continueButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -149,8 +180,9 @@
                 android:layout_marginTop="@dimen/dimen_32"
                 android:layout_marginEnd="@dimen/dimen_16"
                 android:layout_marginBottom="@dimen/dimen_32"
-                android:background="@drawable/drawable_sign_in"
+                android:backgroundTint="@color/shade_green"
                 android:text="@string/continue_"
+                android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_16" />
