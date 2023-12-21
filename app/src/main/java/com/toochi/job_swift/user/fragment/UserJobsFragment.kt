@@ -1,6 +1,5 @@
 package com.toochi.job_swift.user.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +14,8 @@ private const val ARG_PARAM2 = "param2"
 
 class UserJobsFragment : Fragment() {
 
-    private lateinit var binding: FragmentUserJobsBinding
+    private var _binding: FragmentUserJobsBinding?=null
+    private val binding get() = _binding!!
 
     private var param1: String? = null
     private var param2: String? = null
@@ -33,7 +33,7 @@ class UserJobsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        binding = FragmentUserJobsBinding.inflate(inflater, container, false)
+        _binding = FragmentUserJobsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -43,6 +43,11 @@ class UserJobsFragment : Fragment() {
         binding.postJobButton.setOnClickListener {
             JobIntroScreenDialogFragment().show(parentFragmentManager, "Intro")
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
