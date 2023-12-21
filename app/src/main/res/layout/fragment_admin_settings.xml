@@ -306,7 +306,7 @@
                 android:drawablePadding="@dimen/dimen_16"
                 android:foreground="?attr/selectableItemBackground"
                 android:padding="@dimen/dimen_16"
-                android:text="@string/log_out_of_dennistoochi_gmail_com"
+                android:text="Sign out"
                 android:textColor="@android:color/holo_red_dark"
                 android:textSize="@dimen/text_16"
                 app:drawableStartCompat="@drawable/ic_logout" />

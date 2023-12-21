@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".common.fragments.AddJobBasicsDialogFragment">
 
@@ -11,16 +11,17 @@
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:background="@color/pale_silver"
-        app:elevation="0dp"
-        android:theme="@style/Platform.MaterialComponents.Light">
+        android:theme="@style/Platform.MaterialComponents.Light"
+        app:elevation="0dp">
 
         <ImageView
+            android:id="@+id/navigateUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_marginTop="6dp"
+            android:background="@drawable/button_bg"
             android:contentDescription="@string/app_logo"
-            android:foreground="?android:attr/selectableItemBackground"
             android:padding="@dimen/dimen_10"
             android:src="@drawable/ic_x" />
 
@@ -46,6 +47,7 @@
                 android:textSize="@dimen/text_24" />
 
             <RelativeLayout
+                android:id="@+id/jobTitleButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:foreground="?android:attr/selectableItemBackground"
@@ -70,7 +72,6 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_14" />
 
-
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -89,6 +90,7 @@
                 android:background="@color/gray" />
 
             <RelativeLayout
+                android:id="@+id/companyButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:foreground="?android:attr/selectableItemBackground"
@@ -132,6 +134,7 @@
                 android:background="@color/gray" />
 
             <RelativeLayout
+                android:id="@+id/workTypeButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:foreground="?android:attr/selectableItemBackground"
@@ -174,6 +177,7 @@
                 android:background="@color/gray" />
 
             <RelativeLayout
+                android:id="@+id/jobLocationButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:foreground="?android:attr/selectableItemBackground"
@@ -217,6 +221,7 @@
 
 
             <RelativeLayout
+                android:id="@+id/jobTypeButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:foreground="?android:attr/selectableItemBackground"
@@ -251,16 +256,17 @@
 
             </RelativeLayout>
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/continueButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_32"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:id="@+id/continueButton"
                 android:layout_marginBottom="@dimen/dimen_32"
-                android:background="@drawable/drawable_sign_in"
+                android:backgroundTint="@color/shade_green"
                 android:text="@string/continue_"
+                android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_16" />
