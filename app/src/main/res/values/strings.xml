@@ -57,7 +57,30 @@
         <item>Heading 1</item>
         <item>Heading 2</item>
         <item>Heading 3</item>
+        <item>Heading 4</item>
     </string-array>
 
+
+    <string-array name="job_title">
+        <item>Software Engineer</item>
+        <item>Software programmer</item>
+        <item>Software Developer</item>
+        <item>Senior Software Developer</item>
+        <item>Senior Software Engineer</item>
+        <item>Software Analyst</item>
+        <item>Software Associate</item>
+        <item>Software Consultant</item>
+        <item>Application Developer</item>
+        <item>Junior Software Developer</item>
+        <item>Web Developer</item>
+        <item>Website Designer</item>
+        <item>Website Manager</item>
+        <item>Mobile Engineer</item>
+        <item>Mobile Developer</item>
+        <item>Data Analyst</item>
+        <item>Data Specialist</item>
+        <item>Data Engineer</item>
+        <item>Security Analyst</item>
+    </string-array>
 
 </resources>
