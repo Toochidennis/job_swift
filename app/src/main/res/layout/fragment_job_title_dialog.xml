@@ -13,8 +13,9 @@
         android:background="@color/pale_silver"
         app:layout_constraintTop_toTopOf="parent">
 
-        <include layout="@layout/toolbar"
-            android:id="@+id/toolbar"/>
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -22,6 +23,8 @@
         android:id="@+id/jobRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/appBar" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/appBar"
+        tools:listitem="@layout/item_job_title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
