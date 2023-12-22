@@ -11,19 +11,21 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_16"
+        android:layout_marginStart="@dimen/dimen_24"
         android:layout_marginTop="@dimen/dimen_16"
         android:layout_marginEnd="@dimen/dimen_16"
+        android:textStyle="bold"
         android:text="Choose the job type"
         android:textColor="@color/black"
-        android:textSize="@dimen/text_16" />
+        android:textSize="@dimen/text_18" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/dimen_16"
+        android:paddingStart="@dimen/dimen_24"
         android:paddingTop="@dimen/dimen_10"
-        android:textSize="@dimen/text_14"
+        android:textSize="@dimen/text_16"
+        android:textColor="@color/black"
         android:paddingEnd="@dimen/dimen_16"
         android:paddingBottom="@dimen/dimen_10"
         android:text="Part-time" />
@@ -34,10 +36,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
-        android:paddingStart="@dimen/dimen_16"
+        android:paddingStart="@dimen/dimen_24"
         android:paddingTop="@dimen/dimen_10"
+        android:textColor="@color/black"
         android:paddingEnd="@dimen/dimen_16"
-        android:textSize="@dimen/text_14"
+        android:textSize="@dimen/text_16"
         android:paddingBottom="@dimen/dimen_10"
         android:text="Contract-time" />
 
@@ -47,8 +50,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
-        android:paddingStart="@dimen/dimen_16"
+        android:paddingStart="@dimen/dimen_24"
         android:paddingTop="@dimen/dimen_10"
+        android:textColor="@color/black"
         android:paddingEnd="@dimen/dimen_16"
         android:paddingBottom="@dimen/dimen_10"
         android:text="Temporary-time" />
@@ -59,10 +63,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
-        android:paddingStart="@dimen/dimen_16"
+        android:paddingStart="@dimen/dimen_24"
         android:paddingTop="@dimen/dimen_10"
-        android:textSize="@dimen/text_14"
+        android:textSize="@dimen/text_16"
         android:paddingEnd="@dimen/dimen_16"
+        android:textColor="@color/black"
         android:paddingBottom="@dimen/dimen_10"
         android:text="Internship" />
 
@@ -72,10 +77,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
-        android:paddingStart="@dimen/dimen_16"
+        android:paddingStart="@dimen/dimen_24"
         android:paddingTop="@dimen/dimen_10"
         android:paddingEnd="@dimen/dimen_16"
-        android:textSize="@dimen/text_14"
+        android:textSize="@dimen/text_16"
+        android:textColor="@color/black"
         android:paddingBottom="@dimen/dimen_10"
         android:text="Temporary" />
 
@@ -85,10 +91,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
-        android:paddingStart="@dimen/dimen_16"
+        android:paddingStart="@dimen/dimen_24"
         android:paddingTop="@dimen/dimen_10"
+        android:layout_marginBottom="@dimen/dimen_16"
+        android:textColor="@color/black"
         android:paddingEnd="@dimen/dimen_16"
-        android:textSize="@dimen/text_14"
+        android:textSize="@dimen/text_16"
         android:paddingBottom="@dimen/dimen_10"
         android:text="Volunteer" />
 
