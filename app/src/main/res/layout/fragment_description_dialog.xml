@@ -8,7 +8,7 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
-        layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/pale_silver">
@@ -22,6 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:background="@drawable/button_bg"
                 android:layout_marginStart="6dp"
                 android:contentDescription="@string/app_name"
                 android:padding="@dimen/dimen_10"
@@ -47,11 +48,9 @@
         android:id="@+id/richEditor"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="@dimen/dimen_16"
+        android:layout_margin="@dimen/dimen_16"
         app:layout_constraintBottom_toTopOf="@id/bottomBar"
         app:layout_constraintTop_toBottomOf="@id/appBar" />
-
 
     <LinearLayout
         android:id="@+id/bottomBar"
@@ -73,8 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_horizontal"
-                android:entries="@array/heading_options"
-                android:padding="@dimen/dimen_10" />
+                android:entries="@array/heading_options" />
 
             <View
                 android:layout_width=".5dp"
