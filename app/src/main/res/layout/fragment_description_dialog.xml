@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".user.fragment.DescriptionDialogFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/pale_silver">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize">
+
+            <ImageView
+                android:id="@+id/navigateUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@drawable/button_bg"
+                android:layout_marginStart="6dp"
+                android:contentDescription="@string/app_name"
+                android:padding="@dimen/dimen_10"
+                android:src="@drawable/ic_x" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/saveButton"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/dimen_16"
+                android:background="@drawable/drawable_create_account"
+                android:text="Save"
+                android:textAllCaps="false"
+                android:textColor="@color/shade_green" />
+
+        </RelativeLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <jp.wasabeef.richeditor.RichEditor
+        android:id="@+id/richEditor"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/dimen_16"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintTop_toBottomOf="@id/appBar" />
+
+    <LinearLayout
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <include layout="@layout/separator_layout" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_10">
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/headingSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_horizontal"
+                android:entries="@array/heading_options" />
+
+            <View
+                android:layout_width=".5dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/dimen_10"
+                android:background="@color/gray" />
+
+            <ImageView
+                android:id="@+id/boldButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dimen_10"
+                android:background="@drawable/button_bg"
+                android:contentDescription="@string/app_name"
+                android:padding="@dimen/dimen_10"
+                android:src="@drawable/ic_bold" />
+
+            <ImageView
+                android:id="@+id/italicButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dimen_10"
+                android:background="@drawable/button_bg"
+                android:contentDescription="@string/app_name"
+                android:padding="@dimen/dimen_10"
+                android:src="@drawable/ic_italic" />
+
+            <ImageView
+                android:id="@+id/bulletButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dimen_10"
+                android:background="@drawable/button_bg"
+                android:contentDescription="@string/app_name"
+                android:padding="@dimen/dimen_10"
+                android:src="@drawable/ic_formatting_list_bullets" />
+
+            <ImageView
+                android:id="@+id/numberButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_bg"
+                android:contentDescription="@string/app_name"
+                android:padding="@dimen/dimen_10"
+                android:src="@drawable/ic_list_number" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

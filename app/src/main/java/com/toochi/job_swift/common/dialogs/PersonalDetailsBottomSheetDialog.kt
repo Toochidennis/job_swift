@@ -10,7 +10,9 @@ import com.toochi.job_swift.databinding.FragmentBottomSheetPersonalDetailsBindin
 
 class PersonalDetailsBottomSheetDialog : BottomSheetDialogFragment() {
 
-    private lateinit var binding: FragmentBottomSheetPersonalDetailsBinding
+    private var _binding: FragmentBottomSheetPersonalDetailsBinding? = null
+
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,12 +23,17 @@ class PersonalDetailsBottomSheetDialog : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentBottomSheetPersonalDetailsBinding.inflate(inflater, container, false)
+        _binding = FragmentBottomSheetPersonalDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

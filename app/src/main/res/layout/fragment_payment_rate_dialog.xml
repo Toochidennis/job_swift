@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".common.dialogs.PaymentRateDialogFragment">
+
+    <include layout="@layout/divider" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_24"
+        android:layout_marginTop="@dimen/dimen_16"
+        android:layout_marginEnd="@dimen/dimen_16"
+        android:text="Choose pay rate"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_18" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/dimen_24"
+        android:paddingTop="@dimen/dimen_10"
+        android:paddingEnd="@dimen/dimen_16"
+        android:textColor="@color/black"
+        android:paddingBottom="@dimen/dimen_10"
+        android:text="Per month"
+        android:textSize="@dimen/text_16" />
+
+    <include layout="@layout/separator_layout" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:paddingStart="@dimen/dimen_24"
+        android:paddingTop="@dimen/dimen_10"
+        android:textSize="@dimen/text_16"
+        android:layout_marginBottom="@dimen/dimen_16"
+        android:textColor="@color/black"
+        android:paddingEnd="@dimen/dimen_16"
+        android:paddingBottom="@dimen/dimen_10"
+        android:text="Per year" />
+
+</LinearLayout>

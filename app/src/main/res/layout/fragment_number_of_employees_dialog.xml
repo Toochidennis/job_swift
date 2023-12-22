@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".common.dialogs.NumberOfEmployeesDialogFragment">
+
+    <include layout="@layout/divider" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_24"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:textStyle="bold"
+        android:layout_marginEnd="@dimen/dimen_16"
+        android:text="Choose a number range"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_18" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:paddingStart="@dimen/dimen_24"
+        android:paddingTop="@dimen/dimen_10"
+        android:id="@+id/textView1"
+        android:textColor="@color/black"
+        android:paddingEnd="@dimen/dimen_16"
+        android:paddingBottom="@dimen/dimen_10"
+        android:text="1 - 50"
+        android:textSize="@dimen/text_16" />
+
+    <include layout="@layout/separator_layout" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:paddingStart="@dimen/dimen_24"
+        android:paddingTop="@dimen/dimen_10"
+        android:id="@+id/textView2"
+        android:paddingEnd="@dimen/dimen_16"
+        android:textColor="@color/black"
+        android:paddingBottom="@dimen/dimen_10"
+        android:text="50 - 100"
+        android:textSize="@dimen/text_16" />
+
+    <include layout="@layout/separator_layout" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:paddingStart="@dimen/dimen_24"
+        android:paddingTop="@dimen/dimen_10"
+        android:id="@+id/textView3"
+        android:textColor="@color/black"
+        android:paddingEnd="@dimen/dimen_16"
+        android:paddingBottom="@dimen/dimen_10"
+        android:text="100 - 150"
+        android:textSize="@dimen/text_16" />
+
+    <include layout="@layout/separator_layout" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:paddingStart="@dimen/dimen_24"
+        android:textColor="@color/black"
+        android:paddingTop="@dimen/dimen_10"
+        android:id="@+id/textView4"
+        android:paddingEnd="@dimen/dimen_16"
+        android:paddingBottom="@dimen/dimen_10"
+        android:text="150 - 200"
+        android:textSize="@dimen/text_16" />
+
+    <include layout="@layout/separator_layout" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:paddingStart="@dimen/dimen_24"
+        android:paddingTop="@dimen/dimen_10"
+        android:id="@+id/textView5"
+        android:layout_marginBottom="@dimen/dimen_16"
+        android:textColor="@color/black"
+        android:paddingEnd="@dimen/dimen_16"
+        android:paddingBottom="@dimen/dimen_10"
+        android:text="200 - 500"
+        android:textSize="@dimen/text_16" />
+
+</LinearLayout>

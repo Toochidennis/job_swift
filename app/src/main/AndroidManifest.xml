@@ -18,8 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JobSwift"
         tools:targetApi="31">
+
         <activity
-            android:name=".user.activity.JobActivity"
+            android:name=".user.activity.PersonalInformationActivity"
             android:exported="false" />
         <activity
             android:name=".user.activity.UserDashboardActivity"
