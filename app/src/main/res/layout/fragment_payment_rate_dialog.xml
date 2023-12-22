@@ -11,22 +11,24 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_16"
+        android:layout_marginStart="@dimen/dimen_24"
         android:layout_marginTop="@dimen/dimen_16"
         android:layout_marginEnd="@dimen/dimen_16"
         android:text="Choose pay rate"
+        android:textStyle="bold"
         android:textColor="@color/black"
-        android:textSize="@dimen/text_16" />
+        android:textSize="@dimen/text_18" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/dimen_16"
+        android:paddingStart="@dimen/dimen_24"
         android:paddingTop="@dimen/dimen_10"
         android:paddingEnd="@dimen/dimen_16"
+        android:textColor="@color/black"
         android:paddingBottom="@dimen/dimen_10"
         android:text="Per month"
-        android:textSize="@dimen/text_14" />
+        android:textSize="@dimen/text_16" />
 
     <include layout="@layout/separator_layout" />
 
@@ -34,8 +36,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
-        android:paddingStart="@dimen/dimen_16"
+        android:paddingStart="@dimen/dimen_24"
         android:paddingTop="@dimen/dimen_10"
+        android:textSize="@dimen/text_16"
+        android:layout_marginBottom="@dimen/dimen_16"
+        android:textColor="@color/black"
         android:paddingEnd="@dimen/dimen_16"
         android:paddingBottom="@dimen/dimen_10"
         android:text="Per year" />
