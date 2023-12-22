@@ -46,7 +46,9 @@ class JobDescriptionDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.descriptionButton.setOnClickListener {
-            DescriptionDialogFragment().show(parentFragmentManager, "")
+            DescriptionDialogFragment({
+
+            }).show(parentFragmentManager, "")
         }
 
         binding.continueButton.setOnClickListener {
