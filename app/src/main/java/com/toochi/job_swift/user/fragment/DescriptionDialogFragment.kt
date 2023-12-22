@@ -4,57 +4,135 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
-import jp.wasabeef.richeditor.RichEditor
+import com.toochi.job_swift.databinding.FragmentDescriptionDialogBinding
 
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class DescriptionDialogFragment(
+    private val onFinished: (String) -> Unit,
+    private var existingDescription: String = ""
+) : DialogFragment() {
 
+    private var _binding: FragmentDescriptionDialogBinding? = null
 
-class DescriptionDialogFragment : DialogFragment() {
+    private val binding get() = _binding!!
 
-    private var param1: String? = null
-    private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
-
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_description_dialog, container, false)
+        _binding = FragmentDescriptionDialogBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val richEditor:RichEditor = view.findViewById(R.id.richEditor)
+        setUpEditor()
 
-        richEditor.setItalic()
-        richEditor.setBullets()
-        richEditor.setNumbers()
+        binding.navigateUp.setOnClickListener {
+            dismiss()
+        }
+
+        saveDescription()
     }
 
-    companion object {
+    private fun setUpEditor() {
+        binding.richEditor.apply {
+            setEditorFontSize(16)
+            setPadding(10, 10, 10, 10)
+            setPlaceholder("Type here...")
+            html = existingDescription
+        }
 
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            DescriptionDialogFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+        applyBullets()
+        applyBold()
+        applyItalic()
+        applyNumber()
+        applyHeading()
+    }
+
+
+    private fun applyBullets() {
+        binding.bulletButton.setOnClickListener {
+            binding.richEditor.setBullets()
+        }
+    }
+
+    private fun applyItalic() {
+        binding.italicButton.setOnClickListener {
+            binding.richEditor.setItalic()
+        }
+    }
+
+    private fun applyBold() {
+        binding.boldButton.setOnClickListener {
+            binding.richEditor.setBold()
+        }
+    }
+
+    private fun applyNumber() {
+        binding.numberButton.setOnClickListener {
+            binding.richEditor.setNumbers()
+        }
+    }
+
+    private fun applyHeading() {
+        binding.headingSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val selectedHeading = parent?.getItemAtPosition(position).toString()
+
+                    binding.richEditor.apply {
+                        when (selectedHeading) {
+                            "Heading 1" -> setHeading(1)
+                            "Heading 2" -> setHeading(2)
+                            "Heading 3" -> setHeading(3)
+                            "Heading 4" -> setHeading(4)
+                        }
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+
                 }
             }
     }
+
+    private fun saveDescription() {
+        binding.saveButton.setOnClickListener {
+            existingDescription = binding.richEditor.html
+
+            if (existingDescription.isNotBlank()) {
+                onFinished.invoke(existingDescription)
+                dismiss()
+            } else {
+                Toast.makeText(
+                    requireContext(), "Please provide a description",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }
