@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
-import com.toochi.job_swift.common.dialogs.CompaniesDialogFragment
 import com.toochi.job_swift.common.dialogs.JobLocationDialogFragment
 import com.toochi.job_swift.common.dialogs.JobTitleDialogFragment
 import com.toochi.job_swift.common.dialogs.JobTypeDialogFragment
@@ -19,7 +18,7 @@ private const val ARG_PARAM2 = "param2"
 
 class AddJobBasicsDialogFragment : DialogFragment() {
 
-    private lateinit var binding:FragmentAddJobBasicsDialogBinding
+    private lateinit var binding: FragmentAddJobBasicsDialogBinding
 
     private var param1: String? = null
     private var param2: String? = null
@@ -37,7 +36,7 @@ class AddJobBasicsDialogFragment : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View{
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentAddJobBasicsDialogBinding.inflate(inflater, container, false)
         return binding.root
@@ -55,11 +54,9 @@ class AddJobBasicsDialogFragment : DialogFragment() {
         }
 
         binding.jobTitleButton.setOnClickListener {
-            JobTitleDialogFragment().show(parentFragmentManager, "title")
-        }
-
-        binding.companyButton.setOnClickListener {
-            CompaniesDialogFragment().show(parentFragmentManager, "company")
+            JobTitleDialogFragment {
+                binding.jobTitleTxt.text = it
+            }.show(parentFragmentManager, "title")
         }
 
         binding.workTypeButton.setOnClickListener {
