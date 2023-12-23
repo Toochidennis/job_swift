@@ -52,7 +52,9 @@ class DescriptionDialogFragment(
             setEditorFontSize(16)
             setPadding(10, 10, 10, 10)
             setPlaceholder("Type here...")
-            html = existingDescription
+
+            if (existingDescription != "null")
+                html = existingDescription
         }
 
         applyBullets()
