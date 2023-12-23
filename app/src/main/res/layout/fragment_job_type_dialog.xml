@@ -8,96 +8,84 @@
 
     <include layout="@layout/divider" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_24"
+        android:layout_marginStart="@dimen/dimen_16"
         android:layout_marginTop="@dimen/dimen_16"
         android:layout_marginEnd="@dimen/dimen_16"
-        android:textStyle="bold"
         android:text="Choose the job type"
         android:textColor="@color/black"
-        android:textSize="@dimen/text_18" />
+        android:textSize="@dimen/text_18"
+        android:textStyle="bold" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/dimen_24"
-        android:paddingTop="@dimen/dimen_10"
-        android:textSize="@dimen/text_16"
+        android:padding="@dimen/dimen_16"
+        android:text="Part-time"
         android:textColor="@color/black"
-        android:paddingEnd="@dimen/dimen_16"
-        android:paddingBottom="@dimen/dimen_10"
-        android:text="Part-time" />
+        android:textSize="@dimen/text_16" />
 
-    <include layout="@layout/separator_layout" />
+    <include layout="@layout/material_divider" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
-        android:paddingStart="@dimen/dimen_24"
-        android:paddingTop="@dimen/dimen_10"
+        android:padding="@dimen/dimen_16"
+        android:text="Contract"
         android:textColor="@color/black"
-        android:paddingEnd="@dimen/dimen_16"
-        android:textSize="@dimen/text_16"
-        android:paddingBottom="@dimen/dimen_10"
-        android:text="Contract-time" />
+        android:textSize="@dimen/text_16" />
 
-    <include layout="@layout/separator_layout" />
+    <include layout="@layout/material_divider" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
-        android:paddingStart="@dimen/dimen_24"
-        android:paddingTop="@dimen/dimen_10"
-        android:textColor="@color/black"
-        android:paddingEnd="@dimen/dimen_16"
-        android:paddingBottom="@dimen/dimen_10"
-        android:text="Temporary-time" />
+        android:padding="@dimen/dimen_16"
+        android:text="Temporary-time"
+        android:textColor="@color/black" />
 
-    <include layout="@layout/separator_layout" />
+    <include layout="@layout/material_divider" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textView4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
-        android:paddingStart="@dimen/dimen_24"
-        android:paddingTop="@dimen/dimen_10"
-        android:textSize="@dimen/text_16"
-        android:paddingEnd="@dimen/dimen_16"
+        android:padding="@dimen/dimen_16"
+        android:text="Internship"
         android:textColor="@color/black"
-        android:paddingBottom="@dimen/dimen_10"
-        android:text="Internship" />
+        android:textSize="@dimen/text_16" />
 
-    <include layout="@layout/separator_layout" />
+    <include layout="@layout/material_divider" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textView5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
-        android:paddingStart="@dimen/dimen_24"
-        android:paddingTop="@dimen/dimen_10"
-        android:paddingEnd="@dimen/dimen_16"
-        android:textSize="@dimen/text_16"
+        android:padding="@dimen/dimen_16"
+        android:text="Temporary"
         android:textColor="@color/black"
-        android:paddingBottom="@dimen/dimen_10"
-        android:text="Temporary" />
+        android:textSize="@dimen/text_16" />
 
-    <include layout="@layout/separator_layout" />
+    <include layout="@layout/material_divider" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textView6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:paddingStart="@dimen/dimen_24"
-        android:paddingTop="@dimen/dimen_10"
         android:layout_marginBottom="@dimen/dimen_16"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:padding="@dimen/dimen_16"
+        android:text="Volunteer"
         android:textColor="@color/black"
-        android:paddingEnd="@dimen/dimen_16"
-        android:textSize="@dimen/text_16"
-        android:paddingBottom="@dimen/dimen_10"
-        android:text="Volunteer" />
+        android:textSize="@dimen/text_16" />
 
 </LinearLayout>
