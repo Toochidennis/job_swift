@@ -6,10 +6,10 @@
 
     <include
         android:id="@+id/separator1"
-        layout="@layout/separator_layout"
+        layout="@layout/material_divider"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/jobNameTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
         app:layout_constraintTop_toBottomOf="@id/separator1" />
 
     <include
-        layout="@layout/separator_layout"
+        layout="@layout/material_divider"
         app:layout_constraintTop_toBottomOf="@id/jobNameTxt" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
