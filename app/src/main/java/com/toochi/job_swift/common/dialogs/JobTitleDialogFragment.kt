@@ -8,9 +8,9 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.textview.MaterialTextView
 import com.toochi.job_swift.R
 import com.toochi.job_swift.databinding.FragmentJobTitleDialogBinding
 import com.toochi.job_swift.user.adapters.GenericAdapter
@@ -65,7 +65,7 @@ class JobTitleDialogFragment(
             itemList = jobTitleList.toMutableList(),
             itemResLayout = R.layout.item_job_title,
             bindItem = { itemView, model ->
-                val jobNameTxt: AppCompatTextView = itemView.findViewById(R.id.jobNameTxt)
+                val jobNameTxt: MaterialTextView = itemView.findViewById(R.id.jobNameTxt)
                 jobNameTxt.text = model.jobTitle
             }
         ) { position ->
