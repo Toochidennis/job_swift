@@ -35,7 +35,7 @@
         android:layout_below="@id/appBar"
         android:orientation="vertical">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/dimen_16"
@@ -43,7 +43,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/text_24" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_16"
@@ -53,13 +53,14 @@
             android:textColor="@color/black"
             android:textSize="@dimen/text_16" />
 
-        <EditText
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/amountEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_16"
             android:layout_marginEnd="@dimen/dimen_16"
             android:autofillHints=""
+            android:backgroundTint="@color/black"
             android:drawableStart="@drawable/ic_currency_naira"
             android:drawablePadding="@dimen/dimen_10"
             android:hint="1,000"
@@ -69,7 +70,7 @@
             android:textColor="@color/black"
             android:textStyle="bold" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_16"
@@ -79,13 +80,14 @@
             android:textColor="@color/black"
             android:textSize="@dimen/text_16" />
 
-        <EditText
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/rateEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_16"
             android:layout_marginEnd="@dimen/dimen_16"
             android:autofillHints=""
+            android:backgroundTint="@color/black"
             android:drawableEnd="@drawable/ic_arrow_drop_down"
             android:focusableInTouchMode="false"
             android:hint="Please select"
