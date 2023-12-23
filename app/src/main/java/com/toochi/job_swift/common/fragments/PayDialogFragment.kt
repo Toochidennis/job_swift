@@ -45,7 +45,9 @@ class PayDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.rateEditText.setOnClickListener {
-            PaymentRateDialogFragment().show(parentFragmentManager, "rate")
+            PaymentRateDialogFragment {
+                binding.rateEditText.setText(it)
+            }.show(parentFragmentManager, "rate")
         }
     }
 
