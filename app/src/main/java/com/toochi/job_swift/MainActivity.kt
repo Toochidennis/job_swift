@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.google.android.material.appbar.MaterialToolbar
 import com.toochi.job_swift.databinding.ActivityMainBinding
 import com.toochi.job_swift.user.activity.UserDashboardActivity
 
