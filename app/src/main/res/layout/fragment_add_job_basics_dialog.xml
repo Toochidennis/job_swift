@@ -38,7 +38,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dimen_16"
@@ -53,7 +53,7 @@
                 android:foreground="?android:attr/selectableItemBackground"
                 android:padding="@dimen/dimen_16">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/jobTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_16" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/jobTitleTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -82,12 +82,12 @@
 
             </RelativeLayout>
 
-            <View
+            <include
+                layout="@layout/material_divider"
                 android:layout_width="match_parent"
-                android:layout_height=".5dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
-                android:layout_marginEnd="@dimen/dimen_16"
-                android:background="@color/gray" />
+                android:layout_marginEnd="@dimen/dimen_16" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -95,7 +95,7 @@
                 android:foreground="?android:attr/selectableItemBackground"
                 android:padding="@dimen/dimen_16">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/companyTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -105,7 +105,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_16" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/companyTitleTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -124,12 +124,12 @@
 
             </RelativeLayout>
 
-            <View
+            <include
+                layout="@layout/material_divider"
                 android:layout_width="match_parent"
-                android:layout_height=".5dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
-                android:layout_marginEnd="@dimen/dimen_16"
-                android:background="@color/gray" />
+                android:layout_marginEnd="@dimen/dimen_16" />
 
             <RelativeLayout
                 android:id="@+id/workTypeButton"
@@ -138,7 +138,7 @@
                 android:foreground="?android:attr/selectableItemBackground"
                 android:padding="@dimen/dimen_16">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/workTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -148,7 +148,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_16" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/workTitleTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -167,12 +167,12 @@
 
             </RelativeLayout>
 
-            <View
+            <include
+                layout="@layout/material_divider"
                 android:layout_width="match_parent"
-                android:layout_height=".5dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
-                android:layout_marginEnd="@dimen/dimen_16"
-                android:background="@color/gray" />
+                android:layout_marginEnd="@dimen/dimen_16" />
 
             <RelativeLayout
                 android:id="@+id/jobLocationButton"
@@ -181,7 +181,7 @@
                 android:foreground="?android:attr/selectableItemBackground"
                 android:padding="@dimen/dimen_16">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/locationTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -191,7 +191,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_16" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/locationTitleTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -210,13 +210,12 @@
 
             </RelativeLayout>
 
-            <View
+            <include
+                layout="@layout/material_divider"
                 android:layout_width="match_parent"
-                android:layout_height=".5dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
-                android:layout_marginEnd="@dimen/dimen_16"
-                android:background="@color/gray" />
-
+                android:layout_marginEnd="@dimen/dimen_16" />
 
             <RelativeLayout
                 android:id="@+id/jobTypeButton"
@@ -225,7 +224,7 @@
                 android:foreground="?android:attr/selectableItemBackground"
                 android:padding="@dimen/dimen_16">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/jobTTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -235,7 +234,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_16" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/jobTypeTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
