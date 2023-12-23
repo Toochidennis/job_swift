@@ -1,6 +1,7 @@
 package com.toochi.job_swift.common.fragments
 
 import android.os.Bundle
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,7 @@ class JobDescriptionDialogFragment : DialogFragment() {
 
     private var param1: String? = null
     private var param2: String? = null
+    private var descriptionText: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +49,9 @@ class JobDescriptionDialogFragment : DialogFragment() {
 
         binding.descriptionButton.setOnClickListener {
             DescriptionDialogFragment({
-
-            }).show(parentFragmentManager, "")
+                descriptionText = it
+                binding.descriptionTxt.text = Html.fromHtml(it, Html.FROM_HTML_MODE_COMPACT)
+            }, descriptionText.toString()).show(parentFragmentManager, "")
         }
 
         binding.continueButton.setOnClickListener {
