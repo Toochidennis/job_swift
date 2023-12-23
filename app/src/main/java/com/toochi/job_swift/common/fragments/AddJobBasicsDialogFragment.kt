@@ -60,7 +60,9 @@ class AddJobBasicsDialogFragment : DialogFragment() {
         }
 
         binding.workTypeButton.setOnClickListener {
-            WorkplaceDialogFragment().show(parentFragmentManager, "work place")
+            WorkplaceDialogFragment {
+                binding.workTitleTxt.text = it
+            }.show(parentFragmentManager, "work place")
         }
 
         binding.jobLocationButton.setOnClickListener {
@@ -68,7 +70,9 @@ class AddJobBasicsDialogFragment : DialogFragment() {
         }
 
         binding.jobTypeButton.setOnClickListener {
-            JobTypeDialogFragment().show(parentFragmentManager, "type")
+            JobTypeDialogFragment {
+                binding.jobTypeTxt.text = it
+            }.show(parentFragmentManager, "type")
         }
     }
 
