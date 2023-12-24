@@ -1,5 +1,6 @@
 package com.toochi.job_swift.user.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
+import com.toochi.job_swift.common.fragments.AddJobBasicsDialogFragment
 import com.toochi.job_swift.databinding.FragmentUserJobsBinding
 import com.toochi.job_swift.user.adapters.FragmentAdapter
 
@@ -51,7 +53,16 @@ class UserJobsFragment : Fragment() {
         }
 
         binding.postJobButton.setOnClickListener {
-            JobIntroScreenDialogFragment().show(parentFragmentManager, "Intro")
+            with(requireActivity().getSharedPreferences("loginDetail", Context.MODE_PRIVATE)) {
+                val isHaveCompany = getBoolean("haveCompany", false)
+
+                if (isHaveCompany) {
+                    AddJobBasicsDialogFragment().show(parentFragmentManager, "job basics")
+                } else {
+                    JobIntroScreenDialogFragment().show(parentFragmentManager, "Intro")
+                }
+            }
+
         }
 
         setUpViewPager()
