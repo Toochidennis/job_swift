@@ -20,6 +20,7 @@
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
+                android:id="@+id/navigateUp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center"
@@ -29,7 +30,7 @@
                 android:padding="@dimen/dimen_10"
                 android:src="@drawable/ic_x" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center"
@@ -57,7 +58,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -65,7 +66,7 @@
                 android:text="* Indicates required"
                 android:textSize="@dimen/text_14" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -75,17 +76,18 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/schoolNameTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:autofillHints=""
+                android:backgroundTint="@color/black"
                 android:hint="Ex: Federal University Wukari"
                 android:inputType="textCapSentences"
                 android:textColor="@color/black" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -95,18 +97,18 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/degreeTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:autofillHints=""
+                android:backgroundTint="@color/black"
                 android:hint="Ex: Bacheclor's"
                 android:inputType="textCapSentences"
                 android:textColor="@color/black" />
 
-
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -116,17 +118,18 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/fieldOfStudyTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:autofillHints=""
+                android:backgroundTint="@color/black"
                 android:hint="Ex: Computer science"
                 android:inputType="textCapSentences"
                 android:textColor="@color/black" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -136,19 +139,21 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/startDateTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:autofillHints=""
+                android:backgroundTint="@color/black"
                 android:drawableEnd="@drawable/ic_calendar"
+                android:focusableInTouchMode="false"
                 android:hint="Ex: December, 2023"
                 android:inputType="date"
                 android:textColor="@color/black" />
 
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -158,18 +163,19 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/endDateTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:autofillHints=""
+                android:backgroundTint="@color/black"
                 android:drawableEnd="@drawable/ic_calendar"
                 android:hint="Ex: December, 2023"
                 android:inputType="date"
                 android:textColor="@color/black" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -179,18 +185,18 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/gradeTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:autofillHints=""
+                android:backgroundTint="@color/black"
                 android:hint="Ex: First class"
                 android:inputType="textCapSentences"
                 android:textColor="@color/black" />
 
-
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -200,24 +206,27 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/activitiesTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:autofillHints=""
+                android:backgroundTint="@color/black"
                 android:hint="Ex: Football, Football, Nacoss"
                 android:inputType="textCapSentences|textMultiLine"
                 android:lines="5"
                 android:maxLength="500"
                 android:minLines="1" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/saveButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_16"
-                android:background="@drawable/drawable_sign_in"
+                android:backgroundTint="@color/shade_green"
                 android:text="Save"
+                android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_18" />
