@@ -76,6 +76,7 @@ class LoginActivity : AppCompatActivity() {
             val lastname = binding.lastnameTextInput.editText?.text.toString().trim()
             val password = binding.passwordTextInput.editText?.text.toString().trim()
             val email = binding.emailTextInput.editText?.text.toString().trim()
+            val phoneNumber = binding.phoneNumberTextInput.editText?.text.toString().trim()
 
             editTextWatcher(binding.emailTextInput, "email")
             editTextWatcher(binding.phoneNumberTextInput, "phone_number")
@@ -83,7 +84,14 @@ class LoginActivity : AppCompatActivity() {
 
             if (isValidSignUpForm()) {
                 registerWithEmailAndPassword(
-                    User(email, password, firstname, lastname, "employee")
+                    User().apply {
+                        this.email = email
+                        this.password = password
+                        this.firstname = firstname
+                        this.lastname = lastname
+                        this.userType = "employee"
+                        this.phoneNumber = phoneNumber
+                    }
                 ) { success, errorMessage ->
                     if (success) {
                         launchDashboardActivity("user")
