@@ -11,14 +11,12 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
+        android:background="@color/pale_silver"
         app:elevation="0dp">
 
-        <androidx.appcompat.widget.Toolbar
+        <include
             android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/Platform.MaterialComponents.Light" />
+            layout="@layout/toolbar" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -43,9 +41,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimen_16"
                     android:layout_marginTop="@dimen/dimen_32"
-                    android:text="@string/login"
+                    android:layout_marginEnd="@dimen/dimen_16"
+                    android:text="Login"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_32" />
+                    android:textSize="@dimen/text_32"
+                    android:textStyle="bold" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/signInEmail"
@@ -55,19 +55,23 @@
                     android:layout_marginTop="@dimen/dimen_32"
                     android:layout_marginEnd="@dimen/dimen_16"
                     android:hint="@string/enter_your_email"
+                    app:boxBackgroundColor="@android:color/transparent"
                     app:boxBackgroundMode="outline"
-                    app:boxCornerRadiusBottomEnd="@dimen/dimen_10"
-                    app:boxCornerRadiusBottomStart="@dimen/dimen_10"
-                    app:boxCornerRadiusTopEnd="@dimen/dimen_10"
-                    app:boxCornerRadiusTopStart="@dimen/dimen_10"
-                    app:boxStrokeColor="@color/blue_green"
+                    app:boxCornerRadiusBottomEnd="@dimen/dimen_12"
+                    app:boxCornerRadiusBottomStart="@dimen/dimen_12"
+                    app:boxCornerRadiusTopEnd="@dimen/dimen_12"
+                    app:boxCornerRadiusTopStart="@dimen/dimen_12"
+                    app:boxStrokeColor="@color/shade_green"
                     app:boxStrokeWidth="1dp"
-                    app:endIconMode="clear_text">
+                    app:endIconMode="clear_text"
+                    app:hintTextColor="@color/shade_green">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress" />
+                        android:inputType="textEmailAddress"
+                        android:textColor="@color/black" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -77,20 +81,23 @@
                     android:layout_marginStart="@dimen/dimen_16"
                     android:layout_marginTop="@dimen/dimen_16"
                     android:layout_marginEnd="@dimen/dimen_16"
+                    android:hint="@string/enter_your_password"
+                    app:boxBackgroundColor="@android:color/transparent"
                     app:boxBackgroundMode="outline"
-                    app:boxCornerRadiusBottomEnd="@dimen/dimen_10"
-                    app:boxCornerRadiusBottomStart="@dimen/dimen_10"
-                    app:boxCornerRadiusTopEnd="@dimen/dimen_10"
-                    app:boxCornerRadiusTopStart="@dimen/dimen_10"
-                    app:boxStrokeColor="@color/blue_green"
+                    app:boxCornerRadiusBottomEnd="@dimen/dimen_12"
+                    app:boxCornerRadiusBottomStart="@dimen/dimen_12"
+                    app:boxCornerRadiusTopEnd="@dimen/dimen_12"
+                    app:boxCornerRadiusTopStart="@dimen/dimen_12"
+                    app:boxStrokeColor="@color/shade_green"
                     app:boxStrokeWidth="1dp"
+                    app:hintTextColor="@color/shade_green"
                     app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/enter_your_password"
-                        android:inputType="textPassword" />
+                        android:inputType="textPassword"
+                        android:textColor="@color/black" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -104,19 +111,19 @@
                     android:textAlignment="textEnd"
                     android:textColor="@color/shade_green" />
 
-                <android.widget.Button
+                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                     android:id="@+id/signInButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimen_16"
                     android:layout_marginTop="@dimen/dimen_16"
                     android:layout_marginEnd="@dimen/dimen_16"
-                    android:background="@drawable/drawable_sign_in"
+                    android:backgroundTint="@color/shade_green"
                     android:text="@string/continue_"
+                    android:textAlignment="center"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_16"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/text_16" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -154,20 +161,18 @@
 
                 </RelativeLayout>
 
-                <androidx.appcompat.widget.AppCompatButton
+                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                     android:id="@+id/googleSignInButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimen_16"
-                    android:layout_marginTop="@dimen/dimen_16"
-                    android:layout_marginEnd="@dimen/dimen_16"
-                    android:background="@drawable/drawable_create_account"
-                    android:drawableStart="@drawable/ic_google"
-                    android:paddingStart="@dimen/dimen_10"
-                    android:paddingEnd="@dimen/dimen_54"
+                    android:layout_margin="@dimen/dimen_16"
+                    android:backgroundTint="@color/pale_silver"
                     android:text="@string/continue_with_google"
+                    android:textAlignment="center"
                     android:textAllCaps="false"
-                    android:textColor="@color/shade_green" />
+                    android:textColor="@color/shade_green"
+                    app:icon="@drawable/ic_google"
+                    app:iconTint="@null" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -212,7 +217,8 @@
                     android:layout_marginTop="@dimen/dimen_32"
                     android:text="@string/create_new"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_32" />
+                    android:textSize="@dimen/text_32"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -220,7 +226,8 @@
                     android:layout_marginStart="@dimen/dimen_16"
                     android:text="@string/account"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_32" />
+                    android:textSize="@dimen/text_32"
+                    android:textStyle="bold" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/firstnameTextInput"
@@ -231,20 +238,22 @@
                     android:layout_marginEnd="@dimen/dimen_16"
                     android:autofillHints="name"
                     android:hint="@string/firstname"
+                    app:boxBackgroundColor="@android:color/transparent"
                     app:boxBackgroundMode="outline"
-                    app:boxCornerRadiusBottomEnd="@dimen/dimen_10"
-                    app:boxCornerRadiusBottomStart="@dimen/dimen_10"
-                    app:boxCornerRadiusTopEnd="@dimen/dimen_10"
-                    app:boxCornerRadiusTopStart="@dimen/dimen_10"
-                    app:boxStrokeColor="@color/blue_green"
+                    app:boxCornerRadiusBottomEnd="@dimen/dimen_12"
+                    app:boxCornerRadiusBottomStart="@dimen/dimen_12"
+                    app:boxCornerRadiusTopEnd="@dimen/dimen_12"
+                    app:boxCornerRadiusTopStart="@dimen/dimen_12"
+                    app:boxStrokeColor="@color/shade_green"
                     app:boxStrokeWidth="1dp"
                     app:endIconMode="clear_text"
-                    app:startIconDrawable="@drawable/ic_email">
+                    app:hintTextColor="@color/shade_green">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPersonName" />
+                        android:inputType="textPersonName"
+                        android:textColor="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -256,20 +265,22 @@
                     android:layout_marginEnd="@dimen/dimen_16"
                     android:autofillHints="name"
                     android:hint="@string/lastname"
+                    app:boxBackgroundColor="@android:color/transparent"
                     app:boxBackgroundMode="outline"
-                    app:boxCornerRadiusBottomEnd="@dimen/dimen_10"
-                    app:boxCornerRadiusBottomStart="@dimen/dimen_10"
-                    app:boxCornerRadiusTopEnd="@dimen/dimen_10"
-                    app:boxCornerRadiusTopStart="@dimen/dimen_10"
-                    app:boxStrokeColor="@color/blue_green"
+                    app:boxCornerRadiusBottomEnd="@dimen/dimen_12"
+                    app:boxCornerRadiusBottomStart="@dimen/dimen_12"
+                    app:boxCornerRadiusTopEnd="@dimen/dimen_12"
+                    app:boxCornerRadiusTopStart="@dimen/dimen_12"
+                    app:boxStrokeColor="@color/shade_green"
                     app:boxStrokeWidth="1dp"
                     app:endIconMode="clear_text"
-                    app:startIconDrawable="@drawable/ic_email">
+                    app:hintTextColor="@color/shade_green">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPersonName" />
+                        android:inputType="textPersonName"
+                        android:textColor="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -281,20 +292,22 @@
                     android:layout_marginEnd="@dimen/dimen_16"
                     android:autofillHints="phone"
                     android:hint="@string/phone_number"
+                    app:boxBackgroundColor="@android:color/transparent"
                     app:boxBackgroundMode="outline"
-                    app:boxCornerRadiusBottomEnd="@dimen/dimen_10"
-                    app:boxCornerRadiusBottomStart="@dimen/dimen_10"
-                    app:boxCornerRadiusTopEnd="@dimen/dimen_10"
-                    app:boxCornerRadiusTopStart="@dimen/dimen_10"
-                    app:boxStrokeColor="@color/blue_green"
+                    app:boxCornerRadiusBottomEnd="@dimen/dimen_12"
+                    app:boxCornerRadiusBottomStart="@dimen/dimen_12"
+                    app:boxCornerRadiusTopEnd="@dimen/dimen_12"
+                    app:boxCornerRadiusTopStart="@dimen/dimen_12"
+                    app:boxStrokeColor="@color/shade_green"
                     app:boxStrokeWidth="1dp"
                     app:endIconMode="clear_text"
-                    app:startIconDrawable="@drawable/ic_email">
+                    app:hintTextColor="@color/shade_green">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="phone" />
+                        android:inputType="phone"
+                        android:textColor="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -306,15 +319,16 @@
                     android:layout_marginEnd="@dimen/dimen_16"
                     android:autofillHints="emailAddress"
                     android:hint="@string/enter_your_email"
+                    app:boxBackgroundColor="@android:color/transparent"
                     app:boxBackgroundMode="outline"
-                    app:boxCornerRadiusBottomEnd="@dimen/dimen_10"
-                    app:boxCornerRadiusBottomStart="@dimen/dimen_10"
-                    app:boxCornerRadiusTopEnd="@dimen/dimen_10"
-                    app:boxCornerRadiusTopStart="@dimen/dimen_10"
-                    app:boxStrokeColor="@color/blue_green"
+                    app:boxCornerRadiusBottomEnd="@dimen/dimen_12"
+                    app:boxCornerRadiusBottomStart="@dimen/dimen_12"
+                    app:boxCornerRadiusTopEnd="@dimen/dimen_12"
+                    app:boxCornerRadiusTopStart="@dimen/dimen_12"
+                    app:boxStrokeColor="@color/shade_green"
                     app:boxStrokeWidth="1dp"
                     app:endIconMode="clear_text"
-                    app:startIconDrawable="@drawable/ic_email">
+                    app:hintTextColor="@color/shade_green">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
@@ -330,22 +344,21 @@
                     android:layout_marginTop="@dimen/dimen_16"
                     android:layout_marginEnd="@dimen/dimen_16"
                     android:hint="@string/enter_your_password"
+                    app:boxBackgroundColor="@android:color/transparent"
                     app:boxBackgroundMode="outline"
-                    app:boxCornerRadiusBottomEnd="@dimen/dimen_10"
-                    app:boxCornerRadiusBottomStart="@dimen/dimen_10"
-                    app:boxCornerRadiusTopEnd="@dimen/dimen_10"
-                    app:boxCornerRadiusTopStart="@dimen/dimen_10"
-                    app:boxStrokeColor="@color/blue_green"
+                    app:boxCornerRadiusBottomEnd="@dimen/dimen_12"
+                    app:boxCornerRadiusBottomStart="@dimen/dimen_12"
+                    app:boxCornerRadiusTopEnd="@dimen/dimen_12"
+                    app:boxCornerRadiusTopStart="@dimen/dimen_12"
+                    app:boxStrokeColor="@color/shade_green"
                     app:boxStrokeWidth="1dp"
+                    app:hintTextColor="@color/shade_green"
                     app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:drawableStart="@drawable/ic_password"
-                        android:drawablePadding="@dimen/dimen_16"
-                        android:drawableTint="@color/gray"
-                        android:inputType="textEmailAddress" />
+                        android:inputType="textPassword" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -365,24 +378,24 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dimen_5"
-                        android:text="Privacy statement and Rules"
+                        android:text="Privacy statement"
                         android:textColor="@color/shade_green" />
 
                 </LinearLayout>
 
-                <android.widget.Button
+                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                     android:id="@+id/signUpButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimen_16"
                     android:layout_marginTop="@dimen/dimen_16"
                     android:layout_marginEnd="@dimen/dimen_16"
-                    android:background="@drawable/drawable_sign_in"
+                    android:backgroundTint="@color/shade_green"
                     android:text="@string/sign_up"
+                    android:textAlignment="center"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_16"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/text_16" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -421,20 +434,18 @@
 
                 </RelativeLayout>
 
-                <androidx.appcompat.widget.AppCompatButton
+                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                     android:id="@+id/googleSignUpButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimen_16"
-                    android:layout_marginTop="@dimen/dimen_16"
-                    android:layout_marginEnd="@dimen/dimen_16"
-                    android:background="@drawable/drawable_create_account"
-                    android:drawableStart="@drawable/ic_google"
-                    android:paddingStart="@dimen/dimen_10"
-                    android:paddingEnd="@dimen/dimen_54"
+                    android:layout_margin="@dimen/dimen_16"
+                    android:backgroundTint="@color/pale_silver"
                     android:text="@string/sign_up_with_google"
+                    android:textAlignment="center"
                     android:textAllCaps="false"
-                    android:textColor="@color/shade_green" />
+                    android:textColor="@color/shade_green"
+                    app:icon="@drawable/ic_google"
+                    app:iconTint="@null" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
