@@ -11,24 +11,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dimen_16"
-            android:text="@string/timeline"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_20" />
+            android:layout_alignParentTop="true"
+            android:background="@color/pale_silver"
+            app:elevation="0dp">
 
+            <include layout="@layout/toolbar" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            style="@style/CustomTabLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:padding="@dimen/dimen_16"
-            android:text="You have no activity yet"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_20" />
+            android:layout_below="@id/appBar"
+            android:contentDescription="@string/app_name" />
 
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tabLayout"
+            android:contentDescription="@string/app_name" />
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
@@ -37,13 +45,14 @@
             android:layout_alignParentBottom="true">
 
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                android:layout_width="wrap_content"
                 android:id="@+id/postJobButton"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|end"
                 android:layout_marginEnd="@dimen/dimen_16"
                 android:layout_marginBottom="@dimen/dimen_38"
                 android:backgroundTint="@color/shade_green"
+                android:contentDescription="@string/app_logo"
                 app:icon="@drawable/ic_add"
                 app:iconTint="@color/white" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
