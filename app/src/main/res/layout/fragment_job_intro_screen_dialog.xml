@@ -232,7 +232,7 @@
                 android:layout_marginEnd="@dimen/dimen_16"
                 android:layout_marginBottom="@dimen/dimen_32"
                 android:backgroundTint="@color/shade_green"
-                android:text="@string/continue_"
+                android:text="@string/get_started"
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
