@@ -52,7 +52,7 @@ class JobTitleDialogFragment(
             setDisplayHomeAsUpEnabled(true)
         }
 
-        onMenuClicked()
+        binding.toolbar.toolbar.setNavigationOnClickListener { dismiss() }
 
         setUpAdapter()
     }
@@ -79,23 +79,6 @@ class JobTitleDialogFragment(
             hasFixedSize()
             this.adapter = adapter
         }
-    }
-
-    private fun onMenuClicked() {
-        requireActivity().addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return if (menuItem.itemId == android.R.id.home) {
-                    dismiss()
-                    true
-                } else {
-                    false
-                }
-            }
-        })
     }
 
 
