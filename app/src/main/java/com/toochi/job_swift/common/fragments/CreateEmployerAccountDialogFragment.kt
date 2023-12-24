@@ -1,19 +1,22 @@
 package com.toochi.job_swift.common.fragments
 
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
+import com.toochi.job_swift.backend.AuthenticationManager.createCompany
+import com.toochi.job_swift.common.dialogs.CompanyPositionDialogFragment
+import com.toochi.job_swift.common.dialogs.LoadingDialog
 import com.toochi.job_swift.common.dialogs.NumberOfEmployeesDialogFragment
 import com.toochi.job_swift.databinding.FragmentCreateEmployerAccountDialogBinding
+import com.toochi.job_swift.model.Company
 import com.toochi.job_swift.user.fragment.DescriptionDialogFragment
 
-
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 class CreateEmployerAccountDialogFragment : DialogFragment() {
 
@@ -21,17 +24,16 @@ class CreateEmployerAccountDialogFragment : DialogFragment() {
 
     private val binding get() = _binding!!
 
-    private var param1: String? = null
-    private var param2: String? = null
-    private var descriptionText: String? = null
+    private var companyName: String? = null
+    private var noOfEmployees: String? = null
+    private var description: String? = null
+    private var regNo: String? = null
+    private var location: String? = null
+    private var position: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog2)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -47,17 +49,50 @@ class CreateEmployerAccountDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewClickListener()
+
+        processFormData()
+
     }
 
 
-    private fun getDataFromViews() {
-        val companyName = binding.companyNameEditText.text.toString().trim()
-        val noOfEmployees = binding.numberOfEmployeesEditText.text.toString()
-        val phoneNumber = binding.phoneNumberEditText.text.toString().trim()
-        val description = binding.descriptionTxt.text.toString()
-        val regNo = binding.cacIdEditText.text.toString().trim()
+    private fun processFormData() {
+        val loadingDialog = LoadingDialog(requireContext())
 
-        println("Name: $companyName No: $phoneNumber  employ: $noOfEmployees des: $description  reg: $regNo")
+        binding.continueButton.setOnClickListener {
+            companyName = binding.companyNameEditText.text.toString().trim()
+            noOfEmployees = binding.numberOfEmployeesEditText.text.toString()
+            regNo = binding.cacIdEditText.text.toString().trim()
+            position = binding.positionEditText.text.toString()
+            location = binding.locationEditText.text.toString()
+
+            if (isValidForm()) {
+                val company = Company(
+                    "",
+                    companyName ?: "",
+                    position ?: "",
+                    noOfEmployees ?: "",
+                    description ?: "",
+                    location ?: "",
+                    regNo ?: ""
+                )
+
+                loadingDialog.show()
+
+                createCompany(company) { success, errorMessage ->
+                    if (success) {
+                        requireActivity().getSharedPreferences("loginDetail", MODE_PRIVATE)
+                            .edit().putBoolean("haveCompany", true).apply()
+
+                        AddJobBasicsDialogFragment().show(parentFragmentManager, "job basics")
+                        dismiss()
+                    } else {
+                        showToast(errorMessage.toString())
+                    }
+
+                    loadingDialog.dismiss()
+                }
+            }
+        }
     }
 
     private fun viewClickListener() {
@@ -68,22 +103,59 @@ class CreateEmployerAccountDialogFragment : DialogFragment() {
         }
 
         binding.descriptionButton.setOnClickListener {
-            DescriptionDialogFragment({ description ->
-                descriptionText = description
+            DescriptionDialogFragment({ descriptionText ->
+                description = descriptionText
                 binding.descriptionTxt.text =
-                    Html.fromHtml(descriptionText, Html.FROM_HTML_MODE_COMPACT)
-            }, descriptionText.toString()).show(parentFragmentManager, "description")
+                    Html.fromHtml(description, Html.FROM_HTML_MODE_COMPACT)
+            }, description.toString()).show(parentFragmentManager, "description")
         }
 
+        binding.positionEditText.setOnClickListener {
+            CompanyPositionDialogFragment {
+                binding.positionEditText.setText(it)
+            }.show(parentFragmentManager, "position")
+        }
 
         binding.navigateUp.setOnClickListener {
             dismiss()
         }
 
-        binding.continueButton.setOnClickListener {
-            getDataFromViews()
-            AddJobBasicsDialogFragment().show(parentFragmentManager, "job basics")
+    }
+
+    private fun isValidForm(): Boolean {
+        return when {
+            companyName.isNullOrEmpty() -> {
+                showToast("Please provide company name")
+                false
+            }
+
+            description.isNullOrEmpty() -> {
+                showToast("Please provide description")
+                false
+            }
+
+            regNo.isNullOrEmpty() -> {
+                showToast("Please provide CAC ID no")
+                false
+            }
+
+            position.isNullOrEmpty() -> {
+                showToast("Please provide position")
+                false
+            }
+
+            location.isNullOrEmpty() -> {
+                showToast("Please provide location")
+                false
+            }
+
+            else -> true
         }
+
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
@@ -91,15 +163,4 @@ class CreateEmployerAccountDialogFragment : DialogFragment() {
         _binding = null
     }
 
-    companion object {
-
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CreateEmployerAccountDialogFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }
