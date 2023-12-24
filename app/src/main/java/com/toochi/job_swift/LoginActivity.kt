@@ -3,7 +3,11 @@ package com.toochi.job_swift
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Patterns
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -11,14 +15,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.android.material.textfield.TextInputLayout
 import com.toochi.job_swift.admin.activity.AdminDashboardActivity
 import com.toochi.job_swift.backend.AuthenticationManager.getGoogleSignInClient
 import com.toochi.job_swift.backend.AuthenticationManager.loginWithEmailAndPassword
-import com.toochi.job_swift.backend.AuthenticationManager.registerUser
+import com.toochi.job_swift.backend.AuthenticationManager.registerWithEmailAndPassword
 import com.toochi.job_swift.backend.AuthenticationManager.registerWithGoogle
 import com.toochi.job_swift.databinding.ActivityLoginBinding
 import com.toochi.job_swift.model.User
 import com.toochi.job_swift.user.activity.UserDashboardActivity
+import java.util.regex.Pattern
 
 class LoginActivity : AppCompatActivity() {
 
@@ -30,21 +36,18 @@ class LoginActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        setSupportActionBar(binding.toolbar)
+        setSupportActionBar(binding.toolbar.toolbar)
         supportActionBar?.apply {
             title = ""
             setHomeButtonEnabled(true)
             setDisplayHomeAsUpEnabled(true)
         }
 
-        val from = getSharedPreferences("login", MODE_PRIVATE).getString("from", "")
+        viewClicks()
 
-        if (from == "sign up") {
-            updateLayoutVisibility(isSignIn = false, isSignUp = true)
-        } else {
-            updateLayoutVisibility(isSignIn = true, isSignUp = false)
-        }
+    }
 
+    private fun viewClicks() {
         binding.signUpInsteadButton.setOnClickListener {
             updateLayoutVisibility(isSignIn = false, isSignUp = true)
         }
@@ -53,11 +56,17 @@ class LoginActivity : AppCompatActivity() {
             updateLayoutVisibility(isSignIn = true, isSignUp = false)
         }
 
+        binding.googleSignUpButton.setOnClickListener {
+            signUpWithGoogle()
+        }
+
+        binding.googleSignInButton.setOnClickListener {
+            signUpWithGoogle()
+        }
 
         signInWithEmailAndPassword()
 
         signUpWithEmailAndPassword()
-        signUpWithGoogle()
 
     }
 
@@ -68,13 +77,19 @@ class LoginActivity : AppCompatActivity() {
             val password = binding.passwordTextInput.editText?.text.toString().trim()
             val email = binding.emailTextInput.editText?.text.toString().trim()
 
-            registerUser(
-                User(email, password, firstname, lastname, "admin")
-            ) { success, errorMessage ->
-                if (success) {
-                    launchDashboardActivity("user")
-                } else {
-                    println(errorMessage)
+            editTextWatcher(binding.emailTextInput, "email")
+            editTextWatcher(binding.phoneNumberTextInput, "phone_number")
+
+
+            if (isValidSignUpForm()) {
+                registerWithEmailAndPassword(
+                    User(email, password, firstname, lastname, "employee")
+                ) { success, errorMessage ->
+                    if (success) {
+                        launchDashboardActivity("user")
+                    } else {
+                        showToast(errorMessage.toString())
+                    }
                 }
             }
         }
@@ -91,28 +106,27 @@ class LoginActivity : AppCompatActivity() {
 
 
     private fun signUpWithGoogle() {
-        binding.googleSignUpButton.setOnClickListener {
-            val googleSignInClient = getGoogleSignInClient(this)
+        val googleSignInClient = getGoogleSignInClient(this)
 
-            val signInIntent = googleSignInClient.signInIntent
-            googleSignInLauncher.launch(signInIntent)
+        val signInIntent = googleSignInClient.signInIntent
+        googleSignInLauncher.launch(signInIntent)
 
-            /* googleSignInClient.signOut().addOnCompleteListener {
-                 val signInIntent = googleSignInClient.signInIntent
-                 googleSignInLauncher.launch(signInIntent)
-             }*/
-        }
+        /* googleSignInClient.signOut().addOnCompleteListener {
+             val signInIntent = googleSignInClient.signInIntent
+             googleSignInLauncher.launch(signInIntent)
+         }*/
     }
 
     private fun handleGoogleSignInResult(task: Task<GoogleSignInAccount>) {
         try {
             val account = task.getResult(ApiException::class.java)
 
-            registerWithGoogle(account!!) { success, errorMessage ->
+            registerWithGoogle(this, account!!) { success, errorMessage ->
                 if (success) {
                     launchDashboardActivity("user")
+                    println("Yeah")
                 } else {
-                    print("$errorMessage")
+                    showToast(errorMessage.toString())
                 }
             }
         } catch (e: ApiException) {
@@ -126,14 +140,104 @@ class LoginActivity : AppCompatActivity() {
             val email = binding.signInEmail.editText?.text.toString().trim()
             val password = binding.signInPassword.editText?.text.toString().trim()
 
-            loginWithEmailAndPassword(email, password) { success, errorMessage ->
-                if (success) {
-                    launchDashboardActivity("admin")
-                } else {
-                    print(errorMessage)
+            editTextWatcher(binding.signInEmail, "email")
+
+            if (isValidSignInForm()) {
+                loginWithEmailAndPassword(email, password) { success, errorMessage ->
+                    if (success) {
+                        launchDashboardActivity("user")
+                    } else {
+                        showToast(errorMessage.toString())
+                    }
                 }
+            }
+        }
+    }
+
+    private fun isValidSignUpForm(): Boolean {
+        return when {
+            binding.firstnameTextInput.editText?.text.isNullOrBlank() -> {
+                showToast("Please provide first name")
+                false
+            }
+
+            binding.lastnameTextInput.editText?.text.isNullOrBlank() -> {
+                showToast("Please provide lastname")
+                false
+            }
+
+            binding.phoneNumberTextInput.editText?.text.isNullOrBlank() -> {
+                showToast("Please provide phone number")
+                false
+            }
+
+            binding.emailTextInput.editText?.text.isNullOrBlank() -> {
+                showToast("Please provide email")
+                false
+            }
+
+            binding.passwordTextInput.editText?.text.isNullOrBlank() -> {
+                showToast("Please provide password")
+                false
+            }
+
+            else -> true
+        }
+    }
+
+    private fun isValidSignInForm(): Boolean {
+        return when {
+            binding.signInEmail.editText?.text.isNullOrBlank() -> {
+                showToast("Please provide email")
+                false
+            }
+
+            binding.signInPassword.editText?.text.isNullOrBlank() -> {
+                showToast("Please provide password")
+                false
+            }
+
+            else -> true
+        }
+    }
+
+    private fun editTextWatcher(
+        textInputLayout: TextInputLayout,
+        from: String
+    ) {
+        textInputLayout.editText?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                val email = s.toString().trim()
+
+                if (isValidEmailOrPhoneNumber(email, from)) {
+                    textInputLayout.error = null
+                } else {
+                    textInputLayout.error = if (from == "email") {
+                        "Invalid email"
+                    } else {
+                        "Invalid phone number"
+                    }
+                }
+            }
+        })
+    }
+
+    private fun isValidEmailOrPhoneNumber(text: String, from: String): Boolean {
+        return if (from == "email") {
+            Patterns.EMAIL_ADDRESS.matcher(text).matches()
+        } else {
+            val phonePattern = Pattern.compile(
+                "^(\\+?234|0)?([789]\\d{9})\$"
+            )
+            phonePattern.matcher(text).matches()
         }
     }
 
@@ -150,6 +254,10 @@ class LoginActivity : AppCompatActivity() {
     private fun updateLayoutVisibility(isSignIn: Boolean, isSignUp: Boolean) {
         binding.signInLayout.isVisible = isSignIn
         binding.signUpLayout.isVisible = isSignUp
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
