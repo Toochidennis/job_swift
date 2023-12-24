@@ -1,0 +1,24 @@
+name: Auto Commit
+
+on:
+  push:
+    branches:
+      - swift  # Adjust the branch name as needed
+
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "Auto commit changes [skip ci]"
