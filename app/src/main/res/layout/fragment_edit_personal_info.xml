@@ -13,14 +13,16 @@
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
+            android:id="@+id/navigateUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center"
             android:layout_marginStart="@dimen/dimen_16"
+            android:background="@drawable/button_bg"
             android:contentDescription="@string/app_logo"
             android:src="@drawable/ic_x" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center"
@@ -42,14 +44,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:text="* Indicates required"
                 android:textSize="@dimen/text_14" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -59,16 +61,17 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/firstNameTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:autofillHints=""
+                android:backgroundTint="@color/black"
                 android:inputType="textPersonName"
                 android:textColor="@color/black" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -78,36 +81,38 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/lastNameTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:autofillHints=""
+                android:backgroundTint="@color/black"
                 android:inputType="textPersonName"
                 android:textColor="@color/black" />
 
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_32"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="Additional name*"
+                android:text="Additional name"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/additionalNameTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:autofillHints=""
+                android:backgroundTint="@color/black"
                 android:inputType="textPersonName"
                 android:textColor="@color/black" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -117,18 +122,20 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/headlineTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
                 android:autofillHints=""
+                android:backgroundTint="@color/black"
                 android:inputType="textMultiLine|textCapSentences"
-                android:lines="5"
+                android:lines="15"
                 android:minLines="1"
                 android:textColor="@color/black" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -139,7 +146,7 @@
                 android:textSize="@dimen/text_16"
                 android:textStyle="bold" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -149,16 +156,18 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/positionTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:autofillHints=""
+                android:backgroundTint="@color/black"
+                android:focusableInTouchMode="false"
                 android:inputType="textCapSentences"
                 android:textColor="@color/black" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -168,17 +177,19 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/industryTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:autofillHints=""
-                android:inputType="textPersonName"
+                android:backgroundTint="@color/black"
+                android:focusableInTouchMode="false"
+                android:inputType="textCapSentences"
                 android:textColor="@color/black" />
 
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -189,7 +200,7 @@
                 android:textSize="@dimen/text_16"
                 android:textStyle="bold" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -199,15 +210,17 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/educationTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:autofillHints=""
+                android:backgroundTint="@color/black"
+                android:focusableInTouchMode="false"
                 android:inputType="textCapSentences" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -218,7 +231,7 @@
                 android:textSize="@dimen/text_16"
                 android:textStyle="bold" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -228,17 +241,18 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/countryTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:autofillHints=""
+                android:backgroundTint="@color/black"
                 android:inputType="textCapSentences"
                 android:textColor="@color/black" />
 
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -248,16 +262,18 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/cityTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:autofillHints=""
+                android:backgroundTint="@color/black"
                 android:inputType="textCapSentences"
                 android:textColor="@color/black" />
 
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/saveButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -266,6 +282,7 @@
                 android:layout_marginBottom="@dimen/dimen_32"
                 android:backgroundTint="@color/shade_green"
                 android:text="Save"
+                android:contentDescription="@string/app_logo"
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
