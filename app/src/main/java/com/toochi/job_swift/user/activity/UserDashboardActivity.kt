@@ -1,6 +1,10 @@
 package com.toochi.job_swift.user.activity
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.toochi.job_swift.R
 import com.toochi.job_swift.common.fragments.NotificationsFragment
@@ -12,12 +16,40 @@ class UserDashboardActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUserDashboardBinding
 
+    private var doubleBackToExitPressedOnce = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUserDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         bottomBarNavigation()
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (isHomeFragmentVisible()) {
+                    if (doubleBackToExitPressedOnce) {
+                        finish()
+                    } else {
+                        doubleBackToExitPressedOnce = true
+                        Toast.makeText(
+                            this@UserDashboardActivity,
+                            "Press back again to exit",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            doubleBackToExitPressedOnce = false
+                        }, 2000)
+                    }
+                } else {
+                    bottomBarNavigation()
+                    binding.bottomNavigation.selectedItemId = R.id.home
+                }
+            }
+        }
+
+        onBackPressedDispatcher.addCallback(this, callback)
     }
 
     private fun bottomBarNavigation() {
@@ -49,6 +81,10 @@ class UserDashboardActivity : AppCompatActivity() {
                 else -> false
             }
         }
+    }
+
+    private fun isHomeFragmentVisible(): Boolean {
+        return binding.bottomNavigation.selectedItemId == R.id.home
     }
 
 }

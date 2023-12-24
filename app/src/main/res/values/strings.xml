@@ -55,6 +55,7 @@
     <string name="toochukwu_dennis">Toochukwu Dennis</string>
     <string name="good_morning">Good morning</string>
     <string name="search_job_dream">Search your dream job right now!</string>
+    <string name="get_started">Get started</string>
 
     <string-array name="heading_options">
         <item>Heading 1</item>
