@@ -7,7 +7,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.toochi.job_swift.R
@@ -20,17 +19,15 @@ import com.toochi.job_swift.model.User
 object AuthenticationManager {
     private val auth = UserAuth.instance
 
-    private val userId = auth.currentUser?.uid
-    private val userDocument = userId?.let { FirestoreDB.instance.collection("user").document(it) }
+    private val currentUser = auth.currentUser
+    private val userId = currentUser?.uid
+    private val userDocument = userId?.let { FirestoreDB.instance.collection("users").document(it) }
 
     fun registerWithEmailAndPassword(user: User, onComplete: (Boolean, String?) -> Unit) {
-        auth.createUserWithEmailAndPassword(user.email, user.password!!)
+        auth.createUserWithEmailAndPassword(user.email, user.password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val currentUser = auth.currentUser
-                    currentUser?.let {
-                        updateUserProfile(it, user, onComplete)
-                    }
+                    updateUserProfile(user, onComplete)
                 } else {
                     onComplete(false, task.exception?.message)
                 }
@@ -54,7 +51,7 @@ object AuthenticationManager {
                             putString("email", account.email ?: "")
                             putString("lastname", account.familyName ?: "")
                             putString("firstname", account.givenName ?: "")
-                            putString("user_type", "user")
+                            putString("user_type", "employee")
                             putString("photo_url", account.photoUrl?.toString())
                         }.apply()
 
@@ -94,52 +91,44 @@ object AuthenticationManager {
 
 
     private fun updateUserProfile(
-        user: FirebaseUser,
         userData: User,
         onComplete: (Boolean, String?) -> Unit
     ) {
         val profileUpdates = UserProfileChangeRequest.Builder()
-            .setDisplayName("${userData.firstname} ${userData.lastname}")
-            .setPhotoUri(
-                if (!userData.profilePhotoUrl.isNullOrBlank())
-                    Uri.parse(userData.profilePhotoUrl)
-                else Uri.parse("")
-            )
+            .setDisplayName("${userData.firstname} ${userData.middleName} ${userData.lastname}")
+            .setPhotoUri(Uri.parse(userData.profilePhotoUrl))
             .build()
 
-        user.updateProfile(profileUpdates)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    storeUserData(user.uid, userData)
-                    onComplete(true, null)
-                } else {
-                    onComplete(false, task.exception?.message)
+        currentUser?.let {
+            it.updateProfile(profileUpdates)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        createPersonalDetails(userData)
+                        onComplete(true, null)
+                    } else {
+                        onComplete(false, task.exception?.message)
+                    }
                 }
+        }
+    }
+
+    private fun createPersonalDetails(user: User) {
+        userDocument?.collection("personalDetails")?.add(user)
+    }
+
+    fun createCompany(company: Company, onComplete: (Boolean, String?) -> Unit) {
+        userDocument?.collection("companyDetails")
+            ?.add(company)
+            ?.addOnSuccessListener {
+                onComplete(true, null)
+            }
+            ?.addOnFailureListener { error ->
+                onComplete(false, error.message)
             }
     }
 
-    private fun storeUserData(userId: String?, user: User) {
-        userId?.let {
-            FirestoreDB.instance.collection("users")
-                .document(userId)
-                .set(user)
-        }
-    }
+    fun updateCompany(company: Company, onComplete: (Boolean, String?) -> Unit) {
 
-
-    fun createCompany(company: Company, onComplete: (Boolean, String?) -> Unit) {
-        auth.currentUser?.uid?.let {
-            FirestoreDB.instance.collection("users")
-                .document(it)
-                .collection("company")
-                .add(company)
-                .addOnSuccessListener {
-                    onComplete(true, null)
-                }
-                .addOnFailureListener { error ->
-                    onComplete(false, error.message)
-                }
-        }
     }
 
     fun updateUserExperience(
@@ -162,7 +151,7 @@ object AuthenticationManager {
         TODO("Still coming up")
     }
 
-    // Similar functions for companies, personal details, and other user-related information
+// Similar functions for companies, personal details, and other user-related information
 
     fun postJob(userId: String, job: Job, onComplete: (Boolean, String?) -> Unit) {
         // Implement the logic to post a job in Firestore
