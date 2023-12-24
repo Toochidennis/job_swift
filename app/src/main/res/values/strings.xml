@@ -87,4 +87,21 @@
         <item>Security Analyst</item>
     </string-array>
 
+    <string-array name="company_position">
+        <item>Information Communication Technology</item>
+        <item>Agriculture</item>
+        <item>Public Relations</item>
+        <item>Construction and Architecture</item>
+        <item>Arts and Entertainment</item>
+        <item>Finance</item>
+        <item>Healthcare</item>
+        <item>Education</item>
+        <item>Human Resources</item>
+        <item>Customer Services</item>
+        <item>Sales</item>
+        <item>Engineering and Manufacturing</item>
+        <item>Transportation and Logistics</item>
+        <item>Nonprofit and Social Services</item>
+    </string-array>
+
 </resources>
