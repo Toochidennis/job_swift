@@ -73,8 +73,32 @@
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
                 android:autofillHints="name"
+                android:imeOptions="actionNext"
                 android:backgroundTint="@color/black"
                 android:hint="Ex: Digital Dreams Limited"
+                android:inputType="textCapSentences"
+                android:textColor="@color/black" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16"
+                android:layout_marginTop="@dimen/dimen_32"
+                android:layout_marginEnd="@dimen/dimen_16"
+                android:text="Position*"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_14" />
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/positionEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16"
+                android:layout_marginEnd="@dimen/dimen_16"
+                android:backgroundTint="@color/black"
+                android:drawableEnd="@drawable/ic_arrow_drop_down"
+                android:focusableInTouchMode="false"
+                android:hint="Ex: ICT"
                 android:inputType="textCapSentences"
                 android:textColor="@color/black" />
 
@@ -102,28 +126,6 @@
                 android:inputType="number"
                 android:textColor="@color/black" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_16"
-                android:layout_marginTop="@dimen/dimen_32"
-                android:layout_marginEnd="@dimen/dimen_16"
-                android:text="Phone number*"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_14" />
-
-            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                android:id="@+id/phoneNumberEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_16"
-                android:layout_marginEnd="@dimen/dimen_16"
-                android:autofillHints="phone"
-                android:backgroundTint="@color/black"
-                android:drawableEnd="@drawable/ic_phone"
-                android:hint="090 000 000 00"
-                android:inputType="phone"
-                android:textColor="@color/black" />
 
             <LinearLayout
                 android:id="@+id/descriptionButton"
@@ -180,6 +182,30 @@
                 android:autofillHints="phone"
                 android:backgroundTint="@color/black"
                 android:hint="AFDJD"
+                android:imeOptions="actionNext"
+                android:inputType="textCapSentences"
+                android:textColor="@color/black" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16"
+                android:layout_marginTop="@dimen/dimen_32"
+                android:layout_marginEnd="@dimen/dimen_16"
+                android:text="Location*"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_14" />
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/locationEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16"
+                android:layout_marginEnd="@dimen/dimen_16"
+                android:autofillHints="phone"
+                android:backgroundTint="@color/black"
+                android:imeOptions="actionDone"
+                android:hint="Enugu East, Nigeria"
                 android:inputType="textCapSentences"
                 android:textColor="@color/black" />
 
