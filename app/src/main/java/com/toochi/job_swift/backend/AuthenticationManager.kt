@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.toochi.job_swift.R
+import com.toochi.job_swift.model.Company
 import com.toochi.job_swift.model.Education
 import com.toochi.job_swift.model.Experience
 import com.toochi.job_swift.model.Job
@@ -18,6 +19,9 @@ import com.toochi.job_swift.model.User
 
 object AuthenticationManager {
     private val auth = UserAuth.instance
+
+    private val userId = auth.currentUser?.uid
+    private val userDocument = userId?.let { FirestoreDB.instance.collection("user").document(it) }
 
     fun registerWithEmailAndPassword(user: User, onComplete: (Boolean, String?) -> Unit) {
         auth.createUserWithEmailAndPassword(user.email, user.password!!)
@@ -119,6 +123,22 @@ object AuthenticationManager {
             FirestoreDB.instance.collection("users")
                 .document(userId)
                 .set(user)
+        }
+    }
+
+
+    fun createCompany(company: Company, onComplete: (Boolean, String?) -> Unit) {
+        auth.currentUser?.uid?.let {
+            FirestoreDB.instance.collection("users")
+                .document(it)
+                .collection("company")
+                .add(company)
+                .addOnSuccessListener {
+                    onComplete(true, null)
+                }
+                .addOnFailureListener { error ->
+                    onComplete(false, error.message)
+                }
         }
     }
 
