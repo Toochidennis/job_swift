@@ -54,7 +54,7 @@ class UserJobsFragment : Fragment() {
 
         binding.postJobButton.setOnClickListener {
             with(requireActivity().getSharedPreferences("loginDetail", Context.MODE_PRIVATE)) {
-                val isHaveCompany = getBoolean("haveCompany", false)
+                val isHaveCompany = getBoolean("have_company", false)
 
                 if (isHaveCompany) {
                     AddJobBasicsDialogFragment().show(parentFragmentManager, "job basics")
