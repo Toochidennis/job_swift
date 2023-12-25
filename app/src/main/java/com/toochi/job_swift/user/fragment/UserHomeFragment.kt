@@ -6,15 +6,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.squareup.picasso.Picasso
+import com.toochi.job_swift.BR
+import com.toochi.job_swift.R
+import com.toochi.job_swift.backend.AuthenticationManager.getPostedJobs
+import com.toochi.job_swift.common.dialogs.LoadingDialog
+import com.toochi.job_swift.common.fragments.JobDetailsDialogFragment
 import com.toochi.job_swift.databinding.FragmentUserHomeBinding
+import com.toochi.job_swift.model.Job
 import com.toochi.job_swift.user.activity.PersonalInformationActivity
+import com.toochi.job_swift.user.adapters.GenericAdapter
 
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-
 
 class UserHomeFragment : Fragment() {
 
@@ -46,7 +53,10 @@ class UserHomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setUpProfile()
+
+        getAllJobs()
     }
+
 
     private fun setUpProfile() {
         with(requireActivity().getSharedPreferences("loginDetail", MODE_PRIVATE)) {
@@ -66,12 +76,48 @@ class UserHomeFragment : Fragment() {
         }
     }
 
+    private fun getAllJobs() {
+        val loadingDialog = LoadingDialog(requireContext())
+        loadingDialog.show()
+
+        getPostedJobs { jobs, errorMessage ->
+            if (jobs != null) {
+                setUpAdapter(jobs)
+            } else {
+                showToast(errorMessage.toString())
+            }
+
+            loadingDialog.dismiss()
+        }
+    }
+
+    private fun setUpAdapter(jobList: MutableList<Job>) {
+        val jobAdapter = GenericAdapter(
+            jobList,
+            R.layout.item_user_home,
+            bindItem = { binding, model ->
+                binding.setVariable(BR.job, model)
+                binding.executePendingBindings()
+            }
+        ) { position ->
+            val selectedPosition = jobList[position]
+            JobDetailsDialogFragment(selectedPosition).show(parentFragmentManager, "job details")
+        }
+
+        binding.jobRecyclerView.apply {
+            hasFixedSize()
+            adapter = jobAdapter
+        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 
     companion object {
 
