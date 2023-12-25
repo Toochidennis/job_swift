@@ -81,7 +81,12 @@ class CreateEmployerAccountDialogFragment : DialogFragment() {
                 createCompany(company) { success, errorMessage ->
                     if (success) {
                         requireActivity().getSharedPreferences("loginDetail", MODE_PRIVATE)
-                            .edit().putBoolean("haveCompany", true).apply()
+                            .edit().putBoolean("have_company", true)
+                            .putString("user_type", "employer")
+                            .putString("company_name", companyName)
+                            .putString("company_location", location)
+                            .apply()
+
 
                         AddJobBasicsDialogFragment().show(parentFragmentManager, "job basics")
                         dismiss()
