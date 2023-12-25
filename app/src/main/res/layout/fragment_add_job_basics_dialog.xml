@@ -68,7 +68,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/jobTxt"
-                    android:text="Cleaner"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_14" />
 
@@ -110,7 +110,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/companyTxt"
-                    android:text="Cleaner"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_14" />
 
@@ -153,7 +153,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/workTxt"
-                    android:text="On-site"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_14" />
 
@@ -196,7 +196,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/locationTxt"
-                    android:text="Enugu"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_14" />
 
@@ -239,7 +239,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/jobTTxt"
-                    android:text="On-site"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_14" />
 
