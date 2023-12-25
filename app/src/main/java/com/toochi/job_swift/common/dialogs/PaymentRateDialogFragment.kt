@@ -1,14 +1,11 @@
 package com.toochi.job_swift.common.dialogs
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.textview.MaterialTextView
-import com.toochi.job_swift.R
-import com.toochi.job_swift.databinding.FragmentPayDialogBinding
 import com.toochi.job_swift.databinding.FragmentPaymentRateDialogBinding
 
 class PaymentRateDialogFragment(
