@@ -1,8 +1,9 @@
 package com.toochi.job_swift.user.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 
 /**
@@ -17,22 +18,25 @@ import androidx.recyclerview.widget.RecyclerView
 class GenericAdapter<Model>(
     private val itemList: MutableList<Model>,
     private val itemResLayout: Int,
-    private val bindItem: (itemView: View, model: Model) -> Unit,
+    private val bindItem: (binding: ViewDataBinding, model: Model) -> Unit,
     private val onItemClick: (position: Int) -> Unit
 ) : RecyclerView.Adapter<GenericAdapter<Model>.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                itemResLayout, parent, false
-            )
+        val binding: ViewDataBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(parent.context),
+            itemResLayout,
+            parent,
+            false
         )
+
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val model = itemList[position]
 
-        bindItem(holder.itemView, model)
+        bindItem(holder.binding, model)
 
         holder.itemView.setOnClickListener {
             onItemClick(position)
@@ -41,5 +45,5 @@ class GenericAdapter<Model>(
 
     override fun getItemCount() = itemList.size
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    inner class ViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
 }
