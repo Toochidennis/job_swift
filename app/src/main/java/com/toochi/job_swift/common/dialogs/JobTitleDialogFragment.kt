@@ -2,19 +2,15 @@ package com.toochi.job_swift.common.dialogs
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.DialogFragment
-import com.google.android.material.textview.MaterialTextView
+import com.toochi.job_swift.BR
 import com.toochi.job_swift.R
 import com.toochi.job_swift.databinding.FragmentJobTitleDialogBinding
+import com.toochi.job_swift.model.JobTitleModel
 import com.toochi.job_swift.user.adapters.GenericAdapter
-import com.toochi.job_swift.user.model.JobTitleModel
 
 
 class JobTitleDialogFragment(
@@ -28,7 +24,6 @@ class JobTitleDialogFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
-
     }
 
     override fun onCreateView(
@@ -64,9 +59,9 @@ class JobTitleDialogFragment(
         val adapter = GenericAdapter(
             itemList = jobTitleList.toMutableList(),
             itemResLayout = R.layout.item_job_title,
-            bindItem = { itemView, model ->
-                val jobNameTxt: MaterialTextView = itemView.findViewById(R.id.jobNameTxt)
-                jobNameTxt.text = model.jobTitle
+            bindItem = { binding, model ->
+                binding.setVariable(BR.jobModel, model)
+                binding.executePendingBindings()
             }
         ) { position ->
             val selectedPosition = jobTitleList[position]
