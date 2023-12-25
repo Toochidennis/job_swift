@@ -56,6 +56,10 @@
     <string name="good_morning">Good morning</string>
     <string name="search_job_dream">Search your dream job right now!</string>
     <string name="get_started">Get started</string>
+    <string name="job_details">Job details</string>
+    <string name="apply_now">Apply now</string>
+    <string name="naira">\u20A6</string>
+    <string name="upload_cv">Upload CV</string>
 
     <string-array name="heading_options">
         <item>Heading 1</item>
