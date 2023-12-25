@@ -20,24 +20,24 @@
         android:textStyle="bold" />
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/dimen_16"
-        android:id="@+id/textView1"
         android:text="Per month"
         android:textColor="@color/black"
         android:textSize="@dimen/text_16" />
 
     <include layout="@layout/material_divider" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dimen_16"
         android:foreground="?android:attr/selectableItemBackground"
         android:padding="@dimen/dimen_16"
         android:text="Per year"
-        android:id="@+id/textView2"
         android:textColor="@color/black"
         android:textSize="@dimen/text_16" />
 
