@@ -85,7 +85,6 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -113,14 +112,13 @@
             android:inputType="textCapSentences"
             android:padding="@dimen/dimen_10" />
 
-        <androidx.core.widget.NestedScrollView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/jobRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dimen_16"
-            android:contentDescription="@string/nestedscrollview"
-            android:fillViewport="true">
-
-        </androidx.core.widget.NestedScrollView>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_32"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_user_home" />
 
     </LinearLayout>
 
