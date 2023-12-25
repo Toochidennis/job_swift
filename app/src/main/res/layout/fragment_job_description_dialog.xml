@@ -38,11 +38,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dimen_16"
-                android:text="Describe the job"
+                android:text="Almost done! Describe the job"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_24" />
 
@@ -54,7 +54,7 @@
                 android:orientation="vertical"
                 android:padding="@dimen/dimen_16">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Description*"
@@ -68,7 +68,7 @@
                     android:background="@drawable/background_line"
                     android:padding="@dimen/dimen_8">
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/descriptionTxt"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -81,13 +81,6 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height=".5dp"
-                android:layout_marginStart="@dimen/dimen_16"
-                android:layout_marginEnd="@dimen/dimen_16"
-                android:background="@color/gray" />
-
             <RelativeLayout
                 android:id="@+id/contactPreference"
                 android:layout_width="match_parent"
@@ -96,7 +89,7 @@
                 android:orientation="vertical"
                 android:padding="@dimen/dimen_16">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/applicantCollection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -106,15 +99,15 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_16" />
 
-                <TextView
-                    android:id="@+id/contactEmail"
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/jobEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/applicantCollection"
                     android:layout_marginTop="@dimen/dimen_10"
                     android:layout_marginEnd="@dimen/dimen_16"
                     android:layout_toStartOf="@id/editPreference"
-                    android:text="You will receive applicants on SwiftJb and get notified at email"
+                    android:text="You will receive applicants on SwiftJob and get notified to your registered email."
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_14" />
 
@@ -129,14 +122,9 @@
 
             </RelativeLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height=".5dp"
-                android:layout_marginStart="@dimen/dimen_16"
-                android:layout_marginEnd="@dimen/dimen_16"
-                android:background="@color/gray" />
 
-            <CheckBox
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/cvCheckBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -144,14 +132,7 @@
                 android:padding="@dimen/dimen_16"
                 android:text="Ask potential candidates for CV?" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height=".5dp"
-                android:layout_marginStart="@dimen/dimen_16"
-                android:layout_marginEnd="@dimen/dimen_16"
-                android:background="@color/gray" />
-
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -161,53 +142,75 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_16" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/deadlineEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
                 android:autofillHints=""
+                android:backgroundTint="@color/black"
                 android:drawableEnd="@drawable/ic_calendar"
                 android:focusableInTouchMode="false"
-                android:hint="Ex: "
+                android:hint="12, December 2023"
                 android:inputType="date"
-                android:paddingTop="@dimen/dimen_12"
-                android:paddingBottom="@dimen/dimen_12"
                 android:textColor="@color/black" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height=".5dp"
-                android:layout_marginStart="@dimen/dimen_16"
-                android:layout_marginEnd="@dimen/dimen_16"
-                android:background="@color/gray" />
-
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
-                android:layout_marginTop="@dimen/dimen_16"
+                android:layout_marginTop="@dimen/dimen_32"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="Job reference ID"
+                android:text="Pay*"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_16" />
 
-            <EditText
-                android:id="@+id/referenceIdEditText"
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/salaryEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16"
+                android:layout_marginEnd="@dimen/dimen_16"
+                android:imeOptions="actionDone"
+                android:backgroundTint="@color/black"
+                android:drawableStart="@drawable/ic_currency_naira"
+                android:drawablePadding="@dimen/dimen_10"
+                android:hint="1,000"
+                android:inputType="number"
+                android:paddingTop="@dimen/dimen_12"
+                android:paddingBottom="@dimen/dimen_12"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16"
+                android:layout_marginTop="@dimen/dimen_32"
+                android:layout_marginEnd="@dimen/dimen_16"
+                android:text="Rate*"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_16" />
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/rateEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
                 android:autofillHints=""
-                android:hint="kjd"
-                android:inputType="textPostalAddress"
+                android:backgroundTint="@color/black"
+                android:drawableEnd="@drawable/ic_arrow_drop_down"
+                android:focusableInTouchMode="false"
+                android:hint="Please select"
+                android:inputType="textCapSentences"
                 android:paddingTop="@dimen/dimen_12"
                 android:paddingBottom="@dimen/dimen_12"
                 android:textColor="@color/black" />
 
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                android:id="@+id/continueButton"
+                android:id="@+id/postJobButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
@@ -215,7 +218,7 @@
                 android:layout_marginEnd="@dimen/dimen_16"
                 android:layout_marginBottom="@dimen/dimen_32"
                 android:backgroundTint="@color/shade_green"
-                android:text="@string/continue_"
+                android:text="Post job"
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@color/white"

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.google.android.material.appbar.MaterialToolbar
 import com.toochi.job_swift.databinding.ActivityMainBinding
 import com.toochi.job_swift.user.activity.UserDashboardActivity
 
@@ -17,10 +18,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val sharedPreferences = getSharedPreferences("login", MODE_PRIVATE)
+        with(getSharedPreferences("loginDetail", MODE_PRIVATE)) {
+            val id = getString("user_id", "")
 
-        startActivity(Intent(this, UserDashboardActivity::class.java))
-        finish()
+            if (id.isNullOrEmpty()){
+                startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+            }else{
+                startActivity(Intent(this@MainActivity, UserDashboardActivity::class.java))
+            }
+
+            finish()
+        }
 
     }
 }

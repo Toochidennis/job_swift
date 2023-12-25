@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_silver"
+    tools:context=".common.fragments.JobDetailsDialogFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/pale_silver"
+        app:elevation="0dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp">
+
+            <ImageView
+                android:id="@+id/navigateUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/button_bg"
+                android:contentDescription="@string/navigate"
+                android:padding="@dimen/dimen_10"
+                android:src="@drawable/ic_x" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/saveJob"
+                android:layout_toEndOf="@id/navigateUp"
+                android:text="@string/job_details"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_18" />
+
+            <ImageView
+                android:id="@+id/saveJob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/bookmark"
+                android:padding="@dimen/dimen_10"
+                android:src="@drawable/ic_bookmark" />
+
+        </RelativeLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/introCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appBar"
+        android:layout_margin="@dimen/dimen_16"
+        app:cardCornerRadius="@dimen/dimen_16"
+        app:contentPadding="@dimen/dimen_16">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/companyImageView"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:contentDescription="@string/app_logo"
+                android:src="@drawable/ic_company"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/jobTitleTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:text="@string/app_name"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_18"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/companyImageView" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/locationTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:text="@string/app_name"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_14"
+                app:layout_constraintTop_toBottomOf="@id/jobTitleTxt" />
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/jobTypeTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_16"
+                app:layout_constraintBaseline_toBaselineOf="@+id/workplaceTypeTxt"
+                app:layout_constraintEnd_toStartOf="@id/workplaceTypeTxt"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/workplaceTypeTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_16"
+                app:layout_constraintBaseline_toBaselineOf="@+id/salaryTxt"
+                app:layout_constraintEnd_toStartOf="@id/salaryTxt"
+                app:layout_constraintStart_toEndOf="@id/jobTypeTxt" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/salaryTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_16"
+                android:text="@string/app_name"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_16"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/workplaceTypeTxt"
+                app:layout_constraintTop_toBottomOf="@id/locationTxt" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        style="@style/CustomTabLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/introCard"
+        android:layout_marginTop="@dimen/dimen_32"
+        android:contentDescription="@string/app_name" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tabLayout" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/applyButton"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/dimen_16"
+        android:backgroundTint="@color/shade_green"
+        android:contentDescription="@string/apply_now"
+        android:text="@string/apply_now"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_16" />
+
+</RelativeLayout>

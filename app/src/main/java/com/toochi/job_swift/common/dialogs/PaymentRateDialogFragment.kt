@@ -1,49 +1,48 @@
 package com.toochi.job_swift.common.dialogs
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.toochi.job_swift.R
+import com.google.android.material.textview.MaterialTextView
+import com.toochi.job_swift.databinding.FragmentPaymentRateDialogBinding
 
+class PaymentRateDialogFragment(
+    private val onSelected: (String) -> Unit
+) : BottomSheetDialogFragment() {
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+    private var _binding: FragmentPaymentRateDialogBinding? = null
 
-
-class PaymentRateDialogFragment : BottomSheetDialogFragment() {
-
-
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_payment_rate_dialog, container, false)
+        _binding = FragmentPaymentRateDialogBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            PaymentRateDialogFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+       binding.textView1.setOnClickListenerWithText()
+       binding.textView2.setOnClickListenerWithText()
+    }
+
+    private fun View.setOnClickListenerWithText() {
+        if (this is MaterialTextView) {
+            this.setOnClickListener {
+                onSelected.invoke(this.text.toString())
+                dismiss()
             }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatTextView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.textview.MaterialTextView
 import com.toochi.job_swift.databinding.FragmentNumberOfEmployeesDialogBinding
 
 class NumberOfEmployeesDialogFragment(
@@ -36,7 +36,7 @@ class NumberOfEmployeesDialogFragment(
     }
 
     private fun View.setOnClickListenerWithText() {
-        if (this is AppCompatTextView) {
+        if (this is MaterialTextView) {
             this.setOnClickListener {
                 onSelected.invoke(this.text.toString())
                 dismiss()

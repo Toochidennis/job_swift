@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+
+        <variable
+            name="jobModel"
+            type="com.toochi.job_swift.model.JobTitleModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            android:id="@+id/separator1"
+            layout="@layout/material_divider"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/positionNameTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dimen_16"
+            android:text="@{jobModel.jobTitle}"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_16"
+            app:layout_constraintTop_toBottomOf="@id/separator1" />
+
+        <include
+            layout="@layout/material_divider"
+            app:layout_constraintTop_toBottomOf="@id/positionNameTxt" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</layout>

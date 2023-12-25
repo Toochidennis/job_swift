@@ -1,11 +1,16 @@
 package com.toochi.job_swift.user.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.google.android.material.tabs.TabLayoutMediator
+import com.toochi.job_swift.common.fragments.AddJobBasicsDialogFragment
 import com.toochi.job_swift.databinding.FragmentUserJobsBinding
+import com.toochi.job_swift.user.adapters.FragmentAdapter
 
 
 private const val ARG_PARAM1 = "param1"
@@ -14,7 +19,8 @@ private const val ARG_PARAM2 = "param2"
 
 class UserJobsFragment : Fragment() {
 
-    private var _binding: FragmentUserJobsBinding?=null
+    private var _binding: FragmentUserJobsBinding? = null
+
     private val binding get() = _binding!!
 
     private var param1: String? = null
@@ -40,9 +46,42 @@ class UserJobsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.postJobButton.setOnClickListener {
-            JobIntroScreenDialogFragment().show(parentFragmentManager, "Intro")
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar.toolbar)
+        val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
+        actionBar?.apply {
+            title = "My jobs"
         }
+
+        binding.postJobButton.setOnClickListener {
+            with(requireActivity().getSharedPreferences("loginDetail", Context.MODE_PRIVATE)) {
+                val isHaveCompany = getBoolean("have_company", false)
+
+                if (isHaveCompany) {
+                    AddJobBasicsDialogFragment().show(parentFragmentManager, "job basics")
+                } else {
+                    JobIntroScreenDialogFragment().show(parentFragmentManager, "Intro")
+                }
+            }
+
+        }
+
+        setUpViewPager()
+    }
+
+    private fun setUpViewPager() {
+        val fragmentTitles = listOf("Posted jobs", "Applied jobs", "Saved jobs")
+
+        val fragmentAdapter = FragmentAdapter(requireActivity()).apply {
+            addFragment(PostedJobsFragment())
+            addFragment(AppliedJobsFragment())
+            addFragment(SavedJobsFragment())
+        }
+
+        binding.viewPager.adapter = fragmentAdapter
+
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text = fragmentTitles[position]
+        }.attach()
     }
 
     override fun onDestroyView() {

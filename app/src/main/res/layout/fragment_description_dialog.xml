@@ -59,7 +59,7 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <include layout="@layout/separator_layout" />
+        <include layout="@layout/material_divider" />
 
         <LinearLayout
             android:layout_width="match_parent"

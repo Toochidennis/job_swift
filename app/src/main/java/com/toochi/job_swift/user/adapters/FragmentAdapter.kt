@@ -13,9 +13,7 @@ class FragmentAdapter(fragmentActivity: FragmentActivity) :
 
     override fun createFragment(position: Int) = fragments[position]
 
-
-    fun addFragments(fragment: Fragment){
+    fun addFragment(fragment: Fragment) {
         fragments.add(fragment)
-        notifyDataSetChanged()
     }
 }

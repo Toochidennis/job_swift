@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/light_silver"
     tools:context=".user.fragment.UserHomeFragment">
 
     <LinearLayout
@@ -11,128 +13,112 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <RelativeLayout
+
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/pale_silver"
+            app:elevation="0dp">
 
-            <TextView
-                android:id="@+id/greetingsTxt"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="@dimen/dimen_16"
-                android:layout_marginTop="@dimen/dimen_16"
-                android:text="Good morning,"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_16" />
+                android:padding="@dimen/dimen_16">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/greetingsTxt"
-                android:layout_marginStart="@dimen/dimen_16"
-                android:text="Toochukwu Dennis"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_18"
-                android:textStyle="bold" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/greetingsTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginEnd="@dimen/dimen_16"
+                    android:layout_toStartOf="@id/profileButton"
+                    android:text="@string/good_morning"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_16" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/dimen_16"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/ic_user" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/userNameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/greetingsTextView"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@id/profileButton"
+                    android:text="@string/toochukwu_dennis"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_18"
+                    android:textStyle="bold" />
 
-        </RelativeLayout>
+                <LinearLayout
+                    android:id="@+id/profileButton"
+                    android:layout_width="@dimen/dimen_38"
+                    android:layout_height="@dimen/dimen_38"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/dimen_16"
+                    android:background="@drawable/image_border"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center">
 
-        <TextView
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        app:cardCornerRadius="34dp"
+                        app:cardElevation="0dp">
+
+                        <ImageView
+                            android:id="@+id/userImageView"
+                            android:layout_width="34dp"
+                            android:layout_height="34dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center"
+                            android:contentDescription="@string/app_name"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_user2" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_16"
             android:layout_marginTop="@dimen/dimen_32"
             android:layout_marginEnd="@dimen/dimen_16"
             android:layout_marginBottom="@dimen/dimen_16"
-            android:text="Search your dream job right now!"
+            android:text="@string/search_job_dream"
             android:textColor="@color/black"
             android:textSize="@dimen/text_28"
             android:textStyle="bold"
             android:visibility="gone" />
 
-        <EditText
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/searchTextField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_16"
             android:layout_marginTop="@dimen/dimen_32"
             android:layout_marginEnd="@dimen/dimen_16"
-            android:autofillHints="name"
             android:background="@drawable/search_drawable"
             android:drawableStart="@drawable/ic_search"
             android:drawablePadding="@dimen/dimen_10"
             android:hint="@string/search_job"
-            android:inputType="textAutoComplete"
+            android:inputType="textCapSentences"
             android:padding="@dimen/dimen_10" />
 
-        <HorizontalScrollView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/jobRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dimen_16"
-            android:scrollbars="none">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="All filters"
-                    android:textAllCaps="false"
-                    android:textColor="@color/shade_green" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Location"
-                    android:textAllCaps="false"
-                    android:textColor="@color/shade_green" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Categories"
-                    android:textAllCaps="false"
-                    android:textColor="@color/shade_green" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Type"
-                    android:textAllCaps="false"
-                    android:textColor="@color/shade_green" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Salary"
-                    android:textAllCaps="false"
-                    android:textColor="@color/shade_green" />
-
-            </LinearLayout>
-
-        </HorizontalScrollView>
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dimen_16"
-            android:contentDescription="@string/nestedscrollview"
-            android:fillViewport="true">
-
-        </androidx.core.widget.NestedScrollView>
+            android:layout_marginTop="@dimen/dimen_32"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_user_home" />
 
     </LinearLayout>
 

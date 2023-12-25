@@ -1,10 +1,15 @@
 package com.toochi.job_swift.model
 
-data class User(
-    val email: String,
-    val password: String?,
-    val firstname: String,
-    val lastname: String,
-    val userType: String,
-    val profilePhotoUrl: String? =null
-)
+class User {
+    var email: String = ""
+    var password: String = ""
+    var firstname: String = ""
+    var middleName: String = ""
+    var lastname: String = ""
+    var phoneNumber: String = ""
+    var headline: String = ""
+    var country: String = ""
+    var city: String = ""
+    var userType: String = ""
+    var profilePhotoUrl: String = ""
+}

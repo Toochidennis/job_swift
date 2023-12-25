@@ -52,6 +52,14 @@
     <string name="profile">Profile</string>
     <string name="settings">Settings</string>
     <string name="timeline">Timeline</string>
+    <string name="toochukwu_dennis">Toochukwu Dennis</string>
+    <string name="good_morning">Good morning</string>
+    <string name="search_job_dream">Search your dream job right now!</string>
+    <string name="get_started">Get started</string>
+    <string name="job_details">Job details</string>
+    <string name="apply_now">Apply now</string>
+    <string name="naira">\u20A6</string>
+    <string name="upload_cv">Upload CV</string>
 
     <string-array name="heading_options">
         <item>Heading 1</item>
@@ -81,6 +89,23 @@
         <item>Data Specialist</item>
         <item>Data Engineer</item>
         <item>Security Analyst</item>
+    </string-array>
+
+    <string-array name="company_position">
+        <item>Information Communication Technology</item>
+        <item>Agriculture</item>
+        <item>Public Relations</item>
+        <item>Construction and Architecture</item>
+        <item>Arts and Entertainment</item>
+        <item>Finance</item>
+        <item>Healthcare</item>
+        <item>Education</item>
+        <item>Human Resources</item>
+        <item>Customer Services</item>
+        <item>Sales</item>
+        <item>Engineering and Manufacturing</item>
+        <item>Transportation and Logistics</item>
+        <item>Nonprofit and Social Services</item>
     </string-array>
 
 </resources>
