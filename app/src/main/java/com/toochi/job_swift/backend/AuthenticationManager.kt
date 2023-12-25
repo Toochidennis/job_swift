@@ -21,7 +21,9 @@ object AuthenticationManager {
 
     private val currentUser = auth.currentUser
     private val userId = currentUser?.uid
-    private val userDocument = userId?.let { FirestoreDB.instance.collection("users").document(it) }
+    private val usersDocument =
+        userId?.let { FirestoreDB.instance.collection("users").document(it) }
+    private val usersCollection = FirestoreDB.instance.collection("users")
 
     fun registerWithEmailAndPassword(user: User, onComplete: (Boolean, String?) -> Unit) {
         auth.createUserWithEmailAndPassword(user.email, user.password)
@@ -89,7 +91,6 @@ object AuthenticationManager {
         return GoogleSignIn.getClient(context, gso)
     }
 
-
     private fun updateUserProfile(
         userData: User,
         onComplete: (Boolean, String?) -> Unit
@@ -113,22 +114,69 @@ object AuthenticationManager {
     }
 
     private fun createPersonalDetails(user: User) {
-        userDocument?.collection("personalDetails")?.add(user)
+        usersDocument?.collection("personalDetails")?.add(user)
     }
 
     fun createCompany(company: Company, onComplete: (Boolean, String?) -> Unit) {
-        userDocument?.collection("companyDetails")
-            ?.add(company)
-            ?.addOnSuccessListener {
-                onComplete(true, null)
-            }
-            ?.addOnFailureListener { error ->
-                onComplete(false, error.message)
-            }
+        usersDocument?.let {
+            it.collection("companyDetails")
+                .add(company)
+                .addOnSuccessListener {
+                    onComplete(true, null)
+                }
+                .addOnFailureListener { error ->
+                    onComplete(false, error.message)
+                }
+        }
     }
 
-    fun updateCompany(company: Company, onComplete: (Boolean, String?) -> Unit) {
+    fun getCompanyByUserId(userId: String, onComplete: (MutableList<Company>?, String?) -> Unit) {
+        usersCollection.document(userId)
+            .collection("companyDetails")
+            .get()
+            .addOnSuccessListener { document ->
+                println(document)
+                val company = document.toObjects(Company::class.java)
 
+                onComplete(company, null)
+            }
+            .addOnFailureListener {
+                onComplete(null, it.message)
+            }
+
+    }
+
+    fun postJob(job: Job, onComplete: (Boolean, String?) -> Unit) {
+        usersDocument?.let {
+            it.collection("postedJobs")
+                .add(job)
+                .addOnSuccessListener {
+                    onComplete(true, null)
+                }
+                .addOnFailureListener { error ->
+                    onComplete(false, error.message)
+                }
+        }
+    }
+
+    fun getPostedJobs(onComplete: (MutableList<Job>?, String?) -> Unit) {
+        val jobsPostedCollection = FirestoreDB.instance.collectionGroup("postedJobs")
+
+        jobsPostedCollection.get()
+            .addOnSuccessListener { documents ->
+                val allJobs = mutableListOf<Job>()
+
+                for (document in documents) {
+                    val job = document.toObject(Job::class.java)
+                    allJobs.add(job)
+                }
+
+                onComplete(allJobs, null)
+            }
+
+            .addOnFailureListener {
+                onComplete(null, it.message)
+            }
     }
 
     fun updateUserExperience(
@@ -151,13 +199,6 @@ object AuthenticationManager {
         TODO("Still coming up")
     }
 
-// Similar functions for companies, personal details, and other user-related information
-
-    fun postJob(userId: String, job: Job, onComplete: (Boolean, String?) -> Unit) {
-        // Implement the logic to post a job in Firestore
-        // Use FirestoreDB.instance.collection("users").document(userId).collection("jobsPosted").add(job)
-        TODO("Still coming up")
-    }
 
     fun blockJob(
         userId: String,
