@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
-import com.google.android.material.textview.MaterialTextView
+import com.toochi.job_swift.BR
 import com.toochi.job_swift.R
 import com.toochi.job_swift.databinding.FragmentCompanyPositionDialogBinding
+import com.toochi.job_swift.model.JobTitleModel
 import com.toochi.job_swift.user.adapters.GenericAdapter
-import com.toochi.job_swift.user.model.JobTitleModel
 
 class CompanyPositionDialogFragment(private val onSelected: (String) -> Unit) : DialogFragment() {
 
@@ -57,9 +57,9 @@ class CompanyPositionDialogFragment(private val onSelected: (String) -> Unit) : 
         val adapter = GenericAdapter(
             itemList = jobTitleList.toMutableList(),
             itemResLayout = R.layout.item_company_position,
-            bindItem = { itemView, model ->
-                val positionNameTxt: MaterialTextView = itemView.findViewById(R.id.positionNameTxt)
-                positionNameTxt.text = model.jobTitle
+            bindItem = { binding, model ->
+                binding.setVariable(BR.jobModel, model)
+                binding.executePendingBindings()
             }
         ) { position ->
             val selectedPosition = jobTitleList[position]
