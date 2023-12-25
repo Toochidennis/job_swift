@@ -7,10 +7,10 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/loadingView"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_margin="@dimen/dimen_32"
-        app:cardCornerRadius="70dp"
+        app:cardCornerRadius="50dp"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
