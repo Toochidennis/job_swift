@@ -18,6 +18,8 @@ import com.toochi.job_swift.databinding.FragmentUserHomeBinding
 import com.toochi.job_swift.model.Job
 import com.toochi.job_swift.user.activity.PersonalInformationActivity
 import com.toochi.job_swift.user.adapters.GenericAdapter
+import com.toochi.job_swift.util.Utils.getAccessToken
+import timber.log.Timber
 
 
 private const val ARG_PARAM1 = "param1"
@@ -55,8 +57,12 @@ class UserHomeFragment : Fragment() {
         setUpProfile()
 
         getAllJobs()
-    }
 
+        getAccessToken(requireContext()) { token, errorMessage ->
+            Timber.tag("token").d(token)
+            println("$token, $errorMessage")
+        }
+    }
 
     private fun setUpProfile() {
         with(requireActivity().getSharedPreferences("loginDetail", MODE_PRIVATE)) {
