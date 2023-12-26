@@ -105,6 +105,8 @@ class ApplyJobDialogFragment(private val job: Job) : BottomSheetDialogFragment()
                 cvFile = null
             }
         }
+
+      
     }
 
     private fun onPickedPdf(uri: Uri?, fileName: String?) {
@@ -209,3 +211,23 @@ class ApplyJobDialogFragment(private val job: Job) : BottomSheetDialogFragment()
     }
 
 }
+
+/**
+ *
+ * val myImageView: ImageView = findViewById(R.id.myImageView)
+ *
+ * // Set a click listener for the ImageView
+ * myImageView.setOnClickListener {
+ *     // Get the drawable from the ImageView
+ *     val drawable = myImageView.drawable
+ *
+ *     // Set the inner color when clicked
+ *     drawable?.colorFilter = PorterDuffColorFilter(
+ *         ContextCompat.getColor(this, R.color.your_clicked_color),
+ *         PorterDuff.Mode.SRC_IN
+ *     )
+ *
+ *     // Redraw the ImageView to apply the color filter
+ *     myImageView.invalidate()
+ * }
+ * */
