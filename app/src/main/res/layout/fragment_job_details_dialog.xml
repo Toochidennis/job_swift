@@ -62,7 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/appBar"
-        android:layout_margin="@dimen/dimen_16"
+        android:layout_marginTop="@dimen/dimen_16"
         app:cardCornerRadius="@dimen/dimen_16"
         app:contentPadding="@dimen/dimen_16">
 
@@ -70,98 +70,117 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/companyImageView"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:contentDescription="@string/app_logo"
-                android:src="@drawable/ic_company"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/jobTitleTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10"
-                android:text="@string/app_name"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_18"
+                android:textSize="@dimen/text_24"
                 android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/companyImageView" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/locationTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10"
-                android:text="@string/app_name"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_14"
+            <ImageView
+                android:id="@+id/companyImageView"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="@dimen/dimen_16"
+                android:contentDescription="@string/app_logo"
+                android:src="@drawable/ic_company"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/jobTitleTxt" />
 
-
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/jobTypeTxt"
-                android:layout_width="wrap_content"
+                android:id="@+id/companyNameTxt"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_16"
-                app:layout_constraintBaseline_toBaselineOf="@+id/workplaceTypeTxt"
-                app:layout_constraintEnd_toStartOf="@id/workplaceTypeTxt"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/workplaceTypeTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_16"
-                app:layout_constraintBaseline_toBaselineOf="@+id/salaryTxt"
-                app:layout_constraintEnd_toStartOf="@id/salaryTxt"
-                app:layout_constraintStart_toEndOf="@id/jobTypeTxt" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/salaryTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_16"
-                android:text="@string/app_name"
+                android:layout_marginStart="@dimen/dimen_16"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_16"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/workplaceTypeTxt"
+                app:layout_constraintStart_toEndOf="@id/companyImageView"
+                app:layout_constraintTop_toTopOf="@id/companyImageView" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/locationTxt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_14"
+                app:layout_constraintEnd_toEndOf="@id/companyNameTxt"
+                app:layout_constraintStart_toStartOf="@id/companyNameTxt"
+                app:layout_constraintTop_toBottomOf="@id/companyNameTxt" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/jobTypeTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_16"
+                android:drawableStart="@drawable/ic_jobs"
+                android:drawablePadding="@dimen/dimen_16"
+                android:padding="@dimen/dimen_10"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_16"
                 app:layout_constraintTop_toBottomOf="@id/locationTxt" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/workplaceTypeTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_workplace"
+                android:drawablePadding="@dimen/dimen_16"
+                android:padding="@dimen/dimen_10"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_16"
+                app:layout_constraintTop_toBottomOf="@id/jobTypeTxt" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/salaryTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_salary"
+                android:drawablePadding="@dimen/dimen_16"
+                android:padding="@dimen/dimen_10"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_16"
+                app:layout_constraintTop_toBottomOf="@id/workplaceTypeTxt" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
-        style="@style/CustomTabLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/introCard"
-        android:layout_marginTop="@dimen/dimen_32"
-        android:contentDescription="@string/app_name" />
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tabLayout" />
+        android:layout_below="@id/introCard"
+        android:layout_marginTop="@dimen/dimen_16"
+        app:cardCornerRadius="@dimen/dimen_16">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
+                style="@style/CustomTabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/app_name" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/applyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/applyButton"
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/dimen_16"
         android:backgroundTint="@color/shade_green"

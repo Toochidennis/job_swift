@@ -1,7 +1,7 @@
 package com.toochi.job_swift.model
 
 data class Job(
-    val jobId: String = "",
+    var jobId: String = "",
     val userId: String = "",
     val title: String = "",
     val company: String = "",

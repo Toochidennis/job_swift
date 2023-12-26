@@ -9,12 +9,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.storage.FirebaseStorage
 import com.toochi.job_swift.R
+import com.toochi.job_swift.model.ApplyJob
 import com.toochi.job_swift.model.Company
 import com.toochi.job_swift.model.Education
 import com.toochi.job_swift.model.Experience
 import com.toochi.job_swift.model.Job
 import com.toochi.job_swift.model.User
+import java.util.UUID
 
 object AuthenticationManager {
     private val auth = UserAuth.instance
@@ -24,6 +27,7 @@ object AuthenticationManager {
     private val usersDocument =
         userId?.let { FirestoreDB.instance.collection("users").document(it) }
     private val usersCollection = FirestoreDB.instance.collection("users")
+    private val storageRef = FirebaseStorage.getInstance().reference
 
     fun registerWithEmailAndPassword(user: User, onComplete: (Boolean, String?) -> Unit) {
         auth.createUserWithEmailAndPassword(user.email, user.password)
@@ -168,6 +172,9 @@ object AuthenticationManager {
 
                 for (document in documents) {
                     val job = document.toObject(Job::class.java)
+                    job.apply {
+                        jobId = document.id
+                    }
                     allJobs.add(job)
                 }
 
@@ -177,6 +184,54 @@ object AuthenticationManager {
             .addOnFailureListener {
                 onComplete(null, it.message)
             }
+    }
+
+    fun applyJob(
+        applyJob: ApplyJob,
+        cvUri: Uri?,
+        cvName: String?,
+        onComplete: (Boolean, String?) -> Unit
+    ) {
+        if (cvUri != null) {
+            val cvRef = storageRef.child("pdfs/$cvName")
+
+            cvRef.putFile(cvUri)
+                .addOnSuccessListener {
+                    cvRef.downloadUrl.addOnSuccessListener { uri ->
+                        applyJob.apply {
+                            cvURl = uri.toString()
+                        }
+
+                        usersDocument?.let {
+                            it.collection("jobsAppliedFor")
+                                .add(applyJob)
+                                .addOnSuccessListener {
+                                    onComplete(true, null)
+                                }
+                                .addOnFailureListener { exception ->
+                                    onComplete(false, exception.message)
+                                }
+                        }
+
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    onComplete(false, exception.message)
+                }
+        } else {
+            usersDocument?.let {
+                it.collection("jobsAppliedFor")
+                    .add(applyJob)
+                    .addOnSuccessListener {
+                        onComplete(true, null)
+                    }
+                    .addOnFailureListener { exception ->
+                        onComplete(false, exception.message)
+                    }
+
+            }
+        }
+
     }
 
     fun updateUserExperience(
