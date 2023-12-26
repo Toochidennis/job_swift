@@ -48,10 +48,8 @@ class JobDetailsDialogFragment(private val job: Job) : DialogFragment() {
 
         getCompanyDetails()
 
-        fillFieldsWithData()
-
         binding.applyButton.setOnClickListener {
-            ApplyJobDialogFragment().show(parentFragmentManager, "apply job")
+            ApplyJobDialogFragment(job).show(parentFragmentManager, "apply job")
         }
     }
 
@@ -93,10 +91,12 @@ class JobDetailsDialogFragment(private val job: Job) : DialogFragment() {
         getCompanyByUserId(job.userId) { companies, errorMessage ->
             if (companies != null) {
                 aboutCompany = companies[0].description
+                binding.companyNameTxt.text = companies[0].title
             } else {
                 showToast(errorMessage.toString())
             }
 
+            fillFieldsWithData()
             setUpViewPager()
             loadingDialog.dismiss()
         }
