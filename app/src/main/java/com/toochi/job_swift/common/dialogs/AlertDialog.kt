@@ -5,53 +5,41 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.Window
+import androidx.core.view.isVisible
 import com.toochi.job_swift.databinding.DialogAlertBinding
 
-class AlertDialog(context: Context) {
+class AlertDialog private constructor(builder: Builder) {
 
-    private val dialog = Dialog(context)
-
-    private var _binding: DialogAlertBinding? = null
-    private var _message: String? = null
-    private var _negativeMessage: String? = null
-    private var _positiveMessage: String? = null
-
-    private val binding get() = _binding!!
-
-    private val message get() = _message!!
-
-    private val negativeMessage get() = _negativeMessage!!
-
-    private val positiveMessage get() = _positiveMessage!!
+    private val dialog = Dialog(builder.context)
+    private val binding: DialogAlertBinding = DialogAlertBinding.inflate(dialog.layoutInflater)
 
     init {
         dialog.apply {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             setCancelable(false)
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            _binding = DialogAlertBinding.inflate(layoutInflater)
+
             setContentView(binding.root)
 
-            binding.messageTextView.text = message
-            binding.negativeButton.text = negativeMessage
-            binding.positiveButton.text = positiveMessage
+            binding.titleTextView.text = builder.title
+            binding.bodyTextView.text = builder.body
+            binding.negativeButton.text = builder.negativeMessage
+            binding.positiveButton.text = builder.positiveMessage
 
-            setOnDismissListener {
-                _binding = null
+            binding.positiveButton.isVisible = builder.isPositiveVisible
+            binding.negativeButton.isVisible = builder.isNegativeVisible
+
+
+            binding.positiveButton.setOnClickListener {
+                builder.positiveClickListener?.invoke()
+                dismiss()
+            }
+
+            binding.negativeButton.setOnClickListener {
+                builder.negativeClickListener?.invoke()
+                dismiss()
             }
         }
-    }
-
-    fun message(message: String) {
-        _message = message
-    }
-
-    fun negativeMessage(message: String) {
-        _negativeMessage = message
-    }
-
-    fun positiveMessage(message: String) {
-        _positiveMessage = message
     }
 
     fun show() {
@@ -60,6 +48,21 @@ class AlertDialog(context: Context) {
 
     fun dismiss() {
         dialog.dismiss()
+    }
+
+    class Builder(val context: Context) {
+        var title: String = ""
+        var body: String = ""
+        var negativeMessage: String = ""
+        var positiveMessage: String = ""
+        var isPositiveVisible: Boolean = false
+        var isNegativeVisible: Boolean = false
+        var positiveClickListener: (() -> Unit)? = null
+        var negativeClickListener: (() -> Unit)? = null
+
+        fun build(): AlertDialog {
+            return AlertDialog(this)
+        }
     }
 
 }
