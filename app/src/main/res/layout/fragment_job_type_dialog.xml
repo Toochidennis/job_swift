@@ -14,7 +14,7 @@
         android:layout_marginStart="@dimen/dimen_16"
         android:layout_marginTop="@dimen/dimen_16"
         android:layout_marginEnd="@dimen/dimen_16"
-        android:text="Choose the job type"
+        android:text="@string/choose_the_job_type"
         android:textColor="@color/black"
         android:textSize="@dimen/text_18"
         android:textStyle="bold" />
@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/dimen_16"
-        android:text="Part-time"
+        android:text="@string/part_time"
         android:textColor="@color/black"
         android:textSize="@dimen/text_16" />
 
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
         android:padding="@dimen/dimen_16"
-        android:text="Contract"
+        android:text="@string/contract"
         android:textColor="@color/black"
         android:textSize="@dimen/text_16" />
 
@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
         android:padding="@dimen/dimen_16"
-        android:text="Temporary-time"
+        android:text="@string/full_time"
         android:textColor="@color/black" />
 
     <include layout="@layout/material_divider" />
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
         android:padding="@dimen/dimen_16"
-        android:text="Internship"
+        android:text="@string/internship"
         android:textColor="@color/black"
         android:textSize="@dimen/text_16" />
 
@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
         android:padding="@dimen/dimen_16"
-        android:text="Temporary"
+        android:text="@string/temporary"
         android:textColor="@color/black"
         android:textSize="@dimen/text_16" />
 
@@ -84,7 +84,7 @@
         android:layout_marginBottom="@dimen/dimen_16"
         android:foreground="?android:attr/selectableItemBackground"
         android:padding="@dimen/dimen_16"
-        android:text="Volunteer"
+        android:text="@string/volunteer"
         android:textColor="@color/black"
         android:textSize="@dimen/text_16" />
 
