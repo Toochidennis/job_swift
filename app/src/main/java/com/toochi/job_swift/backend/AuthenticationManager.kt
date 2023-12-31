@@ -1,47 +1,45 @@
 package com.toochi.job_swift.backend
 
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.net.Uri
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.storage.FirebaseStorage
 import com.toochi.job_swift.R
 import com.toochi.job_swift.model.ApplyJob
 import com.toochi.job_swift.model.Company
 import com.toochi.job_swift.model.Education
 import com.toochi.job_swift.model.Experience
-import com.toochi.job_swift.model.Job
+import com.toochi.job_swift.model.Notification
+import com.toochi.job_swift.model.PostJob
 import com.toochi.job_swift.model.User
-import java.util.UUID
 
 object AuthenticationManager {
-    private val auth = UserAuth.instance
+    val auth = UserAuth.instance
 
     private val currentUser = auth.currentUser
-    private val userId = currentUser?.uid
+    private var userId = currentUser?.uid
     private val usersDocument =
         userId?.let { FirestoreDB.instance.collection("users").document(it) }
     private val usersCollection = FirestoreDB.instance.collection("users")
     private val storageRef = FirebaseStorage.getInstance().reference
+    private var completedCount = 0
 
     fun registerWithEmailAndPassword(user: User, onComplete: (Boolean, String?) -> Unit) {
         auth.createUserWithEmailAndPassword(user.email, user.password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    updateUserProfile(user, onComplete)
-                } else {
-                    onComplete(false, task.exception?.message)
-                }
+            .addOnSuccessListener {
+                createPersonalDetails(user, onComplete)
+            }
+            .addOnFailureListener { error ->
+                onComplete.invoke(false, error.message)
             }
     }
 
-    fun registerWithGoogle(
-        context: Context,
+
+    fun registerWithGoogleAndLogin(
         account: GoogleSignInAccount,
         onComplete: (Boolean, String?) -> Unit
     ) {
@@ -50,23 +48,32 @@ object AuthenticationManager {
         auth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val currentUser = auth.currentUser
-                    currentUser?.let {
-                        context.getSharedPreferences("loginDetail", MODE_PRIVATE).edit().apply {
-                            putString("user_id", currentUser.uid)
-                            putString("email", account.email ?: "")
-                            putString("lastname", account.familyName ?: "")
-                            putString("firstname", account.givenName ?: "")
-                            putString("user_type", "employee")
-                            putString("photo_url", account.photoUrl?.toString())
-                        }.apply()
-
-                        onComplete(true, null)
-                    } ?: run {
-                        onComplete(false, task.exception?.message)
+                    ifUserExist { success, error ->
+                        if (success != null) {
+                            updateUserDetails(
+                                profileId = success,
+                                hashMapOf(
+                                    "firstname" to account.givenName.toString(),
+                                    "lastname" to account.familyName.toString(),
+                                    "profilePhotoUrl" to account.photoUrl.toString()
+                                ),
+                                onComplete
+                            )
+                        } else if (error == null) {
+                            createPersonalDetails(
+                                User(
+                                    email = account.email ?: "",
+                                    firstname = account.givenName ?: "",
+                                    lastname = account.familyName ?: "",
+                                    profilePhotoUrl = account.photoUrl.toString(),
+                                    userType = "employee"
+                                ),
+                                onComplete
+                            )
+                        }
                     }
                 } else {
-                    onComplete(false, task.exception?.message)
+                    onComplete.invoke(false, task.exception?.message)
                 }
             }
     }
@@ -79,9 +86,9 @@ object AuthenticationManager {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    onComplete(true, null)
+                    onComplete.invoke(true, null)
                 } else {
-                    onComplete(false, task.exception?.message)
+                    onComplete.invoke(false, task.exception?.message)
                 }
             }
     }
@@ -95,96 +102,257 @@ object AuthenticationManager {
         return GoogleSignIn.getClient(context, gso)
     }
 
-    private fun updateUserProfile(
-        userData: User,
-        onComplete: (Boolean, String?) -> Unit
-    ) {
-        val profileUpdates = UserProfileChangeRequest.Builder()
-            .setDisplayName("${userData.firstname} ${userData.middleName} ${userData.lastname}")
-            .setPhotoUri(Uri.parse(userData.profilePhotoUrl))
-            .build()
-
-        currentUser?.let {
-            it.updateProfile(profileUpdates)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        createPersonalDetails(userData)
-                        onComplete(true, null)
-                    } else {
-                        onComplete(false, task.exception?.message)
-                    }
+    private fun createPersonalDetails(user: User, onComplete: (Boolean, String?) -> Unit) {
+        usersDocument?.let {
+            it.collection("personalDetails")
+                .add(user).addOnSuccessListener {
+                    onComplete.invoke(true, null)
+                }
+                .addOnFailureListener { error ->
+                    onComplete.invoke(false, error.message)
                 }
         }
     }
 
-    private fun createPersonalDetails(user: User) {
-        usersDocument?.collection("personalDetails")?.add(user)
+
+    private fun ifUserExist(isExist: (String?, String?) -> Unit) {
+        usersDocument?.let {
+            it.collection("personalDetails")
+                .get()
+                .addOnSuccessListener { querySnapShot ->
+                    if (!querySnapShot.isEmpty) {
+                        val document = querySnapShot.documents[0]
+                        isExist.invoke(document.id, null)
+                    } else {
+                        isExist.invoke(null, null)
+                    }
+                }
+                .addOnFailureListener { error ->
+                    isExist.invoke(null, error.message)
+                }
+        }
     }
+
+
+    fun getUserPersonalDetails(onComplete: (User?, String?) -> Unit) {
+        usersDocument?.let {
+            it.collection("personalDetails")
+                .get()
+                .addOnSuccessListener { querySnapShot ->
+                    if (!querySnapShot.isEmpty) {
+                        var user: User? = null
+
+                        querySnapShot.documents.map { document ->
+                            user = document.toObject(User::class.java)
+                            user?.profileId = document.id
+                        }
+                        onComplete.invoke(user, null)
+
+                    } else {
+                        onComplete.invoke(null, null)
+                    }
+                }
+                .addOnFailureListener { error ->
+                    onComplete.invoke(null, error.message)
+                }
+        }
+    }
+
+    fun updateUserDetails(
+        profileId: String,
+        hashMap: HashMap<String, Any>,
+        onComplete: (Boolean, String?) -> Unit
+    ) {
+        try {
+            usersDocument?.let {
+                it.collection("personalDetails")
+                    .document(profileId)
+                    .update(hashMap)
+                    .addOnSuccessListener {
+                        onComplete.invoke(true, null)
+                    }.addOnFailureListener { error ->
+                        onComplete.invoke(false, error.toString())
+                    }
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 
     fun createCompany(company: Company, onComplete: (Boolean, String?) -> Unit) {
         usersDocument?.let {
             it.collection("companyDetails")
                 .add(company)
                 .addOnSuccessListener {
-                    onComplete(true, null)
+                    onComplete.invoke(true, null)
                 }
                 .addOnFailureListener { error ->
-                    onComplete(false, error.message)
+                    onComplete.invoke(false, error.message)
                 }
         }
     }
 
-    fun getCompanyByUserId(userId: String, onComplete: (MutableList<Company>?, String?) -> Unit) {
-        usersCollection.document(userId)
-            .collection("companyDetails")
-            .get()
-            .addOnSuccessListener { document ->
-                println(document)
-                val company = document.toObjects(Company::class.java)
-
-                onComplete(company, null)
-            }
-            .addOnFailureListener {
-                onComplete(null, it.message)
-            }
-
+    fun updateCompany(
+        companyId: String,
+        data: HashMap<String, Any>,
+        onComplete: (Boolean, String?) -> Unit
+    ) {
+        usersDocument?.let {
+            it.collection("companyDetails")
+                .document(companyId)
+                .update(data)
+                .addOnSuccessListener {
+                    onComplete.invoke(true, null)
+                }
+                .addOnFailureListener { error ->
+                    onComplete.invoke(false, error.message)
+                }
+        }
     }
 
-    fun postJob(job: Job, onComplete: (Boolean, String?) -> Unit) {
+    fun getCompany(
+        userId: String = "",
+        onComplete: (Company?, String?) -> Unit
+    ) {
+        val companyDocument = if (userId.isEmpty()) {
+            usersDocument
+        } else {
+            usersCollection.document(userId)
+        }
+
+        companyDocument?.let {
+            it.collection("companyDetails")
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (!querySnapshot.isEmpty) {
+                        var company: Company? = null
+
+                        querySnapshot.documents.map { document ->
+                            company = document.toObject(Company::class.java)
+                            company?.companyId = document.id
+                        }
+
+                        onComplete.invoke(company, null)
+                    } else {
+                        onComplete.invoke(null, null)
+                    }
+                }
+                .addOnFailureListener { error ->
+                    onComplete.invoke(null, error.message)
+                }
+        }
+    }
+
+    fun postJob(postJob: PostJob, onComplete: (Boolean, String?) -> Unit) {
         usersDocument?.let {
             it.collection("postedJobs")
-                .add(job)
+                .add(postJob)
                 .addOnSuccessListener {
-                    onComplete(true, null)
+                    onComplete.invoke(true, null)
                 }
                 .addOnFailureListener { error ->
-                    onComplete(false, error.message)
+                    onComplete.invoke(false, error.message)
                 }
         }
     }
 
-    fun getPostedJobs(onComplete: (MutableList<Job>?, String?) -> Unit) {
+    fun getAllPostedJobs(onComplete: (MutableList<PostJob>?, String?) -> Unit) {
         val jobsPostedCollection = FirestoreDB.instance.collectionGroup("postedJobs")
 
         jobsPostedCollection.get()
             .addOnSuccessListener { documents ->
-                val allJobs = mutableListOf<Job>()
+                val allPostJobs = mutableListOf<PostJob>()
 
                 for (document in documents) {
-                    val job = document.toObject(Job::class.java)
-                    job.apply {
+                    val postJob = document.toObject(PostJob::class.java)
+                    postJob.apply {
                         jobId = document.id
                     }
-                    allJobs.add(job)
+                    allPostJobs.add(postJob)
                 }
 
-                onComplete(allJobs, null)
+                onComplete.invoke(allPostJobs, null)
             }
 
             .addOnFailureListener {
-                onComplete(null, it.message)
+                onComplete.invoke(null, it.message)
             }
     }
+
+    fun getPostedJobsByUserId(onComplete: (MutableList<PostJob>?, String?) -> Unit) {
+        usersDocument?.let {
+            it.collection("postedJobs")
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (querySnapshot.isEmpty) {
+                        onComplete.invoke(null, "empty")
+                    } else {
+                        val allPostJobs = mutableListOf<PostJob>()
+
+                        querySnapshot.documents.map { document ->
+                            val postJob = document.toObject(PostJob::class.java)
+
+                            if (postJob != null) {
+                                postJob.jobId = document.id
+                                allPostJobs.add(postJob)
+                            }
+                        }
+
+                        onComplete.invoke(allPostJobs, null)
+                    }
+                }
+                .addOnFailureListener { error ->
+                    onComplete.invoke(null, error.message)
+                }
+        }
+    }
+
+    fun updateProfileImage(
+        profileId: String,
+        imageUri: Uri,
+        imageName: String,
+        onComplete: (Boolean, String?) -> Unit
+    ) {
+        val imageRef = storageRef.child("images/$imageName")
+
+        imageRef.putFile(imageUri)
+            .addOnSuccessListener {
+                imageRef.downloadUrl.addOnSuccessListener { uri ->
+                    updateUserDetails(
+                        profileId = profileId,
+                        hashMapOf("profilePhotoUrl" to uri.toString())
+                    ) { success, error ->
+                        if (success) {
+                            onComplete.invoke(true, null)
+                        } else {
+                            onComplete.invoke(false, error)
+                        }
+                    }
+                }
+                    .addOnFailureListener { error ->
+                        onComplete.invoke(false, error.message)
+                    }
+            }
+            .addOnFailureListener { error ->
+                onComplete.invoke(false, error.message)
+            }
+    }
+
+    fun getUserToken(userId: String, onComplete: (String?, String?) -> Unit) {
+        usersCollection.document(userId).collection("personalDetails").get()
+            .addOnSuccessListener {
+                if (!it.isEmpty) {
+                    val token = it.documents[0].getString("token")
+                    onComplete.invoke(token, null)
+                }
+            }
+            .addOnFailureListener { error ->
+                onComplete.invoke(null, error.message)
+            }
+    }
+
 
     fun applyJob(
         applyJob: ApplyJob,
@@ -206,71 +374,233 @@ object AuthenticationManager {
                             it.collection("jobsAppliedFor")
                                 .add(applyJob)
                                 .addOnSuccessListener {
-                                    onComplete(true, null)
+                                    onComplete.invoke(true, null)
                                 }
                                 .addOnFailureListener { exception ->
-                                    onComplete(false, exception.message)
+                                    onComplete.invoke(false, exception.message)
                                 }
                         }
 
                     }
                 }
                 .addOnFailureListener { exception ->
-                    onComplete(false, exception.message)
+                    onComplete.invoke(false, exception.message)
                 }
         } else {
             usersDocument?.let {
                 it.collection("jobsAppliedFor")
                     .add(applyJob)
                     .addOnSuccessListener {
-                        onComplete(true, null)
+                        onComplete.invoke(true, null)
                     }
                     .addOnFailureListener { exception ->
-                        onComplete(false, exception.message)
+                        onComplete.invoke(false, exception.message)
                     }
-
             }
         }
 
     }
 
+    fun getJobsAppliedFor(onComplete: (MutableList<PostJob>?, MutableList<ApplyJob>?, String?) -> Unit) {
+        usersDocument?.let {
+            it.collection("jobsAppliedFor")
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (!querySnapshot.isEmpty) {
+                        val allPostJobs = mutableListOf<PostJob>()
+                        val allAppliedJobs = querySnapshot.toObjects(ApplyJob::class.java)
+
+                        querySnapshot.documents.map { document ->
+                            val jobId = document.getString("jobId")
+                            val userId = document.getString("ownerId")
+
+                            if (jobId != null && userId != null) {
+                                usersCollection.document(userId)
+                                    .collection("postedJobs")
+                                    .document(jobId)
+                                    .get()
+                                    .addOnSuccessListener { documentSnapshot ->
+                                        val postJob = documentSnapshot.toObject(PostJob::class.java)
+
+                                        if (postJob != null) {
+                                            postJob.jobId = document.id
+                                            allPostJobs.add(postJob)
+                                        }
+
+                                        completedCount++
+                                        // Check if all operations are complete before calling onComplete
+                                        if (completedCount == querySnapshot.size()) {
+                                            onComplete.invoke(allPostJobs, allAppliedJobs, null)
+                                        }
+                                    }
+                                    .addOnFailureListener { error ->
+                                        onComplete.invoke(null, null, error.message)
+                                    }
+                            }
+                        }
+                    } else {
+                        onComplete.invoke(null, null, "empty")
+                    }
+                }
+                .addOnFailureListener { error ->
+                    onComplete.invoke(null, null, error.message)
+                }
+        }
+    }
+
+    fun createUserExperience(experience: Experience, onComplete: (Boolean, String?) -> Unit) {
+        usersDocument?.let {
+            it.collection("experienceDetails")
+                .add(experience)
+                .addOnSuccessListener {
+                    onComplete.invoke(true, null)
+                }
+                .addOnFailureListener { error ->
+                    onComplete.invoke(false, error.message)
+                }
+        }
+    }
+
     fun updateUserExperience(
-        userId: String,
-        experience: Experience,
+        experienceId: String,
+        data: HashMap<String, Any>,
         onComplete: (Boolean, String?) -> Unit
     ) {
-        // Implement the logic to update user experience in Firestore
-        // Use FirestoreDB.instance.collection("users").document(userId).collection("experience").document(experienceId).set(experience)
-        TODO("Still coming up")
+        usersDocument?.collection("experienceDetails")
+            ?.document(experienceId)?.update(data)
+            ?.addOnSuccessListener {
+                onComplete.invoke(true, null)
+            }?.addOnFailureListener { error ->
+                onComplete.invoke(false, error.message)
+            }
+    }
+
+    fun getUserExperienceDetails(
+        userId: String = "",
+        onComplete: (MutableList<Experience>?, String?) -> Unit
+    ) {
+        val experienceDocument = if (userId.isEmpty()) {
+            usersDocument
+        } else {
+            usersCollection.document(userId)
+        }
+
+        experienceDocument?.let {
+            it.collection("experienceDetails")
+                .get()
+                .addOnSuccessListener { querySnapShot ->
+                    if (!querySnapShot.isEmpty) {
+                        val experienceList = mutableListOf<Experience>()
+
+                        querySnapShot.documents.map { document ->
+                            val experience = document.toObject(Experience::class.java)
+
+                            if (experience != null) {
+                                experience.experienceId = document.id
+
+                                experienceList.add(experience)
+                            }
+                        }
+
+                        onComplete.invoke(experienceList, null)
+                    } else {
+                        onComplete.invoke(null, null)
+                    }
+                }
+
+                .addOnFailureListener { error ->
+                    onComplete.invoke(null, error.message)
+                }
+        }
+    }
+
+
+    fun createUserEducation(education: Education, onComplete: (Boolean, String?) -> Unit) {
+        usersDocument?.let {
+            it.collection("educationDetails")
+                .add(education)
+                .addOnSuccessListener {
+                    onComplete.invoke(true, null)
+                }
+                .addOnFailureListener { error ->
+                    onComplete.invoke(false, error.message)
+                }
+        }
     }
 
     fun updateUserEducation(
-        userId: String,
-        education: Education,
+        educationId: String,
+        data: HashMap<String, Any>,
         onComplete: (Boolean, String?) -> Unit
     ) {
-        // Implement the logic to update user education in Firestore
-        // Use FirestoreDB.instance.collection("users").document(userId).collection("education").document(educationId).set(education)
-        TODO("Still coming up")
+        usersDocument?.collection("educationDetails")
+            ?.document(educationId)
+            ?.update(data)
+            ?.addOnSuccessListener {
+                onComplete.invoke(true, null)
+            }
+            ?.addOnFailureListener { error ->
+                onComplete.invoke(false, error.message)
+            }
+    }
+
+    fun getUserEducationDetails(
+        userId: String = "",
+        onComplete: (MutableList<Education>?, String?) -> Unit
+    ) {
+        val educationDocument = if (userId.isEmpty()) {
+            usersDocument
+        } else {
+            usersCollection.document(userId)
+        }
+
+        educationDocument?.let {
+            it.collection("educationDetails")
+                .get()
+                .addOnSuccessListener { querySnapShot ->
+                    if (!querySnapShot.isEmpty) {
+                        val educationList = mutableListOf<Education>()
+
+                        querySnapShot.documents.map { document ->
+                            val education = document.toObject(Education::class.java)
+
+                            if (education != null) {
+                                education.educationId = document.id
+
+                                educationList.add(education)
+                            }
+                        }
+
+                        onComplete.invoke(educationList, null)
+                    } else {
+                        onComplete.invoke(null, null)
+                    }
+                }
+
+                .addOnFailureListener { error ->
+                    onComplete.invoke(null, error.message)
+                }
+        }
     }
 
 
-    fun blockJob(
+    fun createNotification(
         userId: String,
-        jobId: String,
-        reason: String,
+        notification: Notification,
         onComplete: (Boolean, String?) -> Unit
     ) {
-        // Implement the logic to block a job in Firestore
-        // Use FirestoreDB.instance.collection("users").document(userId).collection("jobsBlocked").document(jobId).set(mapOf("reason" to reason))
-        TODO("Still coming up")
+        usersCollection.document(userId)
+            .collection("notification")
+            .add(notification)
+            .addOnSuccessListener {
+                onComplete(true, null)
+            }
+            .addOnFailureListener { error ->
+                onComplete(false, error.message)
+            }
     }
 
     fun likeJob(userId: String, jobId: String, onComplete: (Boolean, String?) -> Unit) {
-        // Implement the logic to like a job in Firestore
-        // Use FirestoreDB.instance.collection("users").document(userId).collection("jobsLiked").document(jobId).set(mapOf())
         TODO("Still coming up")
     }
-
-
 }
