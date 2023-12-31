@@ -1,6 +1,6 @@
 package com.toochi.job_swift.common.fragments
 
-import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.Html
@@ -12,28 +12,26 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
 import com.toochi.job_swift.backend.AuthenticationManager.postJob
+import com.toochi.job_swift.common.dialogs.AlertDialog
 import com.toochi.job_swift.common.dialogs.DatePickerDialog
 import com.toochi.job_swift.common.dialogs.LoadingDialog
 import com.toochi.job_swift.common.dialogs.PaymentRateDialogFragment
 import com.toochi.job_swift.databinding.FragmentJobDescriptionDialogBinding
-import com.toochi.job_swift.model.Job
+import com.toochi.job_swift.model.PostJob
 import com.toochi.job_swift.user.fragment.DescriptionDialogFragment
 import com.toochi.job_swift.util.Utils.currencyFormatter
 import com.toochi.job_swift.util.Utils.dateFormatter
 
 
-class JobDescriptionDialogFragment(private val job: Job) : DialogFragment() {
+class JobDescriptionDialogFragment(private val postJob: PostJob) : DialogFragment() {
 
     private var _binding: FragmentJobDescriptionDialogBinding? = null
 
     private val binding get() = _binding!!
 
-    private var descriptionText: String? = null
-    private var salaryRateText: String? = null
+    private var descriptionText: String = ""
     private var deadlineText: String? = null
     private var salaryText: String? = null
-    private var email: String? = null
-    private var isProvideCv = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,24 +51,17 @@ class JobDescriptionDialogFragment(private val job: Job) : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(requireActivity().getSharedPreferences("loginDetail", Context.MODE_PRIVATE)) {
-            email = getString("email", "")
-        }
-
         handleViewClicks()
 
-        processFormData()
     }
-
 
     private fun handleViewClicks() {
         salaryTextWatcher()
 
         binding.descriptionButton.setOnClickListener {
             DescriptionDialogFragment({
-                descriptionText = it
-                binding.descriptionTxt.text = Html.fromHtml(it, Html.FROM_HTML_MODE_COMPACT)
-            }, descriptionText.toString()).show(parentFragmentManager, "")
+                setDescriptionText(it)
+            }, descriptionText).show(parentFragmentManager, "")
         }
 
 
@@ -83,27 +74,30 @@ class JobDescriptionDialogFragment(private val job: Job) : DialogFragment() {
 
         binding.rateEditText.setOnClickListener {
             PaymentRateDialogFragment {
-                salaryRateText = it
                 binding.rateEditText.setText(it)
             }.show(parentFragmentManager, "rate")
         }
 
+        binding.postJobButton.setOnClickListener {
+            processForm()
+        }
+
     }
 
-    private fun isValidForm(): Boolean {
+    private fun isValidForm(job: PostJob): Boolean {
         return when {
-            descriptionText.isNullOrEmpty() -> {
-                showToast("Please provide job description")
+            job.description.isEmpty() -> {
+                showToast(getString(R.string.please_provide_description))
                 false
             }
 
-            salaryText.isNullOrEmpty() -> {
-                showToast("Please provide pay")
+            job.salary.isEmpty() -> {
+                showToast(getString(R.string.please_provide_pay))
                 false
             }
 
-            salaryRateText.isNullOrEmpty() -> {
-                showToast("Please provide pay rate")
+            job.salaryRate.isEmpty() -> {
+                showToast(getString(R.string.please_provide_pay_rate))
                 false
             }
 
@@ -111,32 +105,21 @@ class JobDescriptionDialogFragment(private val job: Job) : DialogFragment() {
         }
     }
 
-    private fun processFormData() {
-        binding.postJobButton.setOnClickListener {
-            isProvideCv = binding.cvCheckBox.isChecked
-            val loadingDialog = LoadingDialog(requireContext())
+    private fun processForm() {
+        val loadingDialog = LoadingDialog(requireContext())
+        val job = getDataFromForm()
 
-            if (isValidForm()) {
-                job.apply {
-                    description = descriptionText ?: ""
-                    jobEmail = email ?: ""
-                    isProvideCV = isProvideCv
-                    deadline = deadlineText ?: ""
-                    salary = salaryText ?: ""
-                    salaryRate = salaryRateText ?: ""
+        if (isValidForm(job)) {
+            loadingDialog.show()
+
+            postJob(job) { success, errorMessage ->
+                if (success) {
+                    showCongratsMessage()
+                } else {
+                    showToast(errorMessage.toString())
                 }
-                loadingDialog.show()
 
-                postJob(job) { success, errorMessage ->
-                    if (success) {
-                        showToast("success")
-                        dismiss()
-                    } else {
-                        showToast(errorMessage.toString())
-                    }
-
-                    loadingDialog.dismiss()
-                }
+                loadingDialog.dismiss()
             }
         }
     }
@@ -179,6 +162,41 @@ class JobDescriptionDialogFragment(private val job: Job) : DialogFragment() {
                 }
             })
         }
+    }
+
+    private fun getDataFromForm(): PostJob {
+        return postJob.apply {
+            description = descriptionText
+            isProvideCV = binding.cvCheckBox.isChecked
+            deadline = deadlineText ?: ""
+            salary = salaryText ?: ""
+            salaryRate = binding.salaryEditText.text.toString()
+        }
+    }
+
+    private fun showCongratsMessage() {
+        AlertDialog.Builder(requireContext()).run {
+            title = getString(R.string.congratulations_on_posting_your_job)
+            body = getString(R.string.job_is_live)
+            isNegativeVisible = false
+            isPositiveVisible = true
+            positiveMessage = getString(R.string.awesome)
+            positiveClickListener = {
+                dismiss()
+            }
+            build()
+        }.show()
+    }
+
+    private fun setDescriptionText(text: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            binding.descriptionTxt.text = Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT)
+        } else {
+            @Suppress("DEPRECATION")
+            binding.descriptionTxt.text = Html.fromHtml(text)
+        }
+
+        descriptionText = text
     }
 
     private fun showToast(message: String) {
