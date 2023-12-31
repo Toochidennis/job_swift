@@ -1,194 +1,273 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_silver"
     tools:context=".common.fragments.JobDetailsDialogFragment">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="@color/pale_silver"
-        app:elevation="0dp">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp">
-
-            <ImageView
-                android:id="@+id/navigateUp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/button_bg"
-                android:contentDescription="@string/navigate"
-                android:padding="@dimen/dimen_10"
-                android:src="@drawable/ic_x" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@id/saveJob"
-                android:layout_toEndOf="@id/navigateUp"
-                android:text="@string/job_details"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_18" />
-
-            <ImageView
-                android:id="@+id/saveJob"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:contentDescription="@string/bookmark"
-                android:padding="@dimen/dimen_10"
-                android:src="@drawable/ic_bookmark" />
-
-        </RelativeLayout>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/introCard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/appBar"
-        android:layout_marginTop="@dimen/dimen_16"
-        app:cardCornerRadius="@dimen/dimen_16"
-        app:contentPadding="@dimen/dimen_16">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/jobTitleTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_24"
-                android:textStyle="bold"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/companyImageView"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="@dimen/dimen_16"
-                android:contentDescription="@string/app_logo"
-                android:src="@drawable/ic_company"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/jobTitleTxt" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/companyNameTxt"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_16"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_16"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/companyImageView"
-                app:layout_constraintTop_toTopOf="@id/companyImageView" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/locationTxt"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_14"
-                app:layout_constraintEnd_toEndOf="@id/companyNameTxt"
-                app:layout_constraintStart_toStartOf="@id/companyNameTxt"
-                app:layout_constraintTop_toBottomOf="@id/companyNameTxt" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/jobTypeTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_16"
-                android:drawableStart="@drawable/ic_jobs"
-                android:drawablePadding="@dimen/dimen_16"
-                android:padding="@dimen/dimen_10"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_16"
-                app:layout_constraintTop_toBottomOf="@id/locationTxt" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/workplaceTypeTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_workplace"
-                android:drawablePadding="@dimen/dimen_16"
-                android:padding="@dimen/dimen_10"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_16"
-                app:layout_constraintTop_toBottomOf="@id/jobTypeTxt" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/salaryTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_salary"
-                android:drawablePadding="@dimen/dimen_16"
-                android:padding="@dimen/dimen_10"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_16"
-                app:layout_constraintTop_toBottomOf="@id/workplaceTypeTxt" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.card.MaterialCardView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/introCard"
-        android:layout_marginTop="@dimen/dimen_16"
-        app:cardCornerRadius="@dimen/dimen_16">
+        android:background="@color/light_silver">
 
-        <LinearLayout
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/pale_silver"
+            app:elevation="0dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
+
+                <ImageView
+                    android:id="@+id/navigateUp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/button_bg"
+                    android:contentDescription="@string/navigate"
+                    android:padding="@dimen/dimen_10"
+                    android:src="@drawable/ic_x" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/saveJob"
+                    android:layout_toEndOf="@id/navigateUp"
+                    android:text="@string/job_details"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_18" />
+
+                <ImageView
+                    android:id="@+id/saveJob"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/bookmark"
+                    android:padding="@dimen/dimen_10"
+                    android:src="@drawable/ic_bookmark" />
+
+            </RelativeLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_below="@id/appBar"
+            android:layout_marginBottom="70dp"
+            android:contentDescription="@string/nested_scroll_view"
+            android:fillViewport="true">
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabLayout"
-                style="@style/CustomTabLayout"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/app_name" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewPager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/introCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/appBar"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    app:cardElevation="0dp"
+                    app:contentPadding="@dimen/dimen_16">
 
-        </LinearLayout>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-    </com.google.android.material.card.MaterialCardView>
+                        <LinearLayout
+                            android:id="@+id/companyImageView"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:background="@drawable/profile_bg"
+                            android:backgroundTint="@color/shade_green"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/applyButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/dimen_16"
-        android:backgroundTint="@color/shade_green"
-        android:contentDescription="@string/apply_now"
-        android:text="@string/apply_now"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_16" />
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:contentDescription="@string/app_logo"
+                                android:src="@drawable/ic_jobs"
+                                app:tint="@color/white" />
 
-</RelativeLayout>
+                        </LinearLayout>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/jobTitleTxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dimen_10"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_24"
+                            android:textStyle="bold"
+                            app:layout_constraintTop_toBottomOf="@id/companyImageView" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/companyNameTxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimen_16"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_16"
+                            app:layout_constraintTop_toBottomOf="@id/jobTitleTxt" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/locationTxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dimen_16"
+                            android:drawableStart="@drawable/ic_location"
+                            android:drawablePadding="@dimen/dimen_16"
+                            android:padding="@dimen/dimen_10"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_16"
+                            app:layout_constraintTop_toBottomOf="@id/companyNameTxt" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/jobTypeTxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_jobs"
+                            android:drawablePadding="@dimen/dimen_16"
+                            android:padding="@dimen/dimen_10"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_16"
+                            app:layout_constraintTop_toBottomOf="@id/locationTxt" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/workplaceTypeTxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_workplace"
+                            android:drawablePadding="@dimen/dimen_16"
+                            android:padding="@dimen/dimen_10"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_16"
+                            app:layout_constraintTop_toBottomOf="@id/jobTypeTxt" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/salaryTxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_salary"
+                            android:drawablePadding="@dimen/dimen_16"
+                            android:padding="@dimen/dimen_10"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_16"
+                            app:layout_constraintTop_toBottomOf="@id/workplaceTypeTxt" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/timeTxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dimen_10"
+                            android:padding="@dimen/dimen_10"
+                            android:textSize="@dimen/text_14"
+                            app:layout_constraintTop_toBottomOf="@id/salaryTxt" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/mailTxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_gmail"
+                            android:drawablePadding="@dimen/dimen_16"
+                            android:foreground="?android:attr/selectableItemBackground"
+                            android:padding="@dimen/dimen_10"
+                            android:text="Send mail"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_16"
+                            app:layout_constraintTop_toBottomOf="@id/timeTxt" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/introCard"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    app:cardCornerRadius="@dimen/dimen_16"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/dimen_16"
+                            android:text="About company"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_18"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/aboutCompanyTxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/dimen_16"
+                            android:textColor="@color/black" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/dimen_16"
+                            android:text="Requirements"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_18"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/requirementsTxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/dimen_16"
+                            android:textColor="@color/black" />
+
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/applyButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/dimen_16"
+            android:backgroundTint="@color/shade_green"
+            android:contentDescription="@string/apply_now"
+            android:text="@string/apply_now"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_16" />
+
+    </RelativeLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
