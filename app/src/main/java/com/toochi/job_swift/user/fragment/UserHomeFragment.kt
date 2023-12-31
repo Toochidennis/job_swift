@@ -13,7 +13,7 @@ import com.toochi.job_swift.BR
 import com.toochi.job_swift.R
 import com.toochi.job_swift.backend.AuthenticationManager.getAllPostedJobs
 import com.toochi.job_swift.common.dialogs.LoadingDialog
-import com.toochi.job_swift.common.fragments.JobDetailsDialogFragment
+import com.toochi.job_swift.common.fragments.PostedJobDetailsDialogFragment
 import com.toochi.job_swift.databinding.FragmentUserHomeBinding
 import com.toochi.job_swift.model.PostJob
 import com.toochi.job_swift.user.activity.PersonalInformationActivity
@@ -111,7 +111,7 @@ class UserHomeFragment : Fragment() {
                 binding.executePendingBindings()
             }
         ) { position ->
-            JobDetailsDialogFragment(jobList[position]).show(parentFragmentManager, "job details")
+            PostedJobDetailsDialogFragment(jobList[position]).show(parentFragmentManager, "job details")
         }
 
         binding.jobRecyclerView.apply {
