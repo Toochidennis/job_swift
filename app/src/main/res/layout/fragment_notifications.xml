@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_silver"
     android:orientation="vertical"
     tools:context=".common.fragments.NotificationsFragment">
 
@@ -26,10 +25,27 @@
         android:contentDescription="@string/nested_scroll_view"
         android:fillViewport="true">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/notificationRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_notifications" />
+
+            <ImageView
+                android:id="@+id/errorImageView"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_centerInParent="true"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/no_internet"
+                android:visibility="gone" />
+
+        </RelativeLayout>
 
     </androidx.core.widget.NestedScrollView>
 

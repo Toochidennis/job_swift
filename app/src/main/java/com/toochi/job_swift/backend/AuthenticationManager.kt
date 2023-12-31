@@ -22,7 +22,7 @@ object AuthenticationManager {
 
     private val currentUser = auth.currentUser
     private var userId = currentUser?.uid
-    private val usersDocument =
+    val usersDocument =
         userId?.let { FirestoreDB.instance.collection("users").document(it) }
     private val usersCollection = FirestoreDB.instance.collection("users")
     private val storageRef = FirebaseStorage.getInstance().reference
@@ -163,21 +163,17 @@ object AuthenticationManager {
         hashMap: HashMap<String, Any>,
         onComplete: (Boolean, String?) -> Unit
     ) {
-        try {
-            usersDocument?.let {
-                it.collection("personalDetails")
-                    .document(profileId)
-                    .update(hashMap)
-                    .addOnSuccessListener {
-                        onComplete.invoke(true, null)
-                    }.addOnFailureListener { error ->
-                        onComplete.invoke(false, error.toString())
-                    }
-            }
-
-        } catch (e: Exception) {
-            e.printStackTrace()
+        usersDocument?.let {
+            it.collection("personalDetails")
+                .document(profileId)
+                .update(hashMap)
+                .addOnSuccessListener {
+                    onComplete.invoke(true, null)
+                }.addOnFailureListener { error ->
+                    onComplete.invoke(false, error.toString())
+                }
         }
+
     }
 
 
@@ -599,7 +595,7 @@ object AuthenticationManager {
             }
     }
 
-    fun getNotifications(onComplete: (MutableList<Notification>?, String?) -> Unit) {
+    fun getAllNotifications(onComplete: (MutableList<Notification>?, String?) -> Unit) {
         usersDocument?.also {
             it.collection("notifications")
                 .get()
