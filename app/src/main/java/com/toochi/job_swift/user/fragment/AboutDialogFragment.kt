@@ -1,63 +1,168 @@
 package com.toochi.job_swift.user.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
+import com.toochi.job_swift.backend.AuthenticationManager.updateUserDetails
+import com.toochi.job_swift.common.dialogs.LoadingDialog
+import com.toochi.job_swift.databinding.FragmentAboutDialogBinding
+import com.toochi.job_swift.model.Skills
+import com.toochi.job_swift.model.User
+import com.toochi.job_swift.user.adapters.SkillsAdapter
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [AboutDialogFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class AboutDialogFragment : DialogFragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class AboutDialogFragment(
+    private val user: User? = null,
+    private val onSave: () -> Unit
+) : DialogFragment() {
+
+    private var _binding: FragmentAboutDialogBinding? = null
+    private val binding get() = _binding!!
+
+    private var selectedItems = hashMapOf<String, String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
 
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_about_dialog, container, false)
+        _binding = FragmentAboutDialogBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment AboutDialogFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            AboutDialogFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        fillFieldsWithData()
+
+        binding.saveButton.setOnClickListener {
+            updateDetails()
+        }
+
+        binding.navigateUp.setOnClickListener {
+            dismiss()
+        }
+    }
+
+
+    private fun fillFieldsWithData() {
+        if (user != null) {
+            binding.aboutTextField.setText(user.about)
+
+            val wordList = user.skills.split(",").map { it.trim() }
+            val idList = user.skillsId.split(",").map { it.trim() }
+
+            if (wordList.isNotEmpty() && idList.isNotEmpty()) {
+                idList.forEach { id ->
+                    if (id.isNotBlank())
+                        selectedItems[id] = wordList[id.toInt()]
                 }
             }
+
+            setUpAdapter()
+        }
     }
+
+
+    private fun setUpAdapter() {
+        val skills = resources.getStringArray(R.array.skills).toMutableList()
+        val newSkillsList = mutableListOf<Skills>()
+
+        skills.forEachIndexed { index, skill ->
+            if (skill.isNotEmpty())
+                newSkillsList.add(Skills((index + 1).toString(), skill))
+        }
+
+        newSkillsList.forEach {
+            val skillName = selectedItems[it.skillsId]
+
+            if (skillName != null) {
+                it.isSelected = true
+            }
+        }
+
+        newSkillsList.sortBy { it.skillName }
+
+        val skillsAdapter = SkillsAdapter(newSkillsList, selectedItems)
+
+        binding.skillsRecyclerView.apply {
+            hasFixedSize()
+            adapter = skillsAdapter
+        }
+
+    }
+
+    private fun isValidForm(user: User): Boolean {
+        return when {
+            user.about.isEmpty() -> {
+                showToast(getString(R.string.please_provide_about))
+                false
+            }
+
+            user.skills.isEmpty() && user.skillsId.isEmpty() -> {
+                showToast(getString(R.string.please_add_skills))
+                false
+            }
+
+            else -> true
+        }
+    }
+
+    private fun updateDetails() {
+        val loadingDialog = LoadingDialog(requireContext())
+        val data = getDataFromForm()
+
+        if (isValidForm(data)) {
+            loadingDialog.show()
+
+            updateUserDetails(
+                user?.profileId!!,
+                hashMap = hashMapOf(
+                    "about" to data.about,
+                    "skillsId" to data.skillsId,
+                    "skills" to data.skills
+                )
+            ) { success, error ->
+                if (success) {
+                    onSave.invoke()
+                    dismiss()
+                } else {
+                    showToast(error.toString())
+                }
+
+                loadingDialog.dismiss()
+            }
+
+        }
+
+    }
+
+    private fun getDataFromForm(): User {
+        return User(
+            about = binding.aboutTextField.text.toString().trim(),
+            skillsId = selectedItems.keys.joinToString { ", " },
+            skills = selectedItems.values.joinToString { ", " },
+        )
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }
