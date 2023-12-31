@@ -1,17 +1,20 @@
 package com.toochi.job_swift.model
 
-data class Job(
+import com.google.firebase.firestore.FieldValue
+
+data class PostJob(
     var jobId: String = "",
     val userId: String = "",
     val title: String = "",
     val company: String = "",
-    val location: String = "",
+    var location: String = "",
     val workplaceType: String = "",
-    val jobType: String = "",
+    var jobType: String = "",
     var description: String = "",
     var jobEmail: String = "",
     var isProvideCV: Boolean = false,
     var deadline: String = "",
     var salary: String = "",
-    var salaryRate: String = ""
+    var salaryRate: String = "",
+    var datePosted: FieldValue = FieldValue.serverTimestamp()
 )
