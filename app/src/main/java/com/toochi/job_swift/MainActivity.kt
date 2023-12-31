@@ -9,6 +9,10 @@ import com.toochi.job_swift.common.activities.LoginActivity
 import com.toochi.job_swift.common.activities.WelcomeActivity
 import com.toochi.job_swift.databinding.ActivityMainBinding
 import com.toochi.job_swift.user.activity.UserDashboardActivity
+import com.toochi.job_swift.util.Constants.Companion.ADMIN
+import com.toochi.job_swift.util.Constants.Companion.EMPLOYEE
+import com.toochi.job_swift.util.Constants.Companion.EMPLOYER
+import com.toochi.job_swift.util.Constants.Companion.SIGN_OUT
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,31 +24,30 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        startActivity(Intent(this@MainActivity, UserDashboardActivity::class.java))
 
-        finish()
+        with(getSharedPreferences("loginDetail", MODE_PRIVATE)) {
 
-        /* with(getSharedPreferences("loginDetail", MODE_PRIVATE)) {
-             when (getString("user_type", "")) {
-                 "admin" -> {
-                     startActivity(Intent(this@MainActivity, AdminDashboardActivity::class.java))
-                 }
+            val intent = when (getString("user_type", "")) {
+                ADMIN -> {
+                    Intent(this@MainActivity, AdminDashboardActivity::class.java)
+                }
 
-                 "employer", "employee" -> {
-                     startActivity(Intent(this@MainActivity, UserDashboardActivity::class.java))
-                 }
+                EMPLOYER, EMPLOYEE -> {
+                    Intent(this@MainActivity, UserDashboardActivity::class.java)
+                }
 
-                 "sign out" -> {
-                     startActivity(Intent(this@MainActivity, LoginActivity::class.java))
-                 }
+                SIGN_OUT -> {
+                    Intent(this@MainActivity, LoginActivity::class.java)
+                }
 
-                 else -> {
-                     startActivity(Intent(this@MainActivity, WelcomeActivity::class.java))
-                 }
-             }
+                else -> {
+                    Intent(this@MainActivity, WelcomeActivity::class.java)
+                }
+            }
 
-             finish()
-         }
- */
+            startActivity(intent)
+
+            finish()
+        }
     }
 }
