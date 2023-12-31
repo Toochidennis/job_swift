@@ -4,46 +4,138 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
+import com.toochi.job_swift.backend.AuthenticationManager.updateUserDetails
+import com.toochi.job_swift.common.dialogs.LoadingDialog
+import com.toochi.job_swift.databinding.FragmentEditPersonalInfoBinding
+import com.toochi.job_swift.model.User
 
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class EditPersonalInfoDialogFragment(
+    private val user: User? = null,
+    private val onSave: () -> Unit
+) : DialogFragment() {
 
+    private var _binding: FragmentEditPersonalInfoBinding? = null
+    private val binding get() = _binding!!
 
-class EditPersonalInfoDialogFragment : DialogFragment() {
-
-    private var param1: String? = null
-    private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
-
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_edit_personal_info, container, false)
+        _binding = FragmentEditPersonalInfoBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            EditPersonalInfoDialogFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+        fillFieldsWithData()
+
+        binding.saveButton.setOnClickListener {
+            processForm()
+        }
+
+        binding.navigateUp.setOnClickListener {
+            dismiss()
+        }
+    }
+
+
+    private fun fillFieldsWithData() {
+        if (user != null) {
+            binding.firstNameTextField.setText(user.firstname)
+            binding.lastNameTextField.setText(user.lastname)
+            binding.additionalNameTextField.setText(user.middleName)
+            binding.countryTextField.setText(user.country)
+            binding.cityTextField.setText(user.city)
+            binding.headlineTextField.setText(user.headline)
+        }
+    }
+
+    private fun isValidForm(user: User): Boolean {
+
+        return when {
+            user.firstname.isBlank() -> {
+                showToast(getString(R.string.please_provide_first_name))
+                false
             }
+
+            user.lastname.isBlank() -> {
+                showToast(getString(R.string.please_provide_lastname))
+                false
+            }
+
+            user.country.isBlank() -> {
+                showToast(getString(R.string.please_provide_country))
+                false
+            }
+
+            user.city.isEmpty() -> {
+                showToast(getString(R.string.please_provide_city))
+                false
+            }
+
+            else -> true
+        }
     }
+
+    private fun processForm() {
+        val loadingDialog = LoadingDialog(requireContext())
+        val user = getDataFromForm()
+
+        if (isValidForm(user)) {
+            loadingDialog.show()
+
+            updateUserDetails(
+                user.profileId, hashMapOf(
+                    "firstname" to user.firstname,
+                    "lastname" to user.lastname,
+                    "middleName" to user.middleName,
+                    "headline" to user.headline,
+                    "country" to user.country,
+                    "city" to user.city
+                )
+            ) { success, error ->
+                if (success) {
+                    onSave.invoke()
+                    dismiss()
+                } else {
+                    showToast(error.toString())
+                }
+
+                loadingDialog.dismiss()
+            }
+        }
+    }
+
+    private fun getDataFromForm(): User {
+        return User(
+            firstname = binding.firstNameTextField.text.toString().trim(),
+            lastname = binding.lastNameTextField.text.toString().trim(),
+            middleName = binding.additionalNameTextField.text.toString().trim(),
+            headline = binding.headlineTextField.text.toString().trim(),
+            country = binding.countryTextField.text.toString().trim(),
+            city = binding.cityTextField.text.toString().trim()
+        )
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }
