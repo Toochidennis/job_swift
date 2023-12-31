@@ -1,4 +1,4 @@
-package com.toochi.job_swift
+package com.toochi.job_swift.common.activities
 
 import android.app.Activity
 import android.content.Intent
