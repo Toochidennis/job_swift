@@ -17,7 +17,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.toochi.job_swift.MainActivity
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager.createNotification
+import com.toochi.job_swift.backend.AuthenticationManager.createNotifications
 import com.toochi.job_swift.backend.AuthenticationManager.updateUserDetails
 import com.toochi.job_swift.util.Constants.Companion.CHANNEL_ID
 import com.toochi.job_swift.util.Constants.Companion.CHANNEL_NAME
@@ -62,12 +62,17 @@ class FirebaseService : FirebaseMessagingService() {
             notificationManager.notify(notificationId, notification)
         }
 
-        /*com.toochi.job_swift.model.Notification(
-            ti
-        )
-
-        AuthenticationManager.createNotification()*/
-
+        message.let {
+            com.toochi.job_swift.model.Notification(
+                title = it.notification?.title ?: "",
+                body = it.notification?.body ?: "",
+                userId = it.data["userId"] ?: "",
+                ownerId = it.data["ownerId"] ?: "",
+                jobId = it.data["jobId"] ?: ""
+            ).also { notification ->
+                createNotifications(notification) { _, _ -> }
+            }
+        }
     }
 
 
