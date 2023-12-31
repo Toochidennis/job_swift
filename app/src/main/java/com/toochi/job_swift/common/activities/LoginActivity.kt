@@ -1,11 +1,11 @@
-package com.toochi.job_swift
+package com.toochi.job_swift.common.activities
 
 import android.app.Activity
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Patterns
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -16,23 +16,37 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.android.material.textfield.TextInputLayout
+import com.toochi.job_swift.R
 import com.toochi.job_swift.admin.activity.AdminDashboardActivity
 import com.toochi.job_swift.backend.AuthenticationManager.getGoogleSignInClient
+import com.toochi.job_swift.backend.AuthenticationManager.getUserPersonalDetails
 import com.toochi.job_swift.backend.AuthenticationManager.loginWithEmailAndPassword
 import com.toochi.job_swift.backend.AuthenticationManager.registerWithEmailAndPassword
-import com.toochi.job_swift.backend.AuthenticationManager.registerWithGoogle
+import com.toochi.job_swift.backend.AuthenticationManager.registerWithGoogleAndLogin
 import com.toochi.job_swift.databinding.ActivityLoginBinding
 import com.toochi.job_swift.model.User
 import com.toochi.job_swift.user.activity.UserDashboardActivity
-import java.util.regex.Pattern
+import com.toochi.job_swift.util.Constants.Companion.ADMIN
+import com.toochi.job_swift.util.Constants.Companion.ADMIN_PASSWORD
+import com.toochi.job_swift.util.Constants.Companion.EMAIL
+import com.toochi.job_swift.util.Constants.Companion.EMPLOYEE
+import com.toochi.job_swift.util.Constants.Companion.PHONE_NUMBER
+import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
+import com.toochi.job_swift.util.Utils.isValidEmailOrPhoneNumber
+import com.toochi.job_swift.util.Utils.updateSharedPreferences
 
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityLoginBinding
+    private var _binding: ActivityLoginBinding? = null
+
+    private val binding get() = _binding!!
+
+    private lateinit var sharedPreferences: SharedPreferences
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
+        _binding = ActivityLoginBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
@@ -43,8 +57,9 @@ class LoginActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        viewClicks()
+        sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE)
 
+        viewClicks()
     }
 
     private fun viewClicks() {
@@ -67,39 +82,22 @@ class LoginActivity : AppCompatActivity() {
         signInWithEmailAndPassword()
 
         signUpWithEmailAndPassword()
-
     }
 
     private fun signUpWithEmailAndPassword() {
         binding.signUpButton.setOnClickListener {
-            val firstname = binding.firstnameTextInput.editText?.text.toString().trim()
-            val lastname = binding.lastnameTextInput.editText?.text.toString().trim()
-            val password = binding.passwordTextInput.editText?.text.toString().trim()
-            val email = binding.emailTextInput.editText?.text.toString().trim()
-            val phoneNumber = binding.phoneNumberTextInput.editText?.text.toString().trim()
+            val user = getUserFromForm()
 
-            editTextWatcher(binding.emailTextInput, "email")
-            editTextWatcher(binding.phoneNumberTextInput, "phone_number")
+            editTextWatcher(binding.emailTextInput, EMAIL)
+            editTextWatcher(binding.phoneNumberTextInput, PHONE_NUMBER)
 
-
-            if (isValidSignUpForm()) {
-                registerWithEmailAndPassword(
-                    User().apply {
-                        this.email = email
-                        this.password = password
-                        this.firstname = firstname
-                        this.lastname = lastname
-                        this.userType = "employee"
-                        this.phoneNumber = phoneNumber
-                    }
-                ) { success, errorMessage ->
-                    if (success) {
-                        launchDashboardActivity("user")
-                    } else {
-                        showToast(errorMessage.toString())
-                    }
+            if (isValidSignUpForm(user)) {
+                registerWithEmailAndPassword(user) { success, errorMessage ->
+                    handleAuthenticationResult(success, errorMessage, user)
                 }
+
             }
+
         }
     }
 
@@ -115,32 +113,29 @@ class LoginActivity : AppCompatActivity() {
 
     private fun signUpWithGoogle() {
         val googleSignInClient = getGoogleSignInClient(this)
-
         val signInIntent = googleSignInClient.signInIntent
         googleSignInLauncher.launch(signInIntent)
-
-        /* googleSignInClient.signOut().addOnCompleteListener {
-             val signInIntent = googleSignInClient.signInIntent
-             googleSignInLauncher.launch(signInIntent)
-         }*/
     }
 
     private fun handleGoogleSignInResult(task: Task<GoogleSignInAccount>) {
         try {
             val account = task.getResult(ApiException::class.java)
 
-            registerWithGoogle(this, account!!) { success, errorMessage ->
-                if (success) {
-                    launchDashboardActivity("user")
-                    println("Yeah")
-                } else {
-                    showToast(errorMessage.toString())
+            account?.let {
+                registerWithGoogleAndLogin(it) { success, errorMessage ->
+                    if (success) {
+                        getUserPersonalDetails { user, error ->
+                            handleAuthenticationResult(success, error, user)
+                        }
+                    } else {
+                        showToast(errorMessage.toString())
+                    }
                 }
             }
+
         } catch (e: ApiException) {
             e.printStackTrace()
         }
-
     }
 
     private fun signInWithEmailAndPassword() {
@@ -148,12 +143,14 @@ class LoginActivity : AppCompatActivity() {
             val email = binding.signInEmail.editText?.text.toString().trim()
             val password = binding.signInPassword.editText?.text.toString().trim()
 
-            editTextWatcher(binding.signInEmail, "email")
+            editTextWatcher(binding.signInEmail, EMAIL)
 
-            if (isValidSignInForm()) {
+            if (isValidSignInForm(email, password)) {
                 loginWithEmailAndPassword(email, password) { success, errorMessage ->
                     if (success) {
-                        launchDashboardActivity("user")
+                        getUserPersonalDetails { user, error ->
+                            handleAuthenticationResult(success, error, user)
+                        }
                     } else {
                         showToast(errorMessage.toString())
                     }
@@ -162,30 +159,43 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun isValidSignUpForm(): Boolean {
+    private fun getUserFromForm(): User {
+        return User(
+            email = binding.emailTextInput.editText?.text.toString().trim(),
+            password = binding.passwordTextInput.editText?.text.toString().trim(),
+            firstname = binding.firstnameTextInput.editText?.text.toString().trim(),
+            lastname = binding.lastnameTextInput.editText?.text.toString().trim(),
+            userType = if (binding.passwordTextInput.editText?.text.toString()
+                    .trim() == ADMIN_PASSWORD
+            ) ADMIN else EMPLOYEE,
+            phoneNumber = binding.phoneNumberTextInput.editText?.text.toString().trim(),
+        )
+    }
+
+    private fun isValidSignUpForm(user: User): Boolean {
         return when {
-            binding.firstnameTextInput.editText?.text.isNullOrBlank() -> {
-                showToast("Please provide first name")
+            user.firstname.isBlank() -> {
+                showToast(getString(R.string.please_provide_first_name))
                 false
             }
 
-            binding.lastnameTextInput.editText?.text.isNullOrBlank() -> {
-                showToast("Please provide lastname")
+            user.lastname.isBlank() -> {
+                showToast(getString(R.string.please_provide_lastname))
                 false
             }
 
-            binding.phoneNumberTextInput.editText?.text.isNullOrBlank() -> {
-                showToast("Please provide phone number")
+            user.phoneNumber.isBlank() -> {
+                showToast(getString(R.string.please_provide_phone_number))
                 false
             }
 
-            binding.emailTextInput.editText?.text.isNullOrBlank() -> {
-                showToast("Please provide email")
+            user.email.isBlank() -> {
+                showToast(getString(R.string.please_provide_email))
                 false
             }
 
-            binding.passwordTextInput.editText?.text.isNullOrBlank() -> {
-                showToast("Please provide password")
+            user.password.isBlank() -> {
+                showToast(getString(R.string.please_provide_password))
                 false
             }
 
@@ -193,15 +203,15 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun isValidSignInForm(): Boolean {
+    private fun isValidSignInForm(email: String, password: String): Boolean {
         return when {
-            binding.signInEmail.editText?.text.isNullOrBlank() -> {
-                showToast("Please provide email")
+            email.isBlank() -> {
+                showToast(getString(R.string.please_provide_email))
                 false
             }
 
-            binding.signInPassword.editText?.text.isNullOrBlank() -> {
-                showToast("Please provide password")
+            password.isBlank() -> {
+                showToast(getString(R.string.please_provide_password))
                 false
             }
 
@@ -228,34 +238,35 @@ class LoginActivity : AppCompatActivity() {
                 if (isValidEmailOrPhoneNumber(email, from)) {
                     textInputLayout.error = null
                 } else {
-                    textInputLayout.error = if (from == "email") {
-                        "Invalid email"
+                    textInputLayout.error = if (from == EMAIL) {
+                        getString(R.string.invalid_email)
                     } else {
-                        "Invalid phone number"
+                        getString(R.string.invalid_phone_number)
                     }
                 }
             }
         })
     }
 
-    private fun isValidEmailOrPhoneNumber(text: String, from: String): Boolean {
-        return if (from == "email") {
-            Patterns.EMAIL_ADDRESS.matcher(text).matches()
+    private fun handleAuthenticationResult(success: Boolean, errorMessage: String?, user: User?) {
+        if (success) {
+            user?.let {
+                updateSharedPreferences(it, sharedPreferences)
+                launchDashboardActivity(it.userType)
+            }
         } else {
-            val phonePattern = Pattern.compile(
-                "^(\\+?234|0)?([789]\\d{9})\$"
-            )
-            phonePattern.matcher(text).matches()
+            showToast(errorMessage.toString())
         }
     }
 
     private fun launchDashboardActivity(who: String) {
-        if (who == "admin") {
-            startActivity(Intent(this, AdminDashboardActivity::class.java))
+        val intent = if (who == ADMIN) {
+            Intent(this, AdminDashboardActivity::class.java)
         } else {
-            startActivity(Intent(this, UserDashboardActivity::class.java))
+            Intent(this, UserDashboardActivity::class.java)
         }
 
+        startActivity(intent)
         finish()
     }
 
@@ -275,5 +286,10 @@ class LoginActivity : AppCompatActivity() {
         } else {
             false
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }
