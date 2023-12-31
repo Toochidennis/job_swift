@@ -428,7 +428,7 @@ object AuthenticationManager {
                                         }
 
                                         completedCount++
-                                        // Check if all operations are complete before calling onComplete
+
                                         if (completedCount == querySnapshot.size()) {
                                             onComplete.invoke(allPostJobs, allAppliedJobs, null)
                                         }
@@ -584,13 +584,12 @@ object AuthenticationManager {
     }
 
 
-    fun createNotification(
-        userId: String,
+    fun createNotifications(
         notification: Notification,
         onComplete: (Boolean, String?) -> Unit
     ) {
-        usersCollection.document(userId)
-            .collection("notification")
+        usersCollection.document(notification.ownerId)
+            .collection("notifications")
             .add(notification)
             .addOnSuccessListener {
                 onComplete(true, null)
@@ -600,7 +599,21 @@ object AuthenticationManager {
             }
     }
 
-    fun likeJob(userId: String, jobId: String, onComplete: (Boolean, String?) -> Unit) {
-        TODO("Still coming up")
+    fun getNotifications(onComplete: (MutableList<Notification>?, String?) -> Unit) {
+        usersDocument?.also {
+            it.collection("notifications")
+                .get()
+                .addOnSuccessListener { querySnapShot ->
+                    if (!querySnapShot.isEmpty) {
+                        val notifications = querySnapShot.toObjects(Notification::class.java)
+                        onComplete(notifications, null)
+                    }
+                }
+                .addOnFailureListener { error ->
+                    onComplete(null, error.message)
+                }
+        }
     }
+
+
 }
