@@ -1,4 +1,4 @@
-package com.toochi.job_swift.util
+package com.toochi.job_swift
 
 import android.app.Application
 import com.google.firebase.BuildConfig
