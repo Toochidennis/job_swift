@@ -11,36 +11,25 @@ import androidx.fragment.app.Fragment
 import com.squareup.picasso.Picasso
 import com.toochi.job_swift.BR
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager.getPostedJobs
+import com.toochi.job_swift.backend.AuthenticationManager.getAllPostedJobs
 import com.toochi.job_swift.common.dialogs.LoadingDialog
 import com.toochi.job_swift.common.fragments.JobDetailsDialogFragment
 import com.toochi.job_swift.databinding.FragmentUserHomeBinding
-import com.toochi.job_swift.model.Job
+import com.toochi.job_swift.model.PostJob
 import com.toochi.job_swift.user.activity.PersonalInformationActivity
 import com.toochi.job_swift.user.adapters.GenericAdapter
-import com.toochi.job_swift.util.Utils.getAccessToken
-import timber.log.Timber
+import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
+import com.toochi.job_swift.util.Utils.currencyFormatter
+import java.util.Calendar
 
-
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 class UserHomeFragment : Fragment() {
 
     private var _binding: FragmentUserHomeBinding? = null
+
     private val binding get() = _binding!!
 
-    private var param1: String? = null
-    private var param2: String? = null
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var jobList = mutableListOf<PostJob>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,15 +46,10 @@ class UserHomeFragment : Fragment() {
         setUpProfile()
 
         getAllJobs()
-
-        getAccessToken(requireContext()) { token, errorMessage ->
-            Timber.tag("token").d(token)
-            println("$token, $errorMessage")
-        }
     }
 
     private fun setUpProfile() {
-        with(requireActivity().getSharedPreferences("loginDetail", MODE_PRIVATE)) {
+        with(requireActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE)) {
             val firstname = getString("firstname", "")
             val lastname = getString("lastname", "")
             val photoUrl = getString("photo_url", "")
@@ -73,8 +57,11 @@ class UserHomeFragment : Fragment() {
             val fullName = "$firstname $lastname"
 
             binding.userNameTextView.text = fullName
+            binding.greetingsTextView.text = getGreetingMessage()
 
-            Picasso.get().load(photoUrl).into(binding.userImageView)
+            if (!photoUrl.isNullOrEmpty()) {
+                Picasso.get().load(photoUrl).into(binding.userImageView)
+            }
         }
 
         binding.profileButton.setOnClickListener {
@@ -86,8 +73,18 @@ class UserHomeFragment : Fragment() {
         val loadingDialog = LoadingDialog(requireContext())
         loadingDialog.show()
 
-        getPostedJobs { jobs, errorMessage ->
+        getAllPostedJobs { jobs, errorMessage ->
             if (jobs != null) {
+                jobList = jobs
+
+                jobs.forEach { job ->
+                    val location = "${job.location} . ${formatAmount(job.salary, job.salaryRate)}"
+                    val jobType = "${job.jobType} . ${job.workplaceType}"
+
+                    job.location = location
+                    job.jobType = jobType
+                }
+
                 setUpAdapter(jobs)
             } else {
                 showToast(errorMessage.toString())
@@ -97,22 +94,40 @@ class UserHomeFragment : Fragment() {
         }
     }
 
-    private fun setUpAdapter(jobList: MutableList<Job>) {
+    private fun formatAmount(amount: String, rate: String): String {
+        val formatAmount = "${getString(R.string.naira)} ${currencyFormatter(amount.toDouble())}"
+        return when (rate) {
+            "Per month" -> "$formatAmount/m"
+            else -> "$formatAmount/yr"
+        }
+    }
+
+    private fun setUpAdapter(postJobList: MutableList<PostJob>) {
         val jobAdapter = GenericAdapter(
-            jobList,
+            postJobList,
             R.layout.item_user_home,
             bindItem = { binding, model ->
                 binding.setVariable(BR.job, model)
                 binding.executePendingBindings()
             }
         ) { position ->
-            val selectedPosition = jobList[position]
-            JobDetailsDialogFragment(selectedPosition).show(parentFragmentManager, "job details")
+            JobDetailsDialogFragment(jobList[position]).show(parentFragmentManager, "job details")
         }
 
         binding.jobRecyclerView.apply {
             hasFixedSize()
             adapter = jobAdapter
+        }
+    }
+
+    private fun getGreetingMessage(): String {
+        val calender = Calendar.getInstance()
+        val hourOfDay = calender[Calendar.HOUR_OF_DAY]
+
+        return when {
+            hourOfDay < 12 -> getString(R.string.good_morning)
+            hourOfDay < 18 -> getString(R.string.good_afternoon)
+            else -> getString(R.string.good_evening)
         }
     }
 
@@ -123,17 +138,5 @@ class UserHomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            UserHomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 }

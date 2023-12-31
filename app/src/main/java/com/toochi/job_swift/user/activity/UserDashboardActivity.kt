@@ -14,13 +14,15 @@ import com.toochi.job_swift.util.Utils.loadFragment
 
 class UserDashboardActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityUserDashboardBinding
+    private var _binding: ActivityUserDashboardBinding?=null
+
+    private val binding get() = _binding!!
 
     private var doubleBackToExitPressedOnce = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityUserDashboardBinding.inflate(layoutInflater)
+        _binding = ActivityUserDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         bottomBarNavigation()
@@ -85,6 +87,11 @@ class UserDashboardActivity : AppCompatActivity() {
 
     private fun isHomeFragmentVisible(): Boolean {
         return binding.bottomNavigation.selectedItemId == R.id.home
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }
