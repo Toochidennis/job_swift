@@ -72,7 +72,7 @@ dependencies {
 
     implementation("com.jakewharton.timber:timber:5.0.1")
     implementation("com.squareup.picasso:picasso:2.71828")
-    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation ("com.squareup.okhttp3:okhttp:4.9.3")
     implementation("jp.wasabeef:richeditor-android:2.0.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
