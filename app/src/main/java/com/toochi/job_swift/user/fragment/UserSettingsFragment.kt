@@ -11,6 +11,7 @@ import com.toochi.job_swift.common.activities.LoginActivity
 import com.toochi.job_swift.databinding.FragmentUserSettingsBinding
 import com.toochi.job_swift.user.activity.PersonalInformationActivity
 import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
+import com.toochi.job_swift.util.Constants.Companion.SIGN_OUT
 
 
 class UserSettingsFragment : Fragment() {
@@ -47,8 +48,11 @@ class UserSettingsFragment : Fragment() {
         }
 
         binding.signOutButton.setOnClickListener {
-            requireContext().getSharedPreferences(PREF_NAME, MODE_PRIVATE).edit().clear().apply()
+            requireContext().getSharedPreferences(PREF_NAME, MODE_PRIVATE).edit().clear()
+                .putString("user_type", SIGN_OUT).apply()
+
             startActivity(Intent(requireActivity(), LoginActivity::class.java))
+            requireActivity().finish()
         }
     }
 

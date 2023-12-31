@@ -22,8 +22,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JobSwift"
         tools:targetApi="31">
-
-
+        <activity
+            android:name=".user.activity.ApplicationReviewActivity"
+            android:exported="false" />
         <activity
             android:name=".common.activities.ImagePreviewActivity"
             android:exported="false" />
@@ -64,11 +65,9 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/app_logo2" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/shade_green" />
-
     </application>
 
 </manifest>
