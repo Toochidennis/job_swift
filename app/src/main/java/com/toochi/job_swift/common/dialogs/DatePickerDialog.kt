@@ -5,8 +5,10 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.Gravity
 import android.view.ViewGroup
 import android.view.Window
+import com.toochi.job_swift.R
 import com.toochi.job_swift.databinding.DialogDatePickerBinding
 
 
@@ -15,23 +17,20 @@ class DatePickerDialog(
     private val onDateSelected: (String) -> Unit
 ) : Dialog(context) {
 
-    private var _binding: DialogDatePickerBinding? = null
-
-    private val binding get() = _binding!!
+    private val binding = DialogDatePickerBinding.inflate(layoutInflater)
 
     init {
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window?.apply {
+            requestWindowFeature(Window.FEATURE_NO_TITLE)
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            attributes?.windowAnimations = R.style.DialogAnimation
+            setGravity(Gravity.BOTTOM)
+        }
         show()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = DialogDatePickerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.datePicker.let { datePicker ->
@@ -46,9 +45,4 @@ class DatePickerDialog(
 
     }
 
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        _binding = null
-    }
 }
