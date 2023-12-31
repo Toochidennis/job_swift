@@ -8,12 +8,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
-import com.toochi.job_swift.common.dialogs.JobLocationDialogFragment
 import com.toochi.job_swift.common.dialogs.JobTitleDialogFragment
 import com.toochi.job_swift.common.dialogs.JobTypeDialogFragment
 import com.toochi.job_swift.common.dialogs.WorkplaceDialogFragment
 import com.toochi.job_swift.databinding.FragmentAddJobBasicsDialogBinding
-import com.toochi.job_swift.model.Job
+import com.toochi.job_swift.model.PostJob
+import com.toochi.job_swift.util.Constants.Companion.USER_ID_KEY
 
 
 private const val ARG_PARAM1 = "param1"
@@ -27,12 +27,8 @@ class AddJobBasicsDialogFragment : DialogFragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-    private var jobTitle: String? = null
-    private var company: String? = null
-    private var workplaceType: String? = null
-    private var jobLocation: String? = null
-    private var jobType: String? = null
     private var userId: String? = null
+    private var email: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,35 +54,31 @@ class AddJobBasicsDialogFragment : DialogFragment() {
 
         val sharedPreferences = requireActivity().getSharedPreferences("loginDetail", MODE_PRIVATE)
         with(sharedPreferences) {
-            company = getString("company_name", "")
-            jobLocation = getString("company_location", "")
-            userId = getString("user_id", "")
+            val company = getString("company_name", "")
+            val jobLocation = getString("company_location", "")
+            userId = getString(USER_ID_KEY, "")
+            email = getString("email", "")
+
+            binding.companyTitleTxt.text = company ?: ""
+            binding.locationTitleTxt.text = jobLocation ?: ""
         }
 
         handleViewClicks()
-
-        processForm()
-
     }
 
     private fun handleViewClicks() {
-        binding.companyTitleTxt.text = company
-        binding.locationTitleTxt.text = jobLocation
-
         binding.navigateUp.setOnClickListener {
             dismiss()
         }
 
         binding.jobTitleButton.setOnClickListener {
             JobTitleDialogFragment {
-                jobTitle = it
                 binding.jobTitleTxt.text = it
             }.show(parentFragmentManager, "title")
         }
 
         binding.workTypeButton.setOnClickListener {
             WorkplaceDialogFragment {
-                workplaceType = it
                 binding.workTitleTxt.text = it
             }.show(parentFragmentManager, "work place")
         }
@@ -94,26 +86,30 @@ class AddJobBasicsDialogFragment : DialogFragment() {
 
         binding.jobTypeButton.setOnClickListener {
             JobTypeDialogFragment {
-                jobType = it
                 binding.jobTypeTxt.text = it
             }.show(parentFragmentManager, "type")
         }
+
+        binding.continueButton.setOnClickListener {
+            processForm()
+        }
+
     }
 
-    private fun isValidForm(): Boolean {
+    private fun isValidForm(job: PostJob): Boolean {
         return when {
-            jobTitle.isNullOrEmpty() -> {
-                showToast("Please select job title")
+            job.title.isEmpty() -> {
+                showToast(getString(R.string.please_provide_job_title))
                 false
             }
 
-            workplaceType.isNullOrEmpty() -> {
-                showToast("Please select workplace type")
+            job.workplaceType.isEmpty() -> {
+                showToast(getString(R.string.please_select_workplace_type))
                 false
             }
 
-            jobType.isNullOrEmpty() -> {
-                showToast("Please select job type")
+            job.jobType.isEmpty() -> {
+                showToast(getString(R.string.please_select_job_type))
                 false
             }
 
@@ -122,21 +118,25 @@ class AddJobBasicsDialogFragment : DialogFragment() {
     }
 
     private fun processForm() {
-        binding.continueButton.setOnClickListener {
-            if (isValidForm()) {
-                val job = Job(
-                    userId = userId ?: "",
-                    title = jobTitle ?: "",
-                    company = company ?: "",
-                    location = jobLocation ?: "",
-                    workplaceType = workplaceType ?: "",
-                    jobType = jobType ?: ""
-                )
+        val job = getDataFromForm()
 
-                JobDescriptionDialogFragment(job).show(parentFragmentManager, "job description")
-                dismiss()
-            }
+        if (isValidForm(job)) {
+            JobDescriptionDialogFragment(job).show(parentFragmentManager, "job description")
+            dismiss()
         }
+    }
+
+
+    private fun getDataFromForm(): PostJob {
+        return PostJob(
+            userId = userId ?: "",
+            title = binding.jobTitleTxt.text.toString(),
+            company = binding.companyTitleTxt.text.toString(),
+            location = binding.locationTitleTxt.text.toString(),
+            workplaceType = binding.workTitleTxt.text.toString(),
+            jobEmail = email ?: "",
+            jobType = binding.jobTypeTxt.text.toString()
+        )
     }
 
     private fun showToast(message: String) {
