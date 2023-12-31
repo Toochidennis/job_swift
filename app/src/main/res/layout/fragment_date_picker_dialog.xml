@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/dialog_bg2"
     android:orientation="vertical"
-    tools:context=".common.dialogs.DatePickerDialogFragment2">
+    tools:context=".common.dialogs.DatePickerDialogFragment">
 
     <include layout="@layout/divider" />
 
@@ -12,17 +13,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@color/white"
         android:orientation="horizontal">
 
         <NumberPicker
-            android:id="@+id/session_picker"
+            android:id="@+id/monthPicker"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <NumberPicker
-            android:id="@+id/term_picker"
+            android:id="@+id/yearPicker"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
@@ -30,16 +30,15 @@
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/continueButton"
+        android:id="@+id/confirmButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dimen_16"
         android:backgroundTint="@color/shade_green"
-        android:text="@string/continue_"
+        android:text="@string/confirm"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="@dimen/text_16" />
-
 
 </LinearLayout>
