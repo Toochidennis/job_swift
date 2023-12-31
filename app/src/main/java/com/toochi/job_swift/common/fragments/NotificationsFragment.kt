@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.toochi.job_swift.BR
 import com.toochi.job_swift.R
+import com.toochi.job_swift.backend.AuthenticationManager.getAllNotifications
 import com.toochi.job_swift.databinding.FragmentNotificationsBinding
 import com.toochi.job_swift.model.Notification
 import com.toochi.job_swift.user.adapters.GenericAdapter
@@ -14,7 +17,8 @@ import com.toochi.job_swift.user.adapters.GenericAdapter
 
 class NotificationsFragment : Fragment() {
 
-    private lateinit var binding:FragmentNotificationsBinding
+    private lateinit var binding: FragmentNotificationsBinding
+    private var notificationsList = mutableListOf<Notification>()
 
 
     override fun onCreateView(
@@ -31,18 +35,40 @@ class NotificationsFragment : Fragment() {
 
     }
 
+    private fun getNotifications() {
+        getAllNotifications { notifications, error ->
+            if (notifications != null) {
+                notificationsList = notifications
 
-    private fun setUpAdapter(notificationList: MutableList<Notification>){
-        val notificationAdapter = GenericAdapter(
-           itemList =  notificationList,
-            itemResLayout = R.layout.item_notifications,
-            bindItem = {binding, model ->
-                //binding.setVariable(BR.notification, model)
+                notifications.forEach {
+                    it.userId = it.extractTime()
+                }
+
+                setUpAdapter(notifications)
+            } else {
+                binding.errorImageView.isVisible = true
+                Toast.makeText(requireContext(), error.toString(), Toast.LENGTH_SHORT).show()
             }
-        ){
+        }
+    }
+
+
+    private fun setUpAdapter(notificationList: MutableList<Notification>) {
+        val notificationAdapter = GenericAdapter(
+            itemList = notificationList,
+            itemResLayout = R.layout.item_notifications,
+            bindItem = { binding, model ->
+                binding.setVariable(BR.notification, model)
+                binding.executePendingBindings()
+            }
+        ) { position ->
 
         }
 
+        binding.notificationRecyclerView.apply {
+            hasFixedSize()
+            adapter = notificationAdapter
+        }
     }
 
 }

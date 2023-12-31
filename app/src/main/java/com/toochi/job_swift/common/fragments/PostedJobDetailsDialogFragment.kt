@@ -12,15 +12,15 @@ import com.toochi.job_swift.R
 import com.toochi.job_swift.backend.AuthenticationManager.getCompany
 import com.toochi.job_swift.common.dialogs.ApplyJobDialogFragment
 import com.toochi.job_swift.common.dialogs.LoadingDialog
-import com.toochi.job_swift.databinding.FragmentJobDetailsDialogBinding
+import com.toochi.job_swift.databinding.FragmentPostedJobDetailsDialogBinding
 import com.toochi.job_swift.model.PostJob
 import com.toochi.job_swift.util.Utils.currencyFormatter
 import java.util.Locale
 
 
-class JobDetailsDialogFragment(private val postJob: PostJob) : DialogFragment() {
+class PostedJobDetailsDialogFragment(private val postJob: PostJob) : DialogFragment() {
 
-    private var _binding: FragmentJobDetailsDialogBinding? = null
+    private var _binding: FragmentPostedJobDetailsDialogBinding? = null
 
     private val binding get() = _binding!!
 
@@ -36,7 +36,7 @@ class JobDetailsDialogFragment(private val postJob: PostJob) : DialogFragment() 
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentJobDetailsDialogBinding.inflate(inflater, container, false)
+        _binding = FragmentPostedJobDetailsDialogBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -59,6 +59,7 @@ class JobDetailsDialogFragment(private val postJob: PostJob) : DialogFragment() 
         binding.locationTxt.text = postJob.location
         binding.jobTypeTxt.text = postJob.jobType
         binding.workplaceTypeTxt.text = postJob.workplaceType
+        binding.timeTxt.text = postJob.calculateDaysAgo()
 
         val formatAmount = String.format(
             Locale.getDefault(),
