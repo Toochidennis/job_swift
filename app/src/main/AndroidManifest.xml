@@ -12,7 +12,7 @@
         android:maxSdkVersion="32" />
 
     <application
-        android:name=".util.MainApplication"
+        android:name=".MainApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -23,6 +23,10 @@
         android:theme="@style/Theme.JobSwift"
         tools:targetApi="31">
 
+
+        <activity
+            android:name=".common.activities.ImagePreviewActivity"
+            android:exported="false" />
         <activity
             android:name=".user.activity.PersonalInformationActivity"
             android:exported="false" />
@@ -30,10 +34,10 @@
             android:name=".user.activity.UserDashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".common.activities.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".WelcomeActivity"
+            android:name=".common.activities.WelcomeActivity"
             android:exported="false" />
         <activity
             android:name=".admin.activity.AdminDashboardActivity"
@@ -50,13 +54,12 @@
         </activity>
 
         <service
-            android:name=".util.MessagingService"
+            android:name=".backend.FirebaseService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGE_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
