@@ -156,6 +156,11 @@
     <string name="good_evening">Good evening,</string>
     <string name="please_upload_cv">Please upload CV</string>
     <string name="please_provide_name">Please provide name</string>
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
+    <string name="send_mail">Send mail</string>
+    <string name="call">Call</string>
+    <string name="view_cv">View CV</string>
 
     <string-array name="heading_options">
         <item>Heading 1</item>
