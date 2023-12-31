@@ -19,5 +19,6 @@ class Constants {
         const val USER_ID_KEY = "user_id"
         const val EMAIL = "email"
         const val PHONE_NUMBER = "phone number"
+        const val SIGN_OUT = "Sign out"
     }
 }
