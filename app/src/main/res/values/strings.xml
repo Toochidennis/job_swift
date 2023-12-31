@@ -42,7 +42,7 @@
     <string name="accounts_centre">Accounts Centre</string>
     <string name="your_account">Your account</string>
     <string name="settings_and_privacy">Settings</string>
-    <string name="email">dennistoochi@gmail.com</string>
+    <string name="email">Email</string>
     <string name="password_and_security">Change your password</string>
     <string name="email_address">Email address</string>
     <string name="home">Home</string>
@@ -53,13 +53,109 @@
     <string name="settings">Settings</string>
     <string name="timeline">Timeline</string>
     <string name="toochukwu_dennis">Toochukwu Dennis</string>
-    <string name="good_morning">Good morning</string>
+    <string name="good_morning">Good morning,</string>
     <string name="search_job_dream">Search your dream job right now!</string>
     <string name="get_started">Get started</string>
     <string name="job_details">Job details</string>
     <string name="apply_now">Apply now</string>
     <string name="naira">\u20A6</string>
     <string name="upload_cv">Upload CV</string>
+    <string name="have_not_posted_job">You haven\'t posted a job yet! Get started by using the button below.</string>
+    <string name="have_not_applied_job">You haven\'t applied for a job yet!</string>
+    <string name="no_internet">Oops! Something went wrong. Please check your connection and try again.</string>
+    <string name="save">Save</string>
+    <string name="please_provide_email">Please provide email</string>
+    <string name="please_provide_password">Please provide password</string>
+    <string name="please_provide_phone_number">Please provide phone number</string>
+    <string name="please_provide_first_name">Please provide first name</string>
+    <string name="please_provide_lastname">Please provide lastname</string>
+    <string name="invalid_phone_number">Invalid phone number</string>
+    <string name="invalid_email">Invalid email</string>
+    <string name="please_provide_country">Please provide country</string>
+    <string name="please_provide_city">Please provide city</string>
+    <string name="please_provide_school">Please provide school</string>
+    <string name="please_provide_job_title">Please provide job title</string>
+    <string name="please_provide_company_name">Please provide company name</string>
+    <string name="please_provide_end_date">Please provide end date</string>
+    <string name="please_provide_start_date">Please provide start date</string>
+    <string name="please_provide_about">Please provide about</string>
+    <string name="please_add_skills">Please add skills</string>
+    <string name="education">Education</string>
+    <string name="experience">Experience</string>
+    <string name="about">About</string>
+    <string name="top_skills">Top skills</string>
+    <string name="add_experience">Add experience</string>
+    <string name="indicates_required">* Indicates required</string>
+    <string name="title">Title*</string>
+    <string name="employee_type">Employee type</string>
+    <string name="please_select">Please select</string>
+    <string name="company_name">Company name*</string>
+    <string name="ex_digital_dreams_limited">Ex: Digital Dreams Limited</string>
+    <string name="location">Location</string>
+    <string name="ex_fuw">Ex: FUW</string>
+    <string name="location_type">Location type</string>
+    <string name="i_am_currently_working_in_this_role">I am currently working in this role</string>
+    <string name="start_date">Start date</string>
+    <string name="december_2023">Ex: December, 2023</string>
+    <string name="end_date">End date</string>
+    <string name="edit_about">Edit about</string>
+    <string name="about_des">You can write about your years of experience, industry, or skills. People also talk about their achievements or previous job experiences.</string>
+    <string name="type_here">Type here...</string>
+    <string name="skills">Skills</string>
+    <string name="skills_des">Show your top skills. They\'ll also appear in your Skills section. You can only select 5.</string>
+    <string name="add_education">Add education</string>
+    <string name="school">School*</string>
+    <string name="ex_federal_university_wukari">Ex: Federal University Wukari</string>
+    <string name="degree">Degree</string>
+    <string name="ex_bacheclor_s">Ex: Bacheclor\'s</string>
+    <string name="field_of_study">Field of study</string>
+    <string name="computer_science">Ex: Computer science</string>
+    <string name="end_date_or_expected">End date (or expected)</string>
+    <string name="grade">Grade</string>
+    <string name="first_class">Ex: First class</string>
+    <string name="birthday">Birthday</string>
+    <string name="address">Address</string>
+    <string name="_0000000000">0000000000</string>
+    <string name="edit_contact_info">Edit contact info</string>
+    <string name="number_of_employees">Number of employees</string>
+    <string name="company_s_description">Company\'s description*</string>
+    <string name="cac_id">CAC ID*</string>
+    <string name="edit_company_info">Edit company info</string>
+    <string name="ict">ICT</string>
+    <string name="position">Position</string>
+    <string name="please_provide_description">Please provide description</string>
+    <string name="please_provide_cac_id">Please provide CAC ID</string>
+    <string name="personal_information">Personal information</string>
+    <string name="contact_information">Contact information</string>
+    <string name="your_company">Your company</string>
+    <string name="company_information">Company information</string>
+    <string name="employees">Employees</string>
+    <string name="general">General</string>
+    <string name="sign_out">Sign out</string>
+    <string name="edit">Edit</string>
+    <string name="temporary">Temporary</string>
+    <string name="volunteer">Volunteer</string>
+    <string name="internship">Internship</string>
+    <string name="full_time">Full-time</string>
+    <string name="contract">Contract</string>
+    <string name="part_time">Part-time</string>
+    <string name="choose_the_job_type">Choose the job type</string>
+    <string name="confirm">Confirm</string>
+    <string name="please_provide_location">Please provide location</string>
+    <string name="please_select_workplace_type">Please select workplace type</string>
+    <string name="please_select_job_type">Please select job type</string>
+    <string name="please_provide_pay_rate">Please provide pay rate</string>
+    <string name="please_provide_pay">Please provide pay</string>
+    <string name="welcome_to_swift_job">Welcome to Swift Job</string>
+    <string name="employer_body">Congratulations on creating your employer account. You\'re now ready to start hiring top talent. Good luck on your journey with Swift Job</string>
+    <string name="congratulations_on_posting_your_job">Congratulations on Posting Your Job!</string>
+    <string name="job_is_live">Your job listing is live now. Good luck finding the perfect candidate!</string>
+    <string name="great">Great!</string>
+    <string name="awesome">Awesome!</string>
+    <string name="good_afternoon">Good afternoon,</string>
+    <string name="good_evening">Good evening,</string>
+    <string name="please_upload_cv">Please upload CV</string>
+    <string name="please_provide_name">Please provide name</string>
 
     <string-array name="heading_options">
         <item>Heading 1</item>
@@ -106,6 +202,40 @@
         <item>Engineering and Manufacturing</item>
         <item>Transportation and Logistics</item>
         <item>Nonprofit and Social Services</item>
+    </string-array>
+
+    <string-array name="skills">
+        <item>Core Java</item>
+        <item>Python Programming Language</item>
+        <item>Web Development</item>
+        <item>Database Management</item>
+        <item>Cloud Computing</item>
+        <item>Cybersecurity</item>
+        <item>Networking</item>
+        <item>DevOps</item>
+        <item>Agile Methodologies</item>
+        <item>Machine Learning and AI</item>
+        <item>Mobile App Development</item>
+        <item>Data Analysis</item>
+        <item>UI/UX Design</item>
+        <item>Linux System Administration</item>
+        <item>Version Control</item>
+        <item>Problem-Solving</item>
+    </string-array>
+
+    <string-array name="months">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
     </string-array>
 
 </resources>

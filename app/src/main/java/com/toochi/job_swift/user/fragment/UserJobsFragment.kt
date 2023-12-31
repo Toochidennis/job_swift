@@ -62,7 +62,6 @@ class UserJobsFragment : Fragment() {
                     JobIntroScreenDialogFragment().show(parentFragmentManager, "Intro")
                 }
             }
-
         }
 
         setUpViewPager()
@@ -74,7 +73,6 @@ class UserJobsFragment : Fragment() {
         val fragmentAdapter = FragmentAdapter(requireActivity()).apply {
             addFragment(PostedJobsFragment())
             addFragment(AppliedJobsFragment())
-            addFragment(SavedJobsFragment())
         }
 
         binding.viewPager.adapter = fragmentAdapter
