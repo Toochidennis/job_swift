@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager.updateUserDetails
+import com.toochi.job_swift.backend.AuthenticationManager.updateExistingUser
 import com.toochi.job_swift.common.dialogs.LoadingDialog
 import com.toochi.job_swift.databinding.FragmentEditPersonalInfoBinding
 import com.toochi.job_swift.model.User
@@ -96,7 +96,7 @@ class EditPersonalInfoDialogFragment(
         if (isValidForm(user)) {
             loadingDialog.show()
 
-            updateUserDetails(
+            updateExistingUser(
                 user.profileId, hashMapOf(
                     "firstname" to user.firstname,
                     "lastname" to user.lastname,
