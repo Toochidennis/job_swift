@@ -13,7 +13,7 @@ import com.toochi.job_swift.R
 import com.toochi.job_swift.backend.AuthenticationManager.createCompany
 import com.toochi.job_swift.backend.AuthenticationManager.getCompany
 import com.toochi.job_swift.backend.AuthenticationManager.updateCompany
-import com.toochi.job_swift.backend.AuthenticationManager.updateUserDetails
+import com.toochi.job_swift.backend.AuthenticationManager.updateExistingUser
 import com.toochi.job_swift.common.dialogs.AlertDialog
 import com.toochi.job_swift.common.dialogs.CompanyPositionDialogFragment
 import com.toochi.job_swift.common.dialogs.LoadingDialog
@@ -221,7 +221,7 @@ class CompanyInfoDialogFragment : DialogFragment() {
         val profileId = sharedPreferences.getString("profile_id", "")
 
         profileId?.let {
-            updateUserDetails(it, hashMapOf("userType" to EMPLOYER)) { _, _ -> }
+            updateExistingUser(it, hashMapOf("userType" to EMPLOYER)) { _, _ -> }
         }
     }
 
