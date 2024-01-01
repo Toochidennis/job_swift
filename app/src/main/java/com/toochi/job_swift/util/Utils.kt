@@ -17,8 +17,10 @@ import com.toochi.job_swift.util.Constants.Companion.SCOPES
 import com.toochi.job_swift.util.Constants.Companion.USER_ID_KEY
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -141,8 +143,9 @@ object Utils {
 
     fun updateSharedPreferences(user: User, sharedPreferences: SharedPreferences) {
         sharedPreferences.edit().run {
-            putString(USER_ID_KEY, auth.uid)
+            putString(USER_ID_KEY, auth.currentUser?.uid)
             putString("profile_id", user.profileId)
+            putString("email", user.email)
             putString("lastname", user.lastname)
             putString("firstname", user.firstname)
             putString("middle_name", user.middleName)
@@ -154,6 +157,5 @@ object Utils {
             apply()
         }
     }
-
 
 }

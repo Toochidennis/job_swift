@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.toochi.job_swift.backend.AuthenticationManager.getGoogleSignInClient
 import com.toochi.job_swift.common.activities.LoginActivity
 import com.toochi.job_swift.databinding.FragmentUserSettingsBinding
 import com.toochi.job_swift.user.activity.PersonalInformationActivity
@@ -31,6 +33,12 @@ class UserSettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar.toolbar)
+        val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
+        actionBar?.apply {
+            title = "Settings"
+        }
+
         binding.personalInfoButton.setOnClickListener {
             startActivity(Intent(requireActivity(), PersonalInformationActivity::class.java))
         }
@@ -48,8 +56,11 @@ class UserSettingsFragment : Fragment() {
         }
 
         binding.signOutButton.setOnClickListener {
-            requireContext().getSharedPreferences(PREF_NAME, MODE_PRIVATE).edit().clear()
-                .putString("user_type", SIGN_OUT).apply()
+            val sharedPreferences = requireContext().getSharedPreferences(PREF_NAME, MODE_PRIVATE)
+            sharedPreferences.edit().clear().apply()
+            sharedPreferences.edit().putString("user_type", SIGN_OUT).apply()
+
+            getGoogleSignInClient(requireContext()).signOut()
 
             startActivity(Intent(requireActivity(), LoginActivity::class.java))
             requireActivity().finish()
