@@ -10,14 +10,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toFile
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.firebase.messaging.FirebaseMessaging
 import com.toochi.job_swift.R
 import com.toochi.job_swift.backend.AuthenticationManager.applyJob
+import com.toochi.job_swift.backend.AuthenticationManager.checkIfHaveAppliedJob
 import com.toochi.job_swift.backend.AuthenticationManager.getUserToken
-import com.toochi.job_swift.backend.AuthenticationManager.updateUserDetails
 import com.toochi.job_swift.databinding.FragmentApplyJobDialogBinding
 import com.toochi.job_swift.model.ApplyJob
 import com.toochi.job_swift.model.Notification
@@ -25,6 +23,8 @@ import com.toochi.job_swift.model.PostJob
 import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
 import com.toochi.job_swift.util.Constants.Companion.USER_ID_KEY
 import com.toochi.job_swift.util.Utils.sendNotification
+import java.io.IOException
+import java.io.InputStream
 
 
 class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFragment() {
@@ -75,10 +75,13 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
     private fun initializeUI() {
         autoFillTextFields()
         uploadCV()
-        applyNow()
 
         binding.navigateUp.setOnClickListener {
             dismiss()
+        }
+
+        binding.applyForJobButton.setOnClickListener {
+            checkIfAppliedJobBefore()
         }
     }
 
@@ -119,28 +122,50 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
 
 
     private fun onPickedPdf(uri: Uri?, fileName: String?) {
-        if (uri != null) {
-            loadingDialog.show()
+        try {
+            if (uri != null) {
+                loadingDialog.show()
 
-            val fileSizeInMB = uri.toFile().length() / (1024.0 * 1024.0)
+                val fileSizeInBytes = getFileSize(uri)
+                val fileSizeInMB = fileSizeInBytes / (1024.0 * 1024.0)
 
-            if (fileSizeInMB > 2048.0) {
-                loadingDialog.dismiss()
-                showToast("File size is larger than 2MB")
-            } else {
-                binding.cvNameTxt.apply {
-                    text = fileName
-                    isVisible = true
+                if (fileSizeInMB > 2048.0) {
+                    loadingDialog.dismiss()
+                    showToast("File size is larger than 2MB")
+                } else {
+                    binding.cvNameTxt.apply {
+                        text = fileName
+                        isVisible = true
 
-                    postDelayed({
-                        loadingDialog.dismiss()
-                    }, 2000)
+                        postDelayed({
+                            loadingDialog.dismiss()
+                        }, 2000)
+                    }
+
+                    cvFile = uri
+                    cvName = fileName
                 }
-
-                cvFile = uri
-                cvName = fileName
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            showToast(e.message.toString())
         }
+    }
+
+    private fun getFileSize(uri: Uri): Long {
+        var fileSize: Long = 0
+
+        try {
+            val inputStream: InputStream? = requireActivity().contentResolver.openInputStream(uri)
+            fileSize = inputStream?.available()?.toLong() ?: 0
+
+            // Close the input stream after obtaining the file size
+            inputStream?.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        return fileSize
     }
 
 
@@ -179,55 +204,65 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
     }
 
     private fun applyNow() {
-        binding.applyButton.setOnClickListener {
-            val job = getDataFromForm()
+        val job = getDataFromForm()
 
-            if (isValidForm()) {
-                loadingDialog.show()
+        if (isValidForm()) {
+            loadingDialog.show()
 
-                applyJob(job, cvFile, cvName) { success, errorMessage ->
-                    if (success) {
-                        notifyOwner()
-                        dismiss()
-                    } else {
-                        showToast(errorMessage.toString())
-                    }
-
-                    loadingDialog.dismiss()
+            applyJob(job, cvFile, cvName ?: "") { success, errorMessage ->
+                if (success) {
+                    notifyOwner()
+                } else {
+                    showToast(errorMessage.toString())
                 }
+
+                loadingDialog.dismiss()
+            }
+        }
+    }
+
+    private fun checkIfAppliedJobBefore() {
+        checkIfHaveAppliedJob(postJob.jobId) { haveApplied, exception ->
+            if (haveApplied) {
+                showToast("You have applied for this job.")
+            } else if (exception == null) {
+                applyNow()
+            } else {
+                showToast(exception.toString())
             }
         }
     }
 
     private fun notifyOwner() {
-        FirebaseMessaging.getInstance().token
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val recipientToken = task.result
-                    updateToken(recipientToken)
-
-                    getUserToken(postJob.userId) { token, _ ->
-                        if (token != null) {
-                            Notification(
-                                token = recipientToken,
-                                title = "New Job Application",
-                                body = "You have a new job application for the position of ${postJob.title}",
-                                userId = "$userId",
-                                ownerId = postJob.userId,
-                                jobId = postJob.jobId,
-                            ).also {
-                                sendNotification(requireContext(), it) { _, _ -> }
-                            }
-                        }
+        getUserToken(postJob.userId) { token, _ ->
+            if (token != null) {
+                Notification(
+                    token = token,
+                    title = "New Job Application",
+                    body = "You have a new job application for the position of ${postJob.title}",
+                    userId = "$userId",
+                    ownerId = postJob.userId,
+                    jobId = postJob.jobId,
+                ).also {
+                    sendNotification(requireActivity(), it) { _, _ ->
+                        showCongratsMessage()
                     }
                 }
             }
+        }
     }
 
-
-    private fun updateToken(token: String) {
-        profileId?.let {
-            updateUserDetails(it, hashMapOf("token" to token)) { _, _ -> }
+    private fun showCongratsMessage() {
+        AlertDialog.Builder(requireContext()).apply {
+            title = "Awesome!"
+            body = "Your application was submitted successfully."
+            isPositiveVisible = true
+            isNegativeVisible = false
+            positiveMessage = "Thank you"
+            positiveClickListener = {
+                dismiss()
+            }
+            build()
         }
     }
 
@@ -260,11 +295,9 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
         super.onDestroyView()
         _binding = null
     }
-
 }
 
 /**
- *
  * val myImageView: ImageView = findViewById(R.id.myImageView)
  *
  * // Set a click listener for the ImageView
