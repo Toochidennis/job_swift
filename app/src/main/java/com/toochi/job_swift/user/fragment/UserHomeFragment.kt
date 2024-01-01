@@ -75,17 +75,20 @@ class UserHomeFragment : Fragment() {
 
         getAllPostedJobs { jobs, errorMessage ->
             if (jobs != null) {
-                jobList = jobs
+                jobList.addAll(jobs)
 
-                jobs.forEach { job ->
+                val copiedJobs = jobs.map { job ->
                     val location = "${job.location} . ${formatAmount(job.salary, job.salaryRate)}"
                     val jobType = "${job.jobType} . ${job.workplaceType}"
 
-                    job.location = location
-                    job.jobType = jobType
+                    PostJob(
+                        title = job.title,
+                        location = location,
+                        jobType = jobType
+                    )
                 }
 
-                setUpAdapter(jobs)
+                setUpAdapter(copiedJobs.toMutableList())
             } else {
                 showToast(errorMessage.toString())
             }
@@ -111,7 +114,10 @@ class UserHomeFragment : Fragment() {
                 binding.executePendingBindings()
             }
         ) { position ->
-            PostedJobDetailsDialogFragment(jobList[position]).show(parentFragmentManager, "job details")
+            PostedJobDetailsDialogFragment(jobList[position]).show(
+                parentFragmentManager,
+                "job details"
+            )
         }
 
         binding.jobRecyclerView.apply {
