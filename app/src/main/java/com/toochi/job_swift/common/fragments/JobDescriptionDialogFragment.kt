@@ -69,7 +69,10 @@ class JobDescriptionDialogFragment(private val postJob: PostJob) : DialogFragmen
             DatePickerDialog(requireContext()) {
                 deadlineText = it
                 binding.deadlineEditText.setText(dateFormatter(it))
-            }
+            }.window?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
         }
 
         binding.rateEditText.setOnClickListener {
@@ -81,7 +84,6 @@ class JobDescriptionDialogFragment(private val postJob: PostJob) : DialogFragmen
         binding.postJobButton.setOnClickListener {
             processForm()
         }
-
     }
 
     private fun isValidForm(job: PostJob): Boolean {
