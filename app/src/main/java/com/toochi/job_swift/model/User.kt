@@ -1,6 +1,8 @@
 package com.toochi.job_swift.model
 
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.ServerTimestamp
+import java.util.Date
 
 data class User(
     var profileId: String = "",
@@ -21,5 +23,6 @@ data class User(
     var userType: String = "",
     var token: String = "",
     var profilePhotoUrl: String = "",
-    val regDate: FieldValue = FieldValue.serverTimestamp()
+    @ServerTimestamp
+    val regDate: Date = Date()
 )

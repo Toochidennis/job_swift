@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
+import com.toochi.job_swift.backend.AuthenticationManager.checkIfOwnerOfJob
 import com.toochi.job_swift.backend.AuthenticationManager.getCompany
 import com.toochi.job_swift.common.dialogs.ApplyJobDialogFragment
 import com.toochi.job_swift.common.dialogs.LoadingDialog
@@ -49,9 +50,11 @@ class PostedJobDetailsDialogFragment(private val postJob: PostJob) : DialogFragm
 
         getCompanyDetails()
 
-        binding.applyButton.setOnClickListener {
-            ApplyJobDialogFragment(postJob).show(parentFragmentManager, "apply job")
+        binding.applyForJobButton.setOnClickListener {
+            isOwnerOfJob()
         }
+
+        refreshData()
     }
 
     private fun fillFieldsWithData() {
@@ -59,7 +62,9 @@ class PostedJobDetailsDialogFragment(private val postJob: PostJob) : DialogFragm
         binding.locationTxt.text = postJob.location
         binding.jobTypeTxt.text = postJob.jobType
         binding.workplaceTypeTxt.text = postJob.workplaceType
-        binding.timeTxt.text = postJob.calculateDaysAgo()
+
+        val daysAgoString = "Posted ${postJob.calculateDaysAgo()}"
+        binding.timeTxt.text = daysAgoString
 
         val formatAmount = String.format(
             Locale.getDefault(),
@@ -104,6 +109,25 @@ class PostedJobDetailsDialogFragment(private val postJob: PostJob) : DialogFragm
             fillFieldsWithData()
 
             loadingDialog.dismiss()
+        }
+    }
+
+    private fun refreshData() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            getCompanyDetails()
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
+    }
+
+    private fun isOwnerOfJob() {
+        checkIfOwnerOfJob(postJob.jobId) { isOwner, exception ->
+            if (isOwner) {
+                showToast("You can't apply for your own job.")
+            } else if (exception == null) {
+                ApplyJobDialogFragment(postJob).show(parentFragmentManager, "Apply for job")
+            } else {
+                showToast(exception.toString())
+            }
         }
     }
 
