@@ -1,7 +1,6 @@
 package com.toochi.job_swift
 
 import android.app.Application
-import com.google.firebase.BuildConfig
 import com.google.firebase.FirebaseApp
 import timber.log.Timber
 
@@ -10,8 +9,6 @@ class MainApplication : Application() {
         super.onCreate()
         FirebaseApp.initializeApp(this)
 
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        }
+        //Timber.plant(Timber.DebugTree())
     }
 }

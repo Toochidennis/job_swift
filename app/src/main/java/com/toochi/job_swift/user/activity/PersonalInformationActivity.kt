@@ -87,7 +87,7 @@ class PersonalInformationActivity : AppCompatActivity() {
             binding.nameTxt.text = fullName
             binding.headlineTxt.text = user.headline
             binding.locationTxt.text = location
-            binding.aboutTxt.text = user.about
+            binding.bioTxt.text = user.about
             binding.skillTxt.text = user.skills
 
             if (user.profilePhotoUrl.isNotEmpty()) {
