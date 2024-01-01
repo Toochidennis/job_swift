@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/light_silver"
     tools:context=".common.fragments.NotificationsFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -48,6 +49,5 @@
         </RelativeLayout>
 
     </androidx.core.widget.NestedScrollView>
-
 
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -19,7 +20,7 @@ import com.google.firebase.messaging.RemoteMessage
 import com.toochi.job_swift.MainActivity
 import com.toochi.job_swift.R
 import com.toochi.job_swift.backend.AuthenticationManager.createNotifications
-import com.toochi.job_swift.backend.AuthenticationManager.updateUserDetails
+import com.toochi.job_swift.backend.AuthenticationManager.updateExistingUser
 import com.toochi.job_swift.util.Constants.Companion.CHANNEL_ID
 import com.toochi.job_swift.util.Constants.Companion.CHANNEL_NAME
 import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
@@ -34,7 +35,7 @@ class FirebaseService : FirebaseMessagingService() {
             .getString("profile_id", "")
 
         profileId?.let {
-            updateUserDetails(it, hashMapOf("token" to token)) { _, _ -> }
+            updateExistingUser(it, hashMapOf("token" to token)) { _, _ -> }
         }
 
     }
@@ -44,7 +45,7 @@ class FirebaseService : FirebaseMessagingService() {
         super.onMessageReceived(message)
 
         val intent = Intent(this, MainActivity::class.java)
-        intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP or FLAG_ACTIVITY_SINGLE_TOP)
+        intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP or FLAG_ACTIVITY_SINGLE_TOP or FLAG_ACTIVITY_NEW_TASK)
 
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val notificationId = Random.nextInt()
