@@ -184,17 +184,19 @@
                             android:textSize="@dimen/text_14"
                             app:layout_constraintTop_toBottomOf="@id/salaryTxt" />
 
-                        <com.google.android.material.textview.MaterialTextView
+                        <androidx.appcompat.widget.AppCompatButton
                             android:id="@+id/mailTxt"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:drawableStart="@drawable/ic_gmail"
-                            android:drawablePadding="@dimen/dimen_16"
-                            android:foreground="?android:attr/selectableItemBackground"
-                            android:padding="@dimen/dimen_10"
-                            android:text="Send mail"
+                            android:drawablePadding="@dimen/dimen_10"
+                            android:paddingStart="@dimen/dimen_10"
+                            android:paddingEnd="@dimen/dimen_10"
+                            android:text="@string/send_mail"
+                            android:textAllCaps="false"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_16"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/timeTxt" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -227,14 +229,17 @@
                             android:id="@+id/aboutCompanyTxt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="@dimen/dimen_16"
-                            android:textColor="@color/black" />
+                            android:lineSpacingMultiplier="1"
+                            android:paddingStart="@dimen/dimen_16"
+                            android:paddingEnd="@dimen/dimen_16"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_14" />
 
                         <com.google.android.material.textview.MaterialTextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/dimen_16"
-                            android:text="Requirements"
+                            android:text="@string/job_description"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_18"
                             android:textStyle="bold" />
@@ -243,8 +248,11 @@
                             android:id="@+id/requirementsTxt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="@dimen/dimen_16"
-                            android:textColor="@color/black" />
+                            android:lineSpacingMultiplier="1"
+                            android:paddingStart="@dimen/dimen_16"
+                            android:paddingEnd="@dimen/dimen_16"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_14" />
 
 
                     </LinearLayout>
@@ -255,7 +263,7 @@
         </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/applyButton"
+            android:id="@+id/apply_for_job_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
