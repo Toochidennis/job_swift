@@ -20,5 +20,9 @@ class Constants {
         const val EMAIL = "email"
         const val PHONE_NUMBER = "phone number"
         const val SIGN_OUT = "Sign out"
+        const val TAG = "response"
+        const val PDF_STORAGE_PATH = "pdfs"
+        const val IMAGE_STORAGE_PATH = "images"
+        const val PERMISSION_REQUESTED_CODE = 100
     }
 }

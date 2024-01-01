@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager.updateUserDetails
+import com.toochi.job_swift.backend.AuthenticationManager.getUserPersonalDetails
+import com.toochi.job_swift.backend.AuthenticationManager.updateExistingUser
 import com.toochi.job_swift.common.dialogs.DatePickerDialog
+import com.toochi.job_swift.common.dialogs.LoadingDialog
 import com.toochi.job_swift.databinding.FragmentContactInfoDialogBinding
 import com.toochi.job_swift.model.User
 import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
@@ -22,6 +24,7 @@ class ContactInfoDialogFragment : DialogFragment() {
     private val binding get() = _binding!!
 
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var loadingDialog: LoadingDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,22 +45,25 @@ class ContactInfoDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE)
+        loadingDialog = LoadingDialog(requireContext())
 
         initData()
         handleViewClicks()
     }
 
     private fun initData() {
-        with(sharedPreferences) {
-            val address = getString("address", "")
-            val dateOfBirth = getString("dob", "")
-            val email = getString("email", "")
-            val phone = getString("phone_number", "")
+        loadingDialog.show()
+        getUserPersonalDetails { user, exception ->
+            if (user != null) {
+                binding.emailTextView.text = user.email
+                binding.phoneNumberTextField.setText(user.phoneNumber)
+                binding.addressTextField.setText(user.address)
+                binding.birthdayTextField.setText(user.dateOfBirth)
+            } else {
+                Toast.makeText(requireContext(), exception.toString(), Toast.LENGTH_SHORT).show()
+            }
 
-            binding.emailTextView.text = email ?: ""
-            binding.phoneNumberTextField.setText(phone ?: "")
-            binding.addressTextField.setText(address ?: "")
-            binding.birthdayTextField.setText(dateOfBirth ?: "")
+            loadingDialog.dismiss()
         }
     }
 
@@ -86,7 +92,9 @@ class ContactInfoDialogFragment : DialogFragment() {
         val profileId = sharedPreferences.getString("profile_id", "")
 
         if (profileId != null) {
-            updateUserDetails(
+            loadingDialog.show()
+
+            updateExistingUser(
                 profileId = profileId,
                 hashMapOf(
                     "phoneNumber" to user.phoneNumber,
@@ -95,10 +103,13 @@ class ContactInfoDialogFragment : DialogFragment() {
                 )
             ) { success, error ->
                 if (success) {
+                    updateSharedPreference(user)
                     dismiss()
                 } else {
                     Toast.makeText(requireContext(), error.toString(), Toast.LENGTH_SHORT).show()
                 }
+
+                loadingDialog.dismiss()
             }
         }
     }
@@ -110,6 +121,15 @@ class ContactInfoDialogFragment : DialogFragment() {
             address = binding.addressTextField.text.toString().trim(),
             dateOfBirth = binding.birthdayTextField.text.toString().trim()
         )
+    }
+
+    private fun updateSharedPreference(user: User) {
+        sharedPreferences.edit().run {
+            putString("phone_number", user.phoneNumber)
+            putString("dob", user.dateOfBirth)
+            putString("address", user.address)
+            apply()
+        }
     }
 
 
