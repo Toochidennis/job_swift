@@ -12,6 +12,7 @@ import com.toochi.job_swift.user.activity.UserDashboardActivity
 import com.toochi.job_swift.util.Constants.Companion.ADMIN
 import com.toochi.job_swift.util.Constants.Companion.EMPLOYEE
 import com.toochi.job_swift.util.Constants.Companion.EMPLOYER
+import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
 import com.toochi.job_swift.util.Constants.Companion.SIGN_OUT
 
 class MainActivity : AppCompatActivity() {
@@ -25,8 +26,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        with(getSharedPreferences("loginDetail", MODE_PRIVATE)) {
 
+        with(getSharedPreferences(PREF_NAME, MODE_PRIVATE)) {
+            println(getString("user_type", ""))
             val intent = when (getString("user_type", "")) {
                 ADMIN -> {
                     Intent(this@MainActivity, AdminDashboardActivity::class.java)
@@ -50,4 +52,5 @@ class MainActivity : AppCompatActivity() {
             finish()
         }
     }
+
 }

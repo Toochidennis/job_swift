@@ -1,6 +1,5 @@
 package com.toochi.job_swift.user.fragment
 
-import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
 import com.toochi.job_swift.common.fragments.AddJobBasicsDialogFragment
-import com.toochi.job_swift.common.fragments.CreateEmployerAccountDialogFragment
 import com.toochi.job_swift.databinding.FragmentJobIntroScreenDialogBinding
 
 
@@ -37,15 +35,7 @@ class JobIntroScreenDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.getStartedButton.setOnClickListener {
-            val userType = requireActivity().getSharedPreferences("loginDetail", MODE_PRIVATE)
-                .getString("user_type", "")
-
-            if (userType == "employee") {
-                CreateEmployerAccountDialogFragment().show(parentFragmentManager, "create")
-            } else {
-                AddJobBasicsDialogFragment().show(parentFragmentManager, "job basics")
-            }
-
+            AddJobBasicsDialogFragment().show(parentFragmentManager, "job basics")
             dismiss()
         }
 

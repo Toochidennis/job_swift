@@ -23,6 +23,7 @@ import com.toochi.job_swift.backend.AuthenticationManager.getUserPersonalDetails
 import com.toochi.job_swift.backend.AuthenticationManager.loginWithEmailAndPassword
 import com.toochi.job_swift.backend.AuthenticationManager.registerWithEmailAndPassword
 import com.toochi.job_swift.backend.AuthenticationManager.registerWithGoogleAndLogin
+import com.toochi.job_swift.common.dialogs.LoadingDialog
 import com.toochi.job_swift.databinding.ActivityLoginBinding
 import com.toochi.job_swift.model.User
 import com.toochi.job_swift.user.activity.UserDashboardActivity
@@ -37,15 +38,15 @@ import com.toochi.job_swift.util.Utils.updateSharedPreferences
 
 class LoginActivity : AppCompatActivity() {
 
-    private var _binding: ActivityLoginBinding? = null
-
-    private val binding get() = _binding!!
+    private lateinit var binding: ActivityLoginBinding
 
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var loadingDialog: LoadingDialog
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = ActivityLoginBinding.inflate(layoutInflater)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
@@ -57,6 +58,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE)
+        loadingDialog = LoadingDialog(this)
 
         viewClicks()
     }
@@ -91,10 +93,10 @@ class LoginActivity : AppCompatActivity() {
             editTextWatcher(binding.phoneNumberTextInput, PHONE_NUMBER)
 
             if (isValidSignUpForm(user)) {
+                loadingDialog.show()
                 registerWithEmailAndPassword(user) { success, errorMessage ->
                     handleAuthenticationResult(success, errorMessage, user)
                 }
-
             }
 
         }
@@ -121,6 +123,8 @@ class LoginActivity : AppCompatActivity() {
             val account = task.getResult(ApiException::class.java)
 
             account?.let {
+                loadingDialog.show()
+
                 registerWithGoogleAndLogin(it) { success, errorMessage ->
                     if (success) {
                         getUserPersonalDetails { user, error ->
@@ -129,6 +133,7 @@ class LoginActivity : AppCompatActivity() {
                     } else {
                         showToast(errorMessage.toString())
                     }
+                    loadingDialog.dismiss()
                 }
             }
 
@@ -145,6 +150,8 @@ class LoginActivity : AppCompatActivity() {
             editTextWatcher(binding.signInEmail, EMAIL)
 
             if (isValidSignInForm(email, password)) {
+                loadingDialog.show()
+
                 loginWithEmailAndPassword(email, password) { success, errorMessage ->
                     if (success) {
                         getUserPersonalDetails { user, error ->
@@ -153,6 +160,8 @@ class LoginActivity : AppCompatActivity() {
                     } else {
                         showToast(errorMessage.toString())
                     }
+
+                    loadingDialog.dismiss()
                 }
             }
         }
@@ -256,6 +265,8 @@ class LoginActivity : AppCompatActivity() {
         } else {
             showToast(errorMessage.toString())
         }
+
+        loadingDialog.dismiss()
     }
 
     private fun launchDashboardActivity(who: String) {
@@ -287,8 +298,4 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
 }
