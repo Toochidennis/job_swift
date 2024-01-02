@@ -11,11 +11,11 @@ import androidx.core.view.ViewCompat
 import com.squareup.picasso.Picasso
 import com.toochi.job_swift.BR
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager.getUserEducationDetails
-import com.toochi.job_swift.backend.AuthenticationManager.getUserExperienceDetails
-import com.toochi.job_swift.backend.AuthenticationManager.getUserPersonalDetails
-import com.toochi.job_swift.common.dialogs.LoadingDialog
+import com.toochi.job_swift.backend.EducationManager.getUserEducationDetails
+import com.toochi.job_swift.backend.ExperienceManager.getUserExperienceDetails
+import com.toochi.job_swift.backend.PersonalDetailsManager.getUserPersonalDetails
 import com.toochi.job_swift.common.activities.ImagePreviewActivity
+import com.toochi.job_swift.common.dialogs.LoadingDialog
 import com.toochi.job_swift.databinding.ActivityPersonalInformationBinding
 import com.toochi.job_swift.model.Education
 import com.toochi.job_swift.model.Experience
@@ -39,6 +39,8 @@ class PersonalInformationActivity : AppCompatActivity() {
     private var experiencesList = mutableListOf<Experience>()
     private var educationsList = mutableListOf<Education>()
     private var userModel: User? = null
+    private var company = ""
+    private var educationName = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,15 +68,25 @@ class PersonalInformationActivity : AppCompatActivity() {
     private fun initData() {
         loadingDialog.show()
 
-        getUserPersonalDetails { user, error ->
-            if (user != null) {
-                userModel = user
-                setUpProfileDetails()
-                getExperienceDetails()
-                getEducationDetails()
-            } else {
-                showToast(error.toString())
+        try {
+            getUserPersonalDetails { user, _ ->
+                if (user != null) {
+                    userModel = user
+                    setUpProfileDetails()
+                    getExperienceDetails()
+                    getEducationDetails()
+                }
+
+                loadingDialog.dismiss()
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(
+                this@PersonalInformationActivity,
+                "An error occurred.",
+                Toast.LENGTH_SHORT
+            ).show()
+        } finally {
             loadingDialog.dismiss()
         }
     }
@@ -99,51 +111,67 @@ class PersonalInformationActivity : AppCompatActivity() {
     }
 
     private fun getExperienceDetails() {
-        experiencesList.clear()
+        var copiedExperiences = listOf<Experience>()
 
-        getUserExperienceDetails { experiences, error ->
+        getUserExperienceDetails { experiences, _ ->
             if (experiences != null) {
                 experiencesList = experiences
 
-                experiences.forEach { experience ->
-                    experience.companyName = "${experience.companyName} . ${experience.jobType}"
-                    experience.startDate = "${experience.startDate} - ${experience.endDate}"
-                    experience.location = "${experience.location}, ${experience.workplace}"
-                }
+                copiedExperiences = experiences.map { experience ->
+                    val companyName = "${experience.companyName} . ${experience.jobType}"
+                    val date = "${experience.startDate} - ${experience.endDate}"
+                    val location = "${experience.location}, ${experience.workplace}"
 
-                setUpExperienceAdapter(experiences)
-            } else {
-                showToast(error.toString())
+                    company = experience.companyName
+
+                    Experience(
+                        jobTitle = experience.jobTitle,
+                        companyName = companyName,
+                        startDate = date,
+                        location = location
+                    )
+                }
             }
+
+            setUpExperienceAdapter(copiedExperiences.toMutableList())
         }
     }
 
 
     private fun getEducationDetails() {
-        educationsList.clear()
+        var copiedEducations = listOf<Education>()
 
-        getUserEducationDetails { educations, error ->
+        getUserEducationDetails { educations, _ ->
             if (educations != null) {
                 educationsList = educations
 
-                educations.forEach { education ->
-                    education.degree = "${education.degree}, ${education.discipline}"
-                    education.startDate = "${education.startDate} - ${education.endDate}"
-                    education.grade = "Grade: ${education.grade}"
+                copiedEducations = educations.map { education ->
+                    val degree = "${education.degree}, ${education.discipline}"
+                    val startDate = "${education.startDate} - ${education.endDate}"
+                    val grade = "Grade: ${education.grade}"
+
+                    educationName = education.school
+
+                    Education(
+                        school = education.school,
+                        degree = degree,
+                        startDate = startDate,
+                        grade = grade
+                    )
                 }
-
-                setUpEducationAdapter(educations)
-
-            } else {
-                showToast(error.toString())
             }
+
+            val comEdu = "$company . $educationName"
+            binding.industryTxt.text = comEdu
+
+            setUpEducationAdapter(copiedEducations.toMutableList())
         }
     }
 
 
-    private fun setUpExperienceAdapter(experienceList: MutableList<Experience>) {
+    private fun setUpExperienceAdapter(itemList: MutableList<Experience>) {
         val experienceAdapter = GenericAdapter(
-            itemList = experienceList,
+            itemList = itemList,
             itemResLayout = R.layout.item_experience,
             bindItem = { binding, model ->
                 binding.setVariable(BR.experience, model)
@@ -161,9 +189,9 @@ class PersonalInformationActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpEducationAdapter(educationList: MutableList<Education>) {
+    private fun setUpEducationAdapter(itemList: MutableList<Education>) {
         val educationAdapter = GenericAdapter(
-            itemList = educationList,
+            itemList = itemList,
             itemResLayout = R.layout.item_education,
             bindItem = { binding, model ->
                 binding.setVariable(BR.education, model)
@@ -184,13 +212,13 @@ class PersonalInformationActivity : AppCompatActivity() {
     private fun handleViewClicks() {
         binding.editProfileButton.setOnClickListener {
             EditPersonalInfoDialogFragment(userModel) {
-                setUpProfileDetails()
+                initData()
             }.show(supportFragmentManager, "Profile")
         }
 
         binding.editAboutBtn.setOnClickListener {
             AboutDialogFragment(userModel) {
-                setUpProfileDetails()
+                initData()
             }.show(supportFragmentManager, getString(R.string.about))
         }
 
@@ -218,10 +246,6 @@ class PersonalInformationActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun showToast(message: String) {
-        Toast.makeText(this@PersonalInformationActivity, message, Toast.LENGTH_SHORT).show()
-    }
 
     private fun refreshData() {
         binding.swipeRefreshLayout.setOnRefreshListener {
