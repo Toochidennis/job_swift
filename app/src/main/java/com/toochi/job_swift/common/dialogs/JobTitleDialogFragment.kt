@@ -20,7 +20,6 @@ class JobTitleDialogFragment(
     private var _binding: FragmentJobTitleDialogBinding? = null
     private val binding get() = _binding!!
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog)

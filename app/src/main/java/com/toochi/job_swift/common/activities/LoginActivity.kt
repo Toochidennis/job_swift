@@ -19,10 +19,10 @@ import com.google.android.material.textfield.TextInputLayout
 import com.toochi.job_swift.R
 import com.toochi.job_swift.admin.activity.AdminDashboardActivity
 import com.toochi.job_swift.backend.AuthenticationManager.getGoogleSignInClient
-import com.toochi.job_swift.backend.AuthenticationManager.getUserPersonalDetails
 import com.toochi.job_swift.backend.AuthenticationManager.loginWithEmailAndPassword
 import com.toochi.job_swift.backend.AuthenticationManager.registerWithEmailAndPassword
 import com.toochi.job_swift.backend.AuthenticationManager.registerWithGoogleAndLogin
+import com.toochi.job_swift.backend.PersonalDetailsManager.getUserPersonalDetails
 import com.toochi.job_swift.common.dialogs.LoadingDialog
 import com.toochi.job_swift.databinding.ActivityLoginBinding
 import com.toochi.job_swift.model.User
@@ -92,11 +92,19 @@ class LoginActivity : AppCompatActivity() {
             editTextWatcher(binding.emailTextInput, EMAIL)
             editTextWatcher(binding.phoneNumberTextInput, PHONE_NUMBER)
 
-            if (isValidSignUpForm(user)) {
-                loadingDialog.show()
-                registerWithEmailAndPassword(user) { success, errorMessage ->
-                    handleAuthenticationResult(success, errorMessage, user)
+            try {
+
+                if (isValidSignUpForm(user)) {
+                    loadingDialog.show()
+                    registerWithEmailAndPassword(user) { success, errorMessage ->
+                        handleAuthenticationResult(success, errorMessage, user)
+                    }
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                showToast("An error occurred.")
+            }finally {
+                loadingDialog.dismiss()
             }
 
         }
@@ -137,8 +145,11 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
 
-        } catch (e: ApiException) {
+        } catch (e: Exception) {
             e.printStackTrace()
+            showToast("An error occurred.")
+        }finally {
+            loadingDialog.dismiss()
         }
     }
 
@@ -148,23 +159,31 @@ class LoginActivity : AppCompatActivity() {
             val password = binding.signInPassword.editText?.text.toString().trim()
 
             editTextWatcher(binding.signInEmail, EMAIL)
+            try {
+                if (isValidSignInForm(email, password)) {
+                    loadingDialog.show()
 
-            if (isValidSignInForm(email, password)) {
-                loadingDialog.show()
-
-                loginWithEmailAndPassword(email, password) { success, errorMessage ->
-                    if (success) {
-                        getUserPersonalDetails { user, error ->
-                            handleAuthenticationResult(success, error, user)
+                    loginWithEmailAndPassword(email, password) { success, errorMessage ->
+                        if (success) {
+                            getUserPersonalDetails { user, error ->
+                                handleAuthenticationResult(success, error, user)
+                            }
+                        } else {
+                            showToast(errorMessage.toString())
                         }
-                    } else {
-                        showToast(errorMessage.toString())
-                    }
 
-                    loadingDialog.dismiss()
+                        loadingDialog.dismiss()
+                    }
                 }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                showToast("An error occurred.")
+            }finally {
+                loadingDialog.dismiss()
             }
         }
+
     }
 
     private fun getUserFromForm(): User {
