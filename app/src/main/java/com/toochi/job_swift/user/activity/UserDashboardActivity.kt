@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.firebase.messaging.FirebaseMessaging
@@ -15,6 +16,7 @@ import com.toochi.job_swift.R
 import com.toochi.job_swift.backend.PersonalDetailsManager.updateExistingUser
 import com.toochi.job_swift.common.fragments.NotificationsFragment
 import com.toochi.job_swift.databinding.ActivityUserDashboardBinding
+import com.toochi.job_swift.util.NotificationViewModel
 import com.toochi.job_swift.user.fragment.UserHomeFragment
 import com.toochi.job_swift.user.fragment.UserJobsFragment
 import com.toochi.job_swift.user.fragment.UserSettingsFragment
@@ -32,6 +34,7 @@ class UserDashboardActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUserDashboardBinding
     private val userActivityScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private val viewModel: NotificationViewModel by viewModels()
 
     private var doubleBackToExitPressedOnce = false
 
@@ -46,6 +49,14 @@ class UserDashboardActivity : AppCompatActivity() {
 
         bottomBarNavigation()
 
+        onBackClicked()
+
+        viewModel.newNotification.observe(this) {
+            badgeSetUp(R.id.notifications)
+        }
+    }
+
+    private fun onBackClicked() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (isHomeFragmentVisible()) {
@@ -69,9 +80,9 @@ class UserDashboardActivity : AppCompatActivity() {
                 }
             }
         }
-
         onBackPressedDispatcher.addCallback(this, callback)
     }
+
 
     private fun bottomBarNavigation() {
         val container = R.id.userContainer
@@ -91,6 +102,7 @@ class UserDashboardActivity : AppCompatActivity() {
 
                 R.id.notifications -> {
                     loadFragment(this, NotificationsFragment(), container)
+                    clearBadge(R.id.notifications)
                     requestPermission()
                     true
                 }
@@ -145,6 +157,18 @@ class UserDashboardActivity : AppCompatActivity() {
         } catch (e: Exception) {
             // Handle exceptions, such as token retrieval failure or database update failure
             e.printStackTrace()
+        }
+    }
+
+    private fun badgeSetUp(id: Int) {
+        val badge = binding.bottomNavigation.getOrCreateBadge(id)
+        badge.isVisible = true
+    }
+
+    private fun clearBadge(id: Int) {
+        val badgeDrawable = binding.bottomNavigation.getBadge(id)
+        if (badgeDrawable != null) {
+            badgeDrawable.isVisible = false
         }
     }
 
