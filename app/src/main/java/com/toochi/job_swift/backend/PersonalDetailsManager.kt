@@ -8,6 +8,7 @@ import com.toochi.job_swift.backend.AuthenticationManager.storageRef
 import com.toochi.job_swift.backend.AuthenticationManager.usersCollection
 import com.toochi.job_swift.model.User
 import com.toochi.job_swift.util.Constants
+import com.toochi.job_swift.util.Constants.Companion.PERSONAL_DETAILS
 
 object PersonalDetailsManager {
 
@@ -55,11 +56,11 @@ object PersonalDetailsManager {
         // Reference to the user's personal details collection
         val userPersonalDetailsCollection = if (userId.isEmpty()) {
             currentId?.let {
-                AuthenticationManager.usersCollection.document(it)
-                    .collection(Constants.PERSONAL_DETAILS)
+                usersCollection.document(it)
+                    .collection(PERSONAL_DETAILS)
             }
         } else {
-            usersCollection.document(userId).collection(Constants.PERSONAL_DETAILS)
+            usersCollection.document(userId).collection(PERSONAL_DETAILS)
         }
 
         // Retrieve personal details

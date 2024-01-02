@@ -1,6 +1,9 @@
 package com.toochi.job_swift.backend
 
+import com.toochi.job_swift.backend.AuthenticationManager.usersCollection
 import com.toochi.job_swift.model.Notification
+import com.toochi.job_swift.util.Constants.Companion.ACCEPTED
+import com.toochi.job_swift.util.Constants.Companion.REJECTED
 
 object NotificationsManager {
 
@@ -8,7 +11,12 @@ object NotificationsManager {
         notification: Notification,
         onComplete: (Boolean, String?) -> Unit
     ) {
-        val ownerDocument = AuthenticationManager.usersCollection.document(notification.employerId)
+
+        val ownerDocument = if (notification.type == ACCEPTED || notification.type == REJECTED) {
+            usersCollection.document(notification.userId)
+        } else {
+            usersCollection.document(notification.employerId)
+        }
 
         ownerDocument.collection("notifications")
             .add(notification)

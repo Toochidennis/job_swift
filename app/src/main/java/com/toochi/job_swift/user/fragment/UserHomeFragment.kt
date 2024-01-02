@@ -91,15 +91,16 @@ class UserHomeFragment : Fragment() {
                         )
                     }
 
+                    loadingDialog.dismiss()
                     setUpAdapter(copiedJobs.toMutableList())
                 } else {
+                    loadingDialog.dismiss()
                     showToast(errorMessage.toString())
                 }
-
-                loadingDialog.dismiss()
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            loadingDialog.dismiss()
             showToast("An error occurred.")
         }
     }
