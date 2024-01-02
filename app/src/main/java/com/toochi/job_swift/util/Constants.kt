@@ -6,6 +6,7 @@ class Constants {
         const val SCOPES = "https://www.googleapis.com/auth/firebase.messaging"
         const val BASE_URL = "https://fcm.googleapis.com/v1/projects/jobswift-d3781/messages:send"
         const val CONTENT_TYPE = "application/json"
+        const val FILE_TYPE = "application/pdf"
         const val CHANNEL_ID = "swift_job"
         const val CHANNEL_NAME = "swift_job"
         const val SELECTED = "select"
@@ -20,9 +21,16 @@ class Constants {
         const val EMAIL = "email"
         const val PHONE_NUMBER = "phone number"
         const val SIGN_OUT = "Sign out"
-        const val TAG = "response"
         const val PDF_STORAGE_PATH = "pdfs"
         const val IMAGE_STORAGE_PATH = "images"
         const val PERMISSION_REQUESTED_CODE = 100
+        const val JOB_APPLICATION = "Job application"
+        const val ACCOUNT_DISABLED = "Account disabled"
+        const val JOBS_APPLIED_FOR = "jobsAppliedFor"
+        const val JOBS_APPLIED_BY_OTHERS = "jobsAppliedByOthers"
+        const val PERSONAL_DETAILS = "personalDetails"
+        const val PENDING = "Pending"
+        const val REJECTED = "Rejected"
+        const val ACCEPTED = "Accepted"
     }
 }

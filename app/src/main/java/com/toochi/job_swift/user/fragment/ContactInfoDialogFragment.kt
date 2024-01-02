@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager.getUserPersonalDetails
-import com.toochi.job_swift.backend.AuthenticationManager.updateExistingUser
+import com.toochi.job_swift.backend.PersonalDetailsManager.getUserPersonalDetails
+import com.toochi.job_swift.backend.PersonalDetailsManager.updateExistingUser
 import com.toochi.job_swift.common.dialogs.DatePickerDialog
 import com.toochi.job_swift.common.dialogs.LoadingDialog
 import com.toochi.job_swift.databinding.FragmentContactInfoDialogBinding
@@ -21,6 +21,7 @@ import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
 class ContactInfoDialogFragment : DialogFragment() {
 
     private var _binding: FragmentContactInfoDialogBinding? = null
+
     private val binding get() = _binding!!
 
     private lateinit var sharedPreferences: SharedPreferences
@@ -52,17 +53,25 @@ class ContactInfoDialogFragment : DialogFragment() {
     }
 
     private fun initData() {
-        loadingDialog.show()
-        getUserPersonalDetails { user, exception ->
-            if (user != null) {
-                binding.emailTextView.text = user.email
-                binding.phoneNumberTextField.setText(user.phoneNumber)
-                binding.addressTextField.setText(user.address)
-                binding.birthdayTextField.setText(user.dateOfBirth)
-            } else {
-                Toast.makeText(requireContext(), exception.toString(), Toast.LENGTH_SHORT).show()
-            }
+        try {
+            loadingDialog.show()
+            getUserPersonalDetails { user, exception ->
+                if (user != null) {
+                    binding.emailTextView.text = user.email
+                    binding.phoneNumberTextField.setText(user.phoneNumber)
+                    binding.addressTextField.setText(user.address)
+                    binding.birthdayTextField.setText(user.dateOfBirth)
+                } else {
+                    Toast.makeText(requireContext(), exception.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
 
+                loadingDialog.dismiss()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(requireContext(), "An error occurred.", Toast.LENGTH_SHORT).show()
+        }finally {
             loadingDialog.dismiss()
         }
     }
@@ -87,30 +96,39 @@ class ContactInfoDialogFragment : DialogFragment() {
     }
 
     private fun processForm() {
-        val user = getDataFromForm()
+        try {
 
-        val profileId = sharedPreferences.getString("profile_id", "")
+            val user = getDataFromForm()
 
-        if (profileId != null) {
-            loadingDialog.show()
+            val profileId = sharedPreferences.getString("profile_id", "")
 
-            updateExistingUser(
-                profileId = profileId,
-                hashMapOf(
-                    "phoneNumber" to user.phoneNumber,
-                    "address" to user.address,
-                    "dateOfBirth" to user.dateOfBirth
-                )
-            ) { success, error ->
-                if (success) {
-                    updateSharedPreference(user)
-                    dismiss()
-                } else {
-                    Toast.makeText(requireContext(), error.toString(), Toast.LENGTH_SHORT).show()
+            if (profileId != null) {
+                loadingDialog.show()
+
+                updateExistingUser(
+                    profileId = profileId,
+                    hashMapOf(
+                        "phoneNumber" to user.phoneNumber,
+                        "address" to user.address,
+                        "dateOfBirth" to user.dateOfBirth
+                    )
+                ) { success, error ->
+                    if (success) {
+                        updateSharedPreference(user)
+                        dismiss()
+                    } else {
+                        Toast.makeText(requireContext(), error.toString(), Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                    loadingDialog.dismiss()
                 }
-
-                loadingDialog.dismiss()
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+           Toast.makeText(requireContext(), "An error occurred.", Toast.LENGTH_SHORT).show()
+        }finally {
+            loadingDialog.dismiss()
         }
     }
 
