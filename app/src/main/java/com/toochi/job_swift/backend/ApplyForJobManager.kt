@@ -11,6 +11,7 @@ import com.toochi.job_swift.backend.AuthenticationManager.usersCollection
 import com.toochi.job_swift.model.ApplyJob
 import com.toochi.job_swift.model.PostJob
 import com.toochi.job_swift.util.Constants
+import com.toochi.job_swift.util.Constants.Companion.JOBS_APPLIED_FOR
 
 object ApplyForJobManager {
 
@@ -50,7 +51,12 @@ object ApplyForJobManager {
                     cvName,
                     onComplete
                 )
-            } ?: applyJobWithoutCV(Constants.JOBS_APPLIED_BY_OTHERS, usersDocument, applyJob, onComplete)
+            } ?: applyJobWithoutCV(
+                Constants.JOBS_APPLIED_BY_OTHERS,
+                usersDocument,
+                applyJob,
+                onComplete
+            )
         }
     }
 
@@ -153,10 +159,9 @@ object ApplyForJobManager {
         }
 
         val appliedJobsDocument = if (userId.isEmpty()) {
-            usersDocument?.collection(Constants.JOBS_APPLIED_FOR)?.document(applicationId)
+            usersDocument?.collection(JOBS_APPLIED_FOR)?.document(applicationId)
         } else {
-            usersCollection.document(userId).collection(Constants.JOBS_APPLIED_FOR)
-                .document(applicationId)
+            usersCollection.document(userId).collection(JOBS_APPLIED_FOR).document(applicationId)
         }
 
         appliedJobsDocument
@@ -176,7 +181,7 @@ object ApplyForJobManager {
         }
 
         usersDocument?.let { userDoc ->
-            userDoc.collection("jobsAppliedFor")
+            userDoc.collection(JOBS_APPLIED_FOR)
                 .get()
                 .addOnSuccessListener { querySnapshot ->
                     handleAppliedJobsQuerySnapshot(querySnapshot, onComplete)
@@ -254,23 +259,29 @@ object ApplyForJobManager {
     }
 
     fun getJobsAppliedForById(
+        userId: String = "",
         jobId: String,
         employerId: String,
         onComplete: (ApplyJob?, String?) -> Unit
     ) {
         val currentUser = auth.currentUser
-        val usersDocument = currentUser?.let {
-            usersCollection.document(it.uid)
+        val usersDocument = if (userId.isEmpty()) {
+            currentUser?.let {
+                usersCollection.document(it.uid)
+            }
+        } else {
+            usersCollection.document(userId)
         }
 
         usersDocument?.let { userDoc ->
-            userDoc.collection("jobsAppliedFor")
-                .whereEqualTo("jobId", jobId)
-                .whereEqualTo("employerId", employerId)
+            userDoc.collection(JOBS_APPLIED_FOR)
+                .whereEqualTo("jobId", jobId.trim())
+                .whereEqualTo("employerId", employerId.trim())
                 .get()
                 .addOnSuccessListener { querySnapshot ->
                     val applyJob =
                         querySnapshot.documents.firstOrNull()?.toObject(ApplyJob::class.java)
+                    applyJob?.applicationId = querySnapshot.documents.firstOrNull()?.id.toString()
                     onComplete(applyJob, null)
                 }
                 .addOnFailureListener { error ->

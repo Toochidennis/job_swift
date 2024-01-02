@@ -3,6 +3,8 @@ package com.toochi.job_swift.common.dialogs
 import android.content.Context.MODE_PRIVATE
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.View
@@ -212,8 +214,6 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
             val job = getDataFromForm()
 
             if (isValidForm()) {
-                loadingDialog.show()
-
                 applyJob("", job, cvFile, cvName ?: "") { success, errorMessage ->
                     if (success) {
                         applyJob(postJob.userId, job, cvFile, cvName ?: "") { isFinished, error ->
@@ -221,34 +221,41 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
                                 notifyOwner()
                             } else {
                                 showToast(error.toString())
+                                loadingDialog.dismiss()
                             }
                         }
                     } else {
                         showToast(errorMessage.toString())
+                        loadingDialog.dismiss()
                     }
-
-                    loadingDialog.dismiss()
                 }
+            } else {
+                loadingDialog.dismiss()
             }
         } catch (e: ApiException) {
             e.printStackTrace()
+            loadingDialog.dismiss()
             showToast("An error occurred.")
         }
     }
 
     private fun checkIfAppliedJobBefore() {
         try {
+            loadingDialog.show()
+
             checkIfHaveAppliedJob(postJob.jobId) { haveApplied, exception ->
                 if (haveApplied) {
                     showToast(getString(R.string.you_have_applied_for_this_job))
                 } else if (exception == null) {
                     applyNow()
                 } else {
+                    loadingDialog.dismiss()
                     showToast(exception.toString())
                 }
             }
         } catch (e: ApiException) {
             e.printStackTrace()
+            loadingDialog.dismiss()
             showToast("An error occurred.")
         }
     }
@@ -266,7 +273,9 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
                         jobId = postJob.jobId,
                         type = JOB_APPLICATION
                     ).also {
-                        sendNotification(requireActivity(), it) { _, _ ->
+                        sendNotification(requireActivity(), it) { _ ->
+                            loadingDialog.dismiss()
+
                             showCongratsMessage()
                         }
                     }
@@ -274,13 +283,11 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
             }
         } catch (e: Exception) {
             e.printStackTrace()
-
         }
-
     }
 
     private fun showCongratsMessage() {
-        AlertDialog.Builder(requireContext()).apply {
+        AlertDialog.Builder(requireContext()).run {
             title = "Awesome!"
             body = "Your application was submitted successfully."
             isPositiveVisible = true
@@ -290,9 +297,8 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
                 dismiss()
             }
             build()
-        }
+        }.show()
     }
-
 
     private fun getFileName(uri: Uri): String? {
         requireActivity().contentResolver.query(
