@@ -1,5 +1,6 @@
 package com.toochi.job_swift.user.fragment
 
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,10 +8,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager.updateExistingUser
+import com.toochi.job_swift.backend.PersonalDetailsManager.updateExistingUser
 import com.toochi.job_swift.common.dialogs.LoadingDialog
 import com.toochi.job_swift.databinding.FragmentEditPersonalInfoBinding
 import com.toochi.job_swift.model.User
+import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
 
 
 class EditPersonalInfoDialogFragment(
@@ -20,7 +22,6 @@ class EditPersonalInfoDialogFragment(
 
     private var _binding: FragmentEditPersonalInfoBinding? = null
     private val binding get() = _binding!!
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,19 +64,18 @@ class EditPersonalInfoDialogFragment(
     }
 
     private fun isValidForm(user: User): Boolean {
-
         return when {
-            user.firstname.isBlank() -> {
+            user.firstname.isEmpty() -> {
                 showToast(getString(R.string.please_provide_first_name))
                 false
             }
 
-            user.lastname.isBlank() -> {
+            user.lastname.isEmpty() -> {
                 showToast(getString(R.string.please_provide_lastname))
                 false
             }
 
-            user.country.isBlank() -> {
+            user.country.isEmpty() -> {
                 showToast(getString(R.string.please_provide_country))
                 false
             }
@@ -91,30 +91,44 @@ class EditPersonalInfoDialogFragment(
 
     private fun processForm() {
         val loadingDialog = LoadingDialog(requireContext())
-        val user = getDataFromForm()
 
-        if (isValidForm(user)) {
-            loadingDialog.show()
+        try {
+            val sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE)
+            val profileId = sharedPreferences.getString("profile_id", "")
 
-            updateExistingUser(
-                user.profileId, hashMapOf(
-                    "firstname" to user.firstname,
-                    "lastname" to user.lastname,
-                    "middleName" to user.middleName,
-                    "headline" to user.headline,
-                    "country" to user.country,
-                    "city" to user.city
-                )
-            ) { success, error ->
-                if (success) {
-                    onSave.invoke()
-                    dismiss()
-                } else {
-                    showToast(error.toString())
+            val user = getDataFromForm()
+
+            if (isValidForm(user)) {
+                loadingDialog.show()
+
+                if (profileId != null) {
+                    updateExistingUser(
+                        profileId = profileId,
+                        hashMapOf(
+                            "firstname" to user.firstname,
+                            "lastname" to user.lastname,
+                            "middleName" to user.middleName,
+                            "headline" to user.headline,
+                            "country" to user.country,
+                            "city" to user.city
+                        )
+                    ) { success, error ->
+                        if (success) {
+                            onSave.invoke()
+                            dismiss()
+                        } else {
+                            showToast(error.toString())
+                        }
+
+                        loadingDialog.dismiss()
+                    }
                 }
-
-                loadingDialog.dismiss()
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            showToast("An error occurred.")
+        } finally {
+            loadingDialog.dismiss()
         }
     }
 
