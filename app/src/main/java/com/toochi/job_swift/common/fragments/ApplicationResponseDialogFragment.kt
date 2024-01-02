@@ -69,6 +69,7 @@ class ApplicationResponseDialogFragment(private val notification: Notification) 
 
         try {
             getJobsAppliedForById(
+                notification.userId,
                 notification.jobId,
                 notification.employerId
             ) { applyJob, errorMessage ->
@@ -77,7 +78,12 @@ class ApplicationResponseDialogFragment(private val notification: Notification) 
                         getString(R.string.congratulations_your_job_application_was_accepted) else
                         getString(R.string.update_on_your_job_application)
 
-                    getMessage(applyJob.status, userName ?: "", applyJob.jobTitle, applyJob.company)
+                    binding.messageTextView.text = getMessage(
+                        applyJob.status,
+                        userName ?: "",
+                        applyJob.jobTitle,
+                        applyJob.company
+                    )
                 } else {
                     Toast.makeText(requireContext(), errorMessage.toString(), Toast.LENGTH_SHORT)
                         .show()

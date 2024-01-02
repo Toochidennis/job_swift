@@ -4,11 +4,13 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.squareup.picasso.Picasso
 import com.toochi.job_swift.BR
 import com.toochi.job_swift.R
+import com.toochi.job_swift.backend.ApplyForJobManager.getJobsAppliedForById
 import com.toochi.job_swift.backend.ApplyForJobManager.updateJobsAppliedFor
 import com.toochi.job_swift.backend.AuthenticationManager.auth
 import com.toochi.job_swift.backend.EducationManager.getUserEducationDetails
@@ -28,6 +30,8 @@ import com.toochi.job_swift.model.Notification
 import com.toochi.job_swift.model.User
 import com.toochi.job_swift.user.adapters.GenericAdapter
 import com.toochi.job_swift.util.Constants.Companion.ACCEPTED
+import com.toochi.job_swift.util.Constants.Companion.EMPLOYEE
+import com.toochi.job_swift.util.Constants.Companion.EMPLOYER
 import com.toochi.job_swift.util.Constants.Companion.PENDING
 import com.toochi.job_swift.util.Constants.Companion.REJECTED
 import com.toochi.job_swift.util.Utils.sendNotification
@@ -38,8 +42,9 @@ class ApplicationReviewActivity : AppCompatActivity() {
 
     private val binding get() = _binding!!
 
-    private var applicantId: String? = null
+    private var employeeId: String? = null
     private var jobId: String? = null
+    private var employeeApplicationId: String? = null
 
     private var userModel: User? = null
     private var applyJob: ApplyJob? = null
@@ -54,7 +59,14 @@ class ApplicationReviewActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        applicantId = intent.getStringExtra("user_Id")
+        setSupportActionBar(binding.toolbar.toolbar)
+        supportActionBar?.apply {
+            title = "Job review"
+            setHomeButtonEnabled(true)
+            setDisplayHomeAsUpEnabled(true)
+        }
+
+        employeeId = intent.getStringExtra("user_id")
         jobId = intent.getStringExtra("job_id")
 
         loadingDialog = LoadingDialog(this)
@@ -65,39 +77,43 @@ class ApplicationReviewActivity : AppCompatActivity() {
     }
 
     private fun initData() {
-        loadingDialog.show()
-
         try {
+            loadingDialog.show()
 
-            applicantId?.let {
-                getUserPersonalDetails(userId = it) { user, _ ->
+            employeeId?.let {
+                getUserPersonalDetails(userId = it) { user, errorMessage ->
                     if (user != null) {
                         userModel = user
                         setUpProfileDetails()
                         getApplicantApplication()
                         getApplicantExperience()
                         getApplicantEducation()
-                    }
 
-                    loadingDialog.dismiss()
+                        loadingDialog.dismiss()
+                    } else {
+                        loadingDialog.dismiss()
+                        showToast(errorMessage.toString())
+                    }
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            loadingDialog.dismiss()
             showToast("An error occurred.")
         }
     }
 
     private fun getApplicantApplication() {
-        if (applicantId != null && jobId != null) {
+        if (employeeId != null && jobId != null) {
             getJobsAppliedByOthers(
-                userId = applicantId!!,
+                userId = employeeId!!,
                 jobId = jobId!!
             ) { applyJob, errorMessage ->
                 if (applyJob != null) {
                     this.applyJob = applyJob
                     handleApplicantApplicationResult(applyJob)
                 } else {
+                    loadingDialog.dismiss()
                     showToast("Error fetching application details: $errorMessage")
                 }
             }
@@ -113,6 +129,24 @@ class ApplicationReviewActivity : AppCompatActivity() {
             showToast("You've rejected this job.")
         } else if (applyJob.status == ACCEPTED) {
             showToast("You've accepted this job.")
+        }
+
+        getEmployeeJobApplication(applyJob.employerId)
+    }
+
+
+    private fun getEmployeeJobApplication(employerId: String) {
+        jobId?.let {
+            employeeId?.let { it1 ->
+                getJobsAppliedForById(it1, it, employerId) { job, errorMessage ->
+                    if (job != null) {
+                        employeeApplicationId = job.applicationId
+                    } else {
+                        loadingDialog.dismiss()
+                        showToast(errorMessage.toString())
+                    }
+                }
+            }
         }
     }
 
@@ -134,7 +168,7 @@ class ApplicationReviewActivity : AppCompatActivity() {
     private fun getApplicantExperience() {
         var copiedExperiences = listOf<Experience>()
 
-        applicantId?.let {
+        employeeId?.let {
             getUserExperienceDetails(userId = it) { experiences, _ ->
                 if (experiences != null) {
                     copiedExperiences = experiences.map { experience ->
@@ -149,6 +183,8 @@ class ApplicationReviewActivity : AppCompatActivity() {
                             location = location
                         )
                     }
+                } else {
+                    loadingDialog.dismiss()
                 }
 
                 setUpExperienceAdapter(copiedExperiences.toMutableList())
@@ -159,7 +195,7 @@ class ApplicationReviewActivity : AppCompatActivity() {
     private fun getApplicantEducation() {
         var copiedEducations = listOf<Education>()
 
-        applicantId?.let {
+        employeeId?.let {
             getUserEducationDetails(userId = it) { educations, _ ->
                 if (educations != null) {
                     copiedEducations = educations.map { education ->
@@ -174,6 +210,8 @@ class ApplicationReviewActivity : AppCompatActivity() {
                             grade = grade
                         )
                     }
+                } else {
+                    loadingDialog.dismiss()
                 }
 
                 setUpEducationAdapter(copiedEducations.toMutableList())
@@ -226,22 +264,19 @@ class ApplicationReviewActivity : AppCompatActivity() {
         binding.rejectButton.setOnClickListener {
             try {
                 loadingDialog.show()
+
                 updateApplicantJobStatus(
                     "Update on job application",
                     "Your job application has been rejected",
                     REJECTED
                 )
-                updateEmployerJobStatus(
-                    "Update on job application",
-                    "Your job application has been rejected",
-                    REJECTED
-                )
+
             } catch (e: Exception) {
                 e.printStackTrace()
+                loadingDialog.dismiss()
                 showToast("An error occurred")
             }
         }
-
 
         binding.acceptButton.setOnClickListener {
             try {
@@ -252,14 +287,9 @@ class ApplicationReviewActivity : AppCompatActivity() {
                     body = "Your job application has been accepted.",
                     status = ACCEPTED
                 )
-
-                updateEmployerJobStatus(
-                    title = "Congratulations!",
-                    body = "Your job application has been accepted.",
-                    status = ACCEPTED
-                )
             } catch (e: Exception) {
                 e.printStackTrace()
+                loadingDialog.dismiss()
                 showToast("An error occurred")
             }
         }
@@ -306,11 +336,13 @@ class ApplicationReviewActivity : AppCompatActivity() {
             if (intent.resolveActivity(packageManager) != null) {
                 startActivity(intent)
             }
+        } else {
+            showToast("Applicant didn't provide phone number")
         }
     }
 
     private fun showMessageToEmployer(title: String, body: String) {
-        AlertDialog.Builder(this).apply {
+        AlertDialog.Builder(this).run {
             this.title = title
             this.body = body
             isPositiveVisible = true
@@ -320,11 +352,11 @@ class ApplicationReviewActivity : AppCompatActivity() {
                 finish()
             }
             build()
-        }
+        }.show()
     }
 
     private fun sendNotification(title: String, body: String, status: String) {
-        applicantId?.let { userId ->
+        employeeId?.let { userId ->
             getUserToken(userId) { token, _ ->
                 if (token != null) {
                     auth.currentUser?.let { user ->
@@ -337,7 +369,9 @@ class ApplicationReviewActivity : AppCompatActivity() {
                             jobId = jobId ?: "",
                             type = status
                         ).also {
-                            sendNotification(this, it) { _, _ ->
+                            sendNotification(this, it) { _ ->
+                                loadingDialog.dismiss()
+
                                 if (status == REJECTED) {
                                     showMessageToEmployer(
                                         title = "The job has been rejected",
@@ -357,30 +391,40 @@ class ApplicationReviewActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateJobStatus(updateFunction: (String) -> Unit) {
-        val applicationId = applyJob?.applicationId
-        applicationId?.let {
-            updateFunction(it)
+    private fun updateJobStatus(from:String, updateFunction: (String) -> Unit) {
+        if (from == EMPLOYER) {
+            val applicationId = applyJob?.applicationId
+            applicationId?.let {
+                updateFunction(it)
+            }
+        }else{
+            employeeApplicationId?.let {
+                updateFunction(it)
+            }
         }
     }
 
     private fun updateApplicantJobStatus(title: String, body: String, status: String) {
-        updateJobStatus { applicationId ->
-            applicantId?.let { userId ->
+        updateJobStatus(EMPLOYEE) { applicationId ->
+            employeeId?.let { userId ->
                 updateJobsAppliedFor(
                     userId = userId,
                     applicationId = applicationId,
                     hashMapOf("status" to status)
                 ) { success, error ->
-                    handleUpdateResult(success, error, title, body, status)
+                   if (success){
+                       updateEmployerJobStatus(title, body, status)
+                   }else{
+                       loadingDialog.dismiss()
+                       showToast(error.toString())
+                   }
                 }
             }
         }
     }
 
-
     private fun updateEmployerJobStatus(title: String, body: String, status: String) {
-        updateJobStatus { applicationId ->
+        updateJobStatus(EMPLOYER) { applicationId ->
             updateJobsAppliedByOthers(
                 applicationId = applicationId,
                 data = hashMapOf("status" to status)
@@ -400,13 +444,23 @@ class ApplicationReviewActivity : AppCompatActivity() {
         if (success) {
             sendNotification(title = title, body = body, status = status)
         } else {
+            loadingDialog.dismiss()
             showToast(error ?: "An error occurred")
         }
     }
 
-
     private fun showToast(message: String) {
         Toast.makeText(this@ApplicationReviewActivity, message, Toast.LENGTH_SHORT).show()
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == android.R.id.home) {
+            onBackPressedDispatcher.onBackPressed()
+            true
+        } else {
+            false
+        }
     }
 
     override fun onDestroy() {
