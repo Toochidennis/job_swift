@@ -296,8 +296,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_document" />
-                            <entry key="sourceFile" value="C:\Users\tooch\Downloads\description_FILL0_wght400_GRAD0_opsz24.svg" />
+                            <entry key="outputName" value="ic_pending_actions" />
+                            <entry key="sourceFile" value="C:\Users\tooch\Downloads\pending-actions.svg" />
                           </map>
                         </option>
                       </PersistentState>
