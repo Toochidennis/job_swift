@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager.checkIfOwnerOfJob
-import com.toochi.job_swift.backend.AuthenticationManager.getCompany
+import com.toochi.job_swift.backend.CompanyManager.getCompany
+import com.toochi.job_swift.backend.PostJobManager.checkIfOwnerOfJob
 import com.toochi.job_swift.common.dialogs.ApplyJobDialogFragment
 import com.toochi.job_swift.common.dialogs.LoadingDialog
 import com.toochi.job_swift.databinding.FragmentPostedJobDetailsDialogBinding
@@ -98,16 +98,23 @@ class PostedJobDetailsDialogFragment(private val postJob: PostJob) : DialogFragm
         val loadingDialog = LoadingDialog(requireContext())
         loadingDialog.show()
 
-        getCompany(postJob.userId) { company, errorMessage ->
-            if (company != null) {
-                aboutCompany = company.description
-                binding.companyNameTxt.text = company.title
-            } else {
-                showToast(errorMessage.toString())
+        try {
+            getCompany(postJob.userId) { company, errorMessage ->
+                if (company != null) {
+                    aboutCompany = company.description
+                    binding.companyNameTxt.text = company.title
+                } else {
+                    showToast(errorMessage.toString())
+                }
+
+                fillFieldsWithData()
+
+                loadingDialog.dismiss()
             }
-
-            fillFieldsWithData()
-
+        } catch (e: Exception) {
+            e.printStackTrace()
+            showToast("An error occurred.")
+        } finally {
             loadingDialog.dismiss()
         }
     }
@@ -120,14 +127,18 @@ class PostedJobDetailsDialogFragment(private val postJob: PostJob) : DialogFragm
     }
 
     private fun isOwnerOfJob() {
-        checkIfOwnerOfJob(postJob.jobId) { isOwner, exception ->
-            if (isOwner) {
-                showToast("You can't apply for your own job.")
-            } else if (exception == null) {
-                ApplyJobDialogFragment(postJob).show(parentFragmentManager, "Apply for job")
-            } else {
-                showToast(exception.toString())
+        try {
+            checkIfOwnerOfJob(postJob.jobId) { isOwner, exception ->
+                if (isOwner) {
+                    showToast("You can't apply for your own job.")
+                } else if (exception == null) {
+                    ApplyJobDialogFragment(postJob).show(parentFragmentManager, "Apply for job")
+                } else {
+                    showToast(exception.toString())
+                }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

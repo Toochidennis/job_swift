@@ -1,20 +1,20 @@
 package com.toochi.job_swift.user.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.toochi.job_swift.BR
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager.getPostedJobsByUserId
+import com.toochi.job_swift.backend.PostJobManager.getPostedJobsByUserId
 import com.toochi.job_swift.common.dialogs.LoadingDialog
 import com.toochi.job_swift.databinding.FragmentPostedJobsBinding
 import com.toochi.job_swift.model.PostJob
 import com.toochi.job_swift.user.adapters.GenericAdapter
-import com.toochi.job_swift.util.Utils
 import com.toochi.job_swift.util.Utils.currencyFormatter
 import java.util.Locale
 
@@ -44,42 +44,50 @@ class PostedJobsFragment : Fragment() {
 
     private fun getPostedJobs() {
         val loadingDialog = LoadingDialog(requireContext())
-        loadingDialog.show()
 
-        getPostedJobsByUserId { postJobs, error ->
-            binding.imageView.isVisible = postJobs.isNullOrEmpty()
-            binding.messageTextView.isVisible = postJobs.isNullOrEmpty()
+        try {
+            loadingDialog.show()
 
-            if (postJobs != null) {
-                postJobs.forEach { item ->
-                    val currentAmount = item.salary
-                    val currentRate = item.salaryRate
+            getPostedJobsByUserId { postJobs, error ->
+                binding.imageView.isVisible = postJobs.isNullOrEmpty()
+                binding.messageTextView.isVisible = postJobs.isNullOrEmpty()
 
-                    val formattedAmount = formatAmount(currentAmount, currentRate)
+                if (postJobs != null) {
+                    postJobs.forEach { item ->
+                        val currentAmount = item.salary
+                        val currentRate = item.salaryRate
 
-                    item.salary = formattedAmount
+                        val formattedAmount = formatAmount(currentAmount, currentRate)
+
+                        item.salary = formattedAmount
+                    }
+
+                    setUpAdapter(postJobs)
+                } else if (error == "empty") {
+                    binding.imageView.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_no_data
+                        )
+                    )
+                    binding.messageTextView.text =
+                        requireActivity().getString(R.string.have_not_posted_job)
+                } else {
+                    binding.imageView.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.no_internet
+                        )
+                    )
+                    binding.messageTextView.text = requireActivity().getString(R.string.no_internet)
                 }
 
-                setUpAdapter(postJobs)
-            } else if (error == "empty") {
-                binding.imageView.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_no_data
-                    )
-                )
-                binding.messageTextView.text =
-                    requireActivity().getString(R.string.have_not_posted_job)
-            } else {
-                binding.imageView.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.no_internet
-                    )
-                )
-                binding.messageTextView.text = requireActivity().getString(R.string.no_internet)
+                loadingDialog.dismiss()
             }
-
+        } catch (e: Exception) {
+            e.printStackTrace()
+           Toast.makeText(requireContext(), "An error occurred", Toast.LENGTH_SHORT).show()
+        }finally {
             loadingDialog.dismiss()
         }
     }
