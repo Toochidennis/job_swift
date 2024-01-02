@@ -11,15 +11,18 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
+import com.google.android.gms.common.api.ApiException
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager.applyJob
-import com.toochi.job_swift.backend.AuthenticationManager.checkIfHaveAppliedJob
-import com.toochi.job_swift.backend.AuthenticationManager.getUserToken
+import com.toochi.job_swift.backend.ApplyForJobManager.applyJob
+import com.toochi.job_swift.backend.ApplyForJobManager.checkIfHaveAppliedJob
+import com.toochi.job_swift.backend.PersonalDetailsManager.getUserToken
 import com.toochi.job_swift.databinding.FragmentApplyJobDialogBinding
 import com.toochi.job_swift.model.ApplyJob
 import com.toochi.job_swift.model.Notification
 import com.toochi.job_swift.model.PostJob
+import com.toochi.job_swift.util.Constants.Companion.FILE_TYPE
+import com.toochi.job_swift.util.Constants.Companion.JOB_APPLICATION
 import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
 import com.toochi.job_swift.util.Constants.Companion.USER_ID_KEY
 import com.toochi.job_swift.util.Utils.sendNotification
@@ -106,7 +109,7 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
         binding.uploadLayout.isVisible = postJob.isProvideCV
 
         binding.uploadCVButton.setOnClickListener {
-            pdfLauncher.launch("application/pdf")
+            pdfLauncher.launch(FILE_TYPE)
         }
 
         binding.cvNameTxt.apply {
@@ -131,7 +134,7 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
 
                 if (fileSizeInMB > 2048.0) {
                     loadingDialog.dismiss()
-                    showToast("File size is larger than 2MB")
+                    showToast(getString(R.string.file_size_is_larger_than_2mb))
                 } else {
                     binding.cvNameTxt.apply {
                         text = fileName
@@ -163,6 +166,7 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
             inputStream?.close()
         } catch (e: IOException) {
             e.printStackTrace()
+            showToast("An error occurred.")
         }
 
         return fileSize
@@ -204,52 +208,77 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
     }
 
     private fun applyNow() {
-        val job = getDataFromForm()
+        try {
+            val job = getDataFromForm()
 
-        if (isValidForm()) {
-            loadingDialog.show()
+            if (isValidForm()) {
+                loadingDialog.show()
 
-            applyJob(job, cvFile, cvName ?: "") { success, errorMessage ->
-                if (success) {
-                    notifyOwner()
-                } else {
-                    showToast(errorMessage.toString())
+                applyJob("", job, cvFile, cvName ?: "") { success, errorMessage ->
+                    if (success) {
+                        applyJob(postJob.userId, job, cvFile, cvName ?: "") { isFinished, error ->
+                            if (isFinished) {
+                                notifyOwner()
+                            } else {
+                                showToast(error.toString())
+                            }
+                        }
+                    } else {
+                        showToast(errorMessage.toString())
+                    }
+
+                    loadingDialog.dismiss()
                 }
-
-                loadingDialog.dismiss()
             }
+        } catch (e: ApiException) {
+            e.printStackTrace()
+            showToast("An error occurred.")
+        } finally {
+            loadingDialog.dismiss()
         }
     }
 
     private fun checkIfAppliedJobBefore() {
-        checkIfHaveAppliedJob(postJob.jobId) { haveApplied, exception ->
-            if (haveApplied) {
-                showToast("You have applied for this job.")
-            } else if (exception == null) {
-                applyNow()
-            } else {
-                showToast(exception.toString())
+        try {
+            checkIfHaveAppliedJob(postJob.jobId) { haveApplied, exception ->
+                if (haveApplied) {
+                    showToast(getString(R.string.you_have_applied_for_this_job))
+                } else if (exception == null) {
+                    applyNow()
+                } else {
+                    showToast(exception.toString())
+                }
             }
+        } catch (e: ApiException) {
+            e.printStackTrace()
+            showToast("An error occurred.")
         }
     }
 
     private fun notifyOwner() {
-        getUserToken(postJob.userId) { token, _ ->
-            if (token != null) {
-                Notification(
-                    token = token,
-                    title = "New Job Application",
-                    body = "You have a new job application for the position of ${postJob.title}",
-                    userId = "$userId",
-                    ownerId = postJob.userId,
-                    jobId = postJob.jobId,
-                ).also {
-                    sendNotification(requireActivity(), it) { _, _ ->
-                        showCongratsMessage()
+        try {
+            getUserToken(postJob.userId) { token, _ ->
+                if (token != null) {
+                    Notification(
+                        token = token,
+                        title = "New Job Application",
+                        body = "You have a new job application for the position of ${postJob.title}",
+                        userId = "$userId",
+                        employerId = postJob.userId,
+                        jobId = postJob.jobId,
+                        type = JOB_APPLICATION
+                    ).also {
+                        sendNotification(requireActivity(), it) { _, _ ->
+                            showCongratsMessage()
+                        }
                     }
                 }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+
         }
+
     }
 
     private fun showCongratsMessage() {
@@ -282,7 +311,9 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
     private fun getDataFromForm(): ApplyJob {
         return ApplyJob(
             userId = userId ?: "",
-            ownerId = postJob.userId,
+            employerId = postJob.userId,
+            jobTitle = postJob.title,
+            company = postJob.company,
             jobId = postJob.jobId
         )
     }

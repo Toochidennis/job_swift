@@ -4,9 +4,11 @@ import com.google.firebase.firestore.ServerTimestamp
 import java.util.Date
 
 data class ApplyJob(
-    val applicationId: String = "",
+    var applicationId: String = "",
     val userId: String = "",
-    val ownerId: String = "",
+    val employerId: String = "",
+    val jobTitle: String = "",
+    val company: String = "",
     val jobId: String = "",
     val status: String = "Pending",
     var cvURl: String = "",
