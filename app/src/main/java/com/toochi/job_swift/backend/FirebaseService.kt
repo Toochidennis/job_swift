@@ -31,11 +31,15 @@ class FirebaseService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
 
-        val profileId = getSharedPreferences(PREF_NAME, MODE_PRIVATE)
-            .getString("profile_id", "")
+        try {
+            val profileId = getSharedPreferences(PREF_NAME, MODE_PRIVATE)
+                .getString("profile_id", "")
 
-        profileId?.let {
-            updateExistingUser(it, hashMapOf("token" to token)) { _, _ -> }
+            profileId?.let {
+                updateExistingUser(it, hashMapOf("token" to token)) { _, _ -> }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -63,17 +67,21 @@ class FirebaseService : FirebaseMessagingService() {
             notificationManager.notify(notificationId, notification)
         }
 
-        message.let {
-            com.toochi.job_swift.model.Notification(
-                title = it.notification?.title ?: "",
-                body = it.notification?.body ?: "",
-                userId = it.data["userId"] ?: "",
-                employerId = it.data["employerId"] ?: "",
-                jobId = it.data["jobId"] ?: "",
-                type = it.data["type"] ?: ""
-            ).also { notification ->
-                createNotifications(notification) { _, _ -> }
+        try {
+            message.let {
+                com.toochi.job_swift.model.Notification(
+                    title = it.notification?.title ?: "",
+                    body = it.notification?.body ?: "",
+                    userId = it.data["userId"] ?: "",
+                    employerId = it.data["employerId"] ?: "",
+                    jobId = it.data["jobId"] ?: "",
+                    type = it.data["type"] ?: ""
+                ).also { notification ->
+                    createNotifications(notification) { _, _ -> }
+                }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
