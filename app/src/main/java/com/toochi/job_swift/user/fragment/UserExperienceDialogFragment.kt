@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager.createUserExperience
-import com.toochi.job_swift.backend.AuthenticationManager.updateUserExperience
+import com.toochi.job_swift.backend.ExperienceManager.createUserExperience
+import com.toochi.job_swift.backend.ExperienceManager.updateUserExperience
 import com.toochi.job_swift.common.dialogs.DatePickerDialogFragment
 import com.toochi.job_swift.common.dialogs.JobTypeDialogFragment
 import com.toochi.job_swift.common.dialogs.LoadingDialog
@@ -45,7 +45,6 @@ class UserExperienceDialogFragment(
         super.onViewCreated(view, savedInstanceState)
 
         handleViewClicks()
-        addExperience()
 
         fillForm()
     }
@@ -53,8 +52,10 @@ class UserExperienceDialogFragment(
     private fun fillForm() {
         if (experienceModel != null) {
             binding.jobTitleTextField.setText(experienceModel.jobTitle)
+            binding.employeeTypeTextField.setText(experienceModel.jobType)
             binding.companyNameTextField.setText(experienceModel.companyName)
             binding.locationTextField.setText(experienceModel.location)
+            binding.locationTypeTextField.setText(experienceModel.workplace)
             binding.startDateTextField.setText(experienceModel.startDate)
 
             if (experienceModel.endDate == PRESENT) {
@@ -112,6 +113,9 @@ class UserExperienceDialogFragment(
             dismiss()
         }
 
+        binding.saveButton.setOnClickListener {
+            addExperience()
+        }
     }
 
     private fun isValidForm(experience: Experience): Boolean {
@@ -141,8 +145,9 @@ class UserExperienceDialogFragment(
     }
 
     private fun addExperience() {
-        binding.saveButton.setOnClickListener {
-            val loadingDialog = LoadingDialog(requireContext())
+        val loadingDialog = LoadingDialog(requireContext())
+
+        try {
             val experience = getDataFromForm()
 
             if (isValidForm(experience)) {
@@ -172,13 +177,18 @@ class UserExperienceDialogFragment(
                     }
                 }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            showToast("An error occurred.")
+        } finally {
+            loadingDialog.dismiss()
         }
     }
 
     private fun getDataFromForm(): Experience {
         return Experience(
-            jobType = binding.jobTitleTextField.text.toString().trim(),
             jobTitle = binding.jobTitleTextField.text.toString().trim(),
+            jobType = binding.employeeTypeTextField.text.toString().trim(),
             companyName = binding.companyNameTextField.text.toString().trim(),
             location = binding.locationTextField.text.toString().trim(),
             workplace = binding.locationTypeTextField.text.toString().trim(),

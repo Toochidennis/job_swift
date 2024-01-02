@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.firebase.messaging.FirebaseMessaging
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager.updateExistingUser
+import com.toochi.job_swift.backend.PersonalDetailsManager.updateExistingUser
 import com.toochi.job_swift.common.fragments.NotificationsFragment
 import com.toochi.job_swift.databinding.ActivityUserDashboardBinding
 import com.toochi.job_swift.user.fragment.UserHomeFragment
