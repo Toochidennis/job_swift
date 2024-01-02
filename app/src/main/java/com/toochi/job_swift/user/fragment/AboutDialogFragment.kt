@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager.updateExistingUser
+import com.toochi.job_swift.backend.PersonalDetailsManager.updateExistingUser
 import com.toochi.job_swift.common.dialogs.LoadingDialog
 import com.toochi.job_swift.databinding.FragmentAboutDialogBinding
 import com.toochi.job_swift.model.Skills
@@ -40,7 +40,6 @@ class AboutDialogFragment(
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -64,9 +63,9 @@ class AboutDialogFragment(
             val idList = user.skillsId.split(",").map { it.trim() }
 
             if (wordList.isNotEmpty() && idList.isNotEmpty()) {
-                idList.forEach { id ->
-                    if (id.isNotBlank())
-                        selectedItems[id] = wordList[id.toInt()]
+                idList.forEachIndexed { index, value ->
+                    if (value.isNotBlank())
+                        selectedItems[value] = wordList[index]
                 }
             }
 
@@ -123,36 +122,46 @@ class AboutDialogFragment(
         val loadingDialog = LoadingDialog(requireContext())
         val data = getDataFromForm()
 
-        if (isValidForm(data)) {
-            loadingDialog.show()
+        try {
 
-            updateExistingUser(
-                user?.profileId!!,
-                hashMap = hashMapOf(
-                    "about" to data.about,
-                    "skillsId" to data.skillsId,
-                    "skills" to data.skills
-                )
-            ) { success, error ->
-                if (success) {
-                    onSave.invoke()
-                    dismiss()
-                } else {
-                    showToast(error.toString())
+            if (isValidForm(data)) {
+                loadingDialog.show()
+
+                updateExistingUser(
+                    user?.profileId!!,
+                    hashMap = hashMapOf(
+                        "about" to data.about,
+                        "skillsId" to data.skillsId,
+                        "skills" to data.skills
+                    )
+                ) { success, error ->
+                    if (success) {
+                        onSave.invoke()
+                        dismiss()
+                    } else {
+                        showToast(error.toString())
+                    }
+
+                    loadingDialog.dismiss()
                 }
-
-                loadingDialog.dismiss()
             }
-
+        } catch (e: Exception) {
+            e.printStackTrace()
+            showToast("An error occurred.")
+        } finally {
+            loadingDialog.dismiss()
         }
 
     }
 
     private fun getDataFromForm(): User {
+        val skillsId = selectedItems.keys.joinToString(", ") { it }
+        val skills = selectedItems.values.joinToString(", ") { it }
+
         return User(
             about = binding.aboutTextField.text.toString().trim(),
-            skillsId = selectedItems.keys.joinToString { ", " },
-            skills = selectedItems.values.joinToString { ", " },
+            skillsId = skillsId,
+            skills = skills
         )
     }
 
