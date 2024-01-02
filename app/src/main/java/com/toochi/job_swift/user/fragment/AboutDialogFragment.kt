@@ -21,6 +21,7 @@ class AboutDialogFragment(
 ) : DialogFragment() {
 
     private var _binding: FragmentAboutDialogBinding? = null
+
     private val binding get() = _binding!!
 
     private var selectedItems = hashMapOf<String, String>()
@@ -28,7 +29,6 @@ class AboutDialogFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
-
     }
 
     override fun onCreateView(
@@ -99,7 +99,6 @@ class AboutDialogFragment(
             hasFixedSize()
             adapter = skillsAdapter
         }
-
     }
 
     private fun isValidForm(user: User): Boolean {
@@ -123,7 +122,6 @@ class AboutDialogFragment(
         val data = getDataFromForm()
 
         try {
-
             if (isValidForm(data)) {
                 loadingDialog.show()
 
@@ -148,8 +146,6 @@ class AboutDialogFragment(
         } catch (e: Exception) {
             e.printStackTrace()
             showToast("An error occurred.")
-        } finally {
-            loadingDialog.dismiss()
         }
 
     }
