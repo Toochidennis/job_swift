@@ -1,23 +1,20 @@
 package com.toochi.job_swift.user.fragment
 
-import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
-import com.toochi.job_swift.common.fragments.CreateEmployerAccountDialogFragment
+import com.toochi.job_swift.common.fragments.AddJobBasicsDialogFragment
 import com.toochi.job_swift.databinding.FragmentJobIntroScreenDialogBinding
-
 
 
 class JobIntroScreenDialogFragment : DialogFragment() {
 
-    private var _binding:FragmentJobIntroScreenDialogBinding?=null
+    private var _binding: FragmentJobIntroScreenDialogBinding? = null
 
     private val binding get() = _binding!!
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,13 +34,18 @@ class JobIntroScreenDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.continueButton.setOnClickListener {
-            CreateEmployerAccountDialogFragment().show(parentFragmentManager, "create")
+        binding.getStartedButton.setOnClickListener {
+            AddJobBasicsDialogFragment().show(parentFragmentManager, "job basics")
             dismiss()
         }
 
         binding.navigateUp.setOnClickListener {
             dismiss()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

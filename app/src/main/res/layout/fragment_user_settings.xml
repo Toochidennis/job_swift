@@ -7,13 +7,17 @@
     android:orientation="vertical"
     tools:context=".user.fragment.UserSettingsFragment">
 
-    <com.google.android.material.textview.MaterialTextView
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dimen_16"
-        android:text="@string/settings_and_privacy"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_20" />
+        android:background="@color/pale_silver"
+        app:elevation="0dp">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
@@ -56,7 +60,7 @@
                         android:drawablePadding="@dimen/dimen_16"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:padding="@dimen/dimen_16"
-                        android:text="Personal information"
+                        android:text="@string/personal_information"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_16"
                         app:drawableStartCompat="@drawable/ic_account_circle" />
@@ -75,7 +79,7 @@
                         android:drawablePadding="@dimen/dimen_16"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:padding="@dimen/dimen_16"
-                        android:text="Contact Information"
+                        android:text="@string/contact_information"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_16"
                         app:drawableStartCompat="@drawable/ic_phone" />
@@ -125,7 +129,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/dimen_16"
-                        android:text="Your company"
+                        android:text="@string/your_company"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_18"
                         android:textStyle="bold" />
@@ -137,7 +141,7 @@
                         android:drawablePadding="@dimen/dimen_16"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:padding="@dimen/dimen_16"
-                        android:text="Company informaton"
+                        android:text="@string/company_information"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_16"
                         app:drawableStartCompat="@drawable/ic_company" />
@@ -156,7 +160,7 @@
                         android:drawablePadding="@dimen/dimen_16"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:padding="@dimen/dimen_16"
-                        android:text="Number of employees"
+                        android:text="@string/employees"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_16"
                         app:drawableStartCompat="@drawable/ic_user" />
@@ -187,7 +191,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/dimen_16"
-                        android:text="General"
+                        android:text="@string/general"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_18"
                         android:textStyle="bold" />
@@ -313,11 +317,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_16"
-                android:backgroundTint="@color/pale_silver"
-                android:text="Sign out"
+                android:backgroundTint="@android:color/holo_red_dark"
+                android:text="@string/sign_out"
                 android:textAlignment="center"
                 android:textAllCaps="false"
-                android:textColor="@android:color/holo_red_dark"
+                android:textColor="@android:color/white"
                 android:textSize="@dimen/text_16" />
 
         </LinearLayout>

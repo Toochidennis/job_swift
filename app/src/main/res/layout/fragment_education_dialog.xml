@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center"
                 android:layout_marginStart="@dimen/dimen_16"
-                android:text="Add education"
+                android:text="@string/add_education"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_18"
                 android:textStyle="bold" />
@@ -43,7 +43,6 @@
         </LinearLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
-
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -63,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_16"
-                android:text="* Indicates required"
+                android:text="@string/indicates_required"
                 android:textSize="@dimen/text_14" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -72,7 +71,7 @@
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_32"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="School*"
+                android:text="@string/school"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
@@ -82,8 +81,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
+                android:imeOptions="actionNext"
                 android:backgroundTint="@color/black"
-                android:hint="Ex: Federal University Wukari"
+                android:hint="@string/ex_federal_university_wukari"
                 android:inputType="textCapSentences"
                 android:textColor="@color/black" />
 
@@ -93,7 +93,7 @@
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_32"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="Degree"
+                android:text="@string/degree"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
@@ -103,8 +103,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
+                android:imeOptions="actionNext"
                 android:backgroundTint="@color/black"
-                android:hint="Ex: Bacheclor's"
+                android:hint="@string/ex_bacheclor_s"
                 android:inputType="textCapSentences"
                 android:textColor="@color/black" />
 
@@ -114,7 +115,7 @@
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_32"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="Field of study"
+                android:text="@string/field_of_study"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
@@ -124,8 +125,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
+                android:imeOptions="actionNext"
                 android:backgroundTint="@color/black"
-                android:hint="Ex: Computer science"
+                android:hint="@string/computer_science"
                 android:inputType="textCapSentences"
                 android:textColor="@color/black" />
 
@@ -135,7 +137,7 @@
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_32"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="Start date"
+                android:text="@string/start_date"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
@@ -148,10 +150,9 @@
                 android:backgroundTint="@color/black"
                 android:drawableEnd="@drawable/ic_calendar"
                 android:focusableInTouchMode="false"
-                android:hint="Ex: December, 2023"
+                android:hint="@string/december_2023"
                 android:inputType="date"
                 android:textColor="@color/black" />
-
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
@@ -159,7 +160,7 @@
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="End date (or expected)"
+                android:text="@string/end_date_or_expected"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
@@ -169,9 +170,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
+                android:focusableInTouchMode="false"
                 android:backgroundTint="@color/black"
                 android:drawableEnd="@drawable/ic_calendar"
-                android:hint="Ex: December, 2023"
+                android:hint="@string/december_2023"
                 android:inputType="date"
                 android:textColor="@color/black" />
 
@@ -181,7 +183,7 @@
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="Grade"
+                android:text="@string/grade"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
@@ -192,32 +194,10 @@
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
                 android:backgroundTint="@color/black"
-                android:hint="Ex: First class"
+                android:imeOptions="actionDone"
+                android:hint="@string/first_class"
                 android:inputType="textCapSentences"
                 android:textColor="@color/black" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_16"
-                android:layout_marginTop="@dimen/dimen_16"
-                android:layout_marginEnd="@dimen/dimen_16"
-                android:text="Activities ans societies"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_14" />
-
-            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                android:id="@+id/activitiesTextField"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_16"
-                android:layout_marginEnd="@dimen/dimen_16"
-                android:backgroundTint="@color/black"
-                android:hint="Ex: Football, Football, Nacoss"
-                android:inputType="textCapSentences|textMultiLine"
-                android:lines="5"
-                android:maxLength="500"
-                android:minLines="1" />
 
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/saveButton"
@@ -225,7 +205,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_16"
                 android:backgroundTint="@color/shade_green"
-                android:text="Save"
+                android:text="@string/save"
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@color/white"

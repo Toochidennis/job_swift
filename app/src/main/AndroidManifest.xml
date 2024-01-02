@@ -2,18 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
         android:name="com.google.android.gms.permission.AD_ID"
         tools:node="remove" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
 
     <application
-        android:name=".util.MainApplication"
-        android:allowBackup="true"
+        android:name=".MainApplication"
+        android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -22,7 +27,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JobSwift"
         tools:targetApi="31">
-
+        <activity
+            android:name=".user.activity.ApplicationReviewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".common.activities.ImagePreviewActivity"
+            android:exported="false" />
         <activity
             android:name=".user.activity.PersonalInformationActivity"
             android:exported="false" />
@@ -30,10 +40,10 @@
             android:name=".user.activity.UserDashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".common.activities.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".WelcomeActivity"
+            android:name=".common.activities.WelcomeActivity"
             android:exported="false" />
         <activity
             android:name=".admin.activity.AdminDashboardActivity"
@@ -50,22 +60,31 @@
         </activity>
 
         <service
-            android:name=".util.MessagingService"
+            android:name=".backend.FirebaseService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGE_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/app_logo2" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/shade_green" />
-
     </application>
+
+    <queries>
+        <!-- Declare the package(s) you query for email and phone functionality -->
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="mailto" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.DIAL" />
+            <data android:scheme="tel" />
+        </intent>
+    </queries>
 
 </manifest>

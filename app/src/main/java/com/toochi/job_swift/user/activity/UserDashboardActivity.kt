@@ -1,20 +1,37 @@
 package com.toochi.job_swift.user.activity
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import com.google.firebase.messaging.FirebaseMessaging
 import com.toochi.job_swift.R
+import com.toochi.job_swift.backend.PersonalDetailsManager.updateExistingUser
 import com.toochi.job_swift.common.fragments.NotificationsFragment
 import com.toochi.job_swift.databinding.ActivityUserDashboardBinding
-import com.toochi.job_swift.user.fragment.*
+import com.toochi.job_swift.user.fragment.UserHomeFragment
+import com.toochi.job_swift.user.fragment.UserJobsFragment
+import com.toochi.job_swift.user.fragment.UserSettingsFragment
+import com.toochi.job_swift.util.Constants.Companion.PERMISSION_REQUESTED_CODE
+import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
 import com.toochi.job_swift.util.Utils.loadFragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class UserDashboardActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUserDashboardBinding
+    private val userActivityScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     private var doubleBackToExitPressedOnce = false
 
@@ -22,6 +39,10 @@ class UserDashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityUserDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        userActivityScope.launch {
+            saveTokenInBackground()
+        }
 
         bottomBarNavigation()
 
@@ -70,6 +91,7 @@ class UserDashboardActivity : AppCompatActivity() {
 
                 R.id.notifications -> {
                     loadFragment(this, NotificationsFragment(), container)
+                    requestPermission()
                     true
                 }
 
@@ -83,8 +105,52 @@ class UserDashboardActivity : AppCompatActivity() {
         }
     }
 
+    private fun requestPermission() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    PERMISSION_REQUESTED_CODE
+                )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
     private fun isHomeFragmentVisible(): Boolean {
         return binding.bottomNavigation.selectedItemId == R.id.home
     }
 
+    private suspend fun saveTokenInBackground() {
+        try {
+            // Get the user's FCM token
+            val userToken = FirebaseMessaging.getInstance().token.await()
+            val profileId =
+                getSharedPreferences(PREF_NAME, MODE_PRIVATE).getString("profile_id", "")
+            // Perform database update here using the obtained FCM token
+            if (profileId != null) {
+                updateExistingUser(profileId, hashMapOf("token" to userToken)) { _, _ -> }
+            }
+        } catch (e: Exception) {
+            // Handle exceptions, such as token retrieval failure or database update failure
+            e.printStackTrace()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Cancel the coroutine scope to avoid potential memory leaks
+        userActivityScope.cancel()
+    }
 }

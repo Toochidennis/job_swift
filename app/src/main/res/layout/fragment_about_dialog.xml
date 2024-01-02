@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".user.fragment.AboutDialogFragment">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
+        android:layout_alignParentTop="true"
         android:background="@color/pale_silver"
         android:theme="@style/Platform.MaterialComponents.Light"
         app:elevation="0dp">
@@ -21,12 +22,13 @@
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
+                android:id="@+id/navigateUp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="6dp"
+                android:background="@drawable/button_bg"
                 android:contentDescription="@string/app_logo"
-                android:foreground="?android:attr/selectableItemBackground"
                 android:padding="@dimen/dimen_10"
                 android:src="@drawable/ic_x" />
 
@@ -34,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dimen_16"
-                android:text="Edit about"
+                android:text="@string/edit_about"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_18"
                 android:textStyle="bold" />
@@ -46,6 +48,8 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/appBar"
+        android:paddingBottom="70dp"
         android:contentDescription="@string/nested_scroll_view"
         android:fillViewport="true">
 
@@ -55,100 +59,74 @@
             android:orientation="vertical">
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/jobTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="You can write about your years of experience, industry, or skills. People also talk about their achievements or previous job experiences."
+                android:text="@string/about_des"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
             <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/aboutTextField"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
+                android:backgroundTint="@color/black"
                 android:gravity="top|start"
-                android:hint="A good guy"
+                android:hint="@string/type_here"
                 android:inputType="textCapSentences|textMultiLine"
                 android:lineSpacingMultiplier="1"
                 android:lines="15"
                 android:minLines="1"
                 android:textColor="@color/black" />
 
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:padding="@dimen/dimen_16">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/titleTXt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="@dimen/dimen_16"
-                    android:text="Skills"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_18"
-                    android:textStyle="bold" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/descriptionTXt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/titleTXt"
-                    android:text="Show your top skills. They'll also appear in your Skills section."
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_14" />
-
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/skillsRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/descriptionTXt" />
-
-                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_below="@id/skillsRecyclerView"
-                    android:layout_marginTop="@dimen/dimen_16"
-                    android:layout_marginBottom="@dimen/dimen_16"
-                    android:backgroundTint="@color/gray"
-                    android:text="Add skill"
-                    android:textAllCaps="false"
-                    app:icon="@drawable/ic_add" />
-
-            </RelativeLayout>
-
-            <include
-                layout="@layout/material_divider"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_16"
-                android:layout_marginEnd="@dimen/dimen_16" />
-
-            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                android:id="@+id/continueButton"
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_32"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:layout_marginBottom="@dimen/dimen_32"
-                android:backgroundTint="@color/shade_green"
-                android:text="Save"
-                android:textAlignment="center"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_16" />
+                android:text="@string/skills"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_18"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_16"
+                android:layout_marginEnd="@dimen/dimen_16"
+                android:text="@string/skills_des"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_14" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/skillsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_about_skills" />
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 
-</LinearLayout>
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/saveButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/dimen_16"
+        android:backgroundTint="@color/shade_green"
+        android:text="@string/save"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_16" />
+
+</RelativeLayout>

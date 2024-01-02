@@ -1,59 +1,162 @@
 package com.toochi.job_swift.user.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
+import com.toochi.job_swift.backend.EducationManager.createUserEducation
+import com.toochi.job_swift.backend.EducationManager.updateUserEducation
+import com.toochi.job_swift.common.dialogs.DatePickerDialogFragment
+import com.toochi.job_swift.common.dialogs.LoadingDialog
+import com.toochi.job_swift.databinding.FragmentEducationDialogBinding
+import com.toochi.job_swift.model.Education
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
+class EducationDialogFragment(
+    private val education: Education? = null,
+    private val onSave: () -> Unit
+) : DialogFragment() {
 
-class EducationDialogFragment : DialogFragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var _binding: FragmentEducationDialogBinding? = null
+    private val binding get() = _binding!!
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
-
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_education_dialog, container, false)
+        _binding = FragmentEducationDialogBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment EducationDialogFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            EducationDialogFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        handleViewClicks()
+
+        processForm()
+
+        fillForm()
+    }
+
+    private fun fillForm() {
+        if (education != null) {
+            binding.schoolNameTextField.setText(education.school)
+            binding.degreeTextField.setText(education.degree)
+            binding.fieldOfStudyTextField.setText(education.discipline)
+            binding.gradeTextField.setText(education.grade)
+            binding.startDateTextField.setText(education.startDate)
+            binding.endDateTextField.setText(education.endDate)
+        }
+    }
+
+    private fun handleViewClicks() {
+        binding.startDateTextField.setOnClickListener {
+            DatePickerDialogFragment(requireContext()) { date ->
+                binding.startDateTextField.setText(date)
+            }.window?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        binding.endDateTextField.setOnClickListener {
+            DatePickerDialogFragment(requireContext()) { date ->
+                binding.endDateTextField.setText(date)
+            }.window?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        binding.navigateUp.setOnClickListener {
+            dismiss()
+        }
+    }
+
+    private fun processForm() {
+        binding.saveButton.setOnClickListener {
+            val loadingDialog = LoadingDialog(requireContext())
+            val data = getDataFromForm()
+
+            try {
+                if (isValidForm(data)) {
+                    loadingDialog.show()
+
+                    if (education != null) {
+                        updateUserEducation(
+                            educationId = education.educationId,
+                            data = hashMapOf(
+                                "school" to data.school,
+                                "degree" to data.degree,
+                                "discipline" to data.discipline,
+                                "startDate" to data.startDate,
+                                "endDate" to data.endDate,
+                                "grade" to data.grade
+                            )
+                        ) { success, error ->
+                            handleAuthResult(success, error.toString())
+                            loadingDialog.dismiss()
+                        }
+                    } else {
+                        createUserEducation(data) { success, error ->
+                            handleAuthResult(success, error.toString())
+                            loadingDialog.dismiss()
+                        }
+                    }
+                } else {
+                    showToast(getString(R.string.please_provide_school))
+
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                showToast("An error occurred.")
+            } finally {
+                loadingDialog.dismiss()
             }
+        }
+    }
+
+    private fun handleAuthResult(success: Boolean, error: String) {
+        if (success) {
+            onSave.invoke()
+            dismiss()
+        } else {
+            showToast(error)
+        }
+    }
+
+    private fun isValidForm(education: Education): Boolean {
+        return education.school.isNotEmpty()
+    }
+
+    private fun getDataFromForm(): Education {
+        return Education(
+            school = binding.schoolNameTextField.text.toString().trim(),
+            degree = binding.degreeTextField.text.toString().trim(),
+            discipline = binding.fieldOfStudyTextField.text.toString().trim(),
+            startDate = binding.startDateTextField.text.toString().trim(),
+            endDate = binding.endDateTextField.text.toString().trim(),
+            grade = binding.gradeTextField.text.toString().trim(),
+        )
+    }
+
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="experience"
+            type="com.toochi.job_swift.model.Experience" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/experienceImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="@dimen/dimen_16"
+                android:contentDescription="@string/app_logo"
+                android:src="@drawable/ic_company" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/experienceNameTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="@dimen/dimen_10"
+                android:layout_marginEnd="@dimen/dimen_16"
+                android:layout_toEndOf="@id/experienceImageView"
+                android:text="@{experience.jobTitle}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_16"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/companyNameTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/experienceNameTxt"
+                android:layout_toEndOf="@id/experienceImageView"
+                android:paddingStart="@dimen/dimen_10"
+                android:paddingEnd="@dimen/dimen_16"
+                android:text="@{experience.companyName}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_14" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/yearTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/companyNameTxt"
+                android:layout_toEndOf="@id/experienceImageView"
+                android:paddingStart="@dimen/dimen_10"
+                android:paddingEnd="@dimen/dimen_16"
+                android:text="@{experience.startDate}"
+                android:textSize="@dimen/text_14" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/locationTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/yearTxt"
+                android:layout_toEndOf="@id/experienceImageView"
+                android:paddingStart="@dimen/dimen_10"
+                android:paddingEnd="@dimen/dimen_16"
+                android:text="@{experience.location}"
+                android:textSize="@dimen/text_14" />
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

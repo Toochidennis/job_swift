@@ -66,8 +66,12 @@
         <item name="tabSelectedTextColor">@color/shade_green</item>
         <item name="tabInlineLabel">true</item>
         <item name="tabTextAppearance">@style/TabTextStyle</item>
-        <item name="tabBackground">@color/light_silver</item>
+        <item name="tabBackground">@drawable/tab_background_drawable</item>
     </style>
 
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in</item>
+        <item name="android:windowExitAnimation">@anim/slide_out</item>
+    </style>
 
 </resources>

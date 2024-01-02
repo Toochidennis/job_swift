@@ -1,6 +1,6 @@
 package com.toochi.job_swift.common.dialogs
 
-import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
@@ -10,22 +10,34 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toFile
 import androidx.core.view.isVisible
+import com.google.android.gms.common.api.ApiException
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.toochi.job_swift.backend.AuthenticationManager.applyJob
+import com.toochi.job_swift.R
+import com.toochi.job_swift.backend.ApplyForJobManager.applyJob
+import com.toochi.job_swift.backend.ApplyForJobManager.checkIfHaveAppliedJob
+import com.toochi.job_swift.backend.PersonalDetailsManager.getUserToken
 import com.toochi.job_swift.databinding.FragmentApplyJobDialogBinding
 import com.toochi.job_swift.model.ApplyJob
-import com.toochi.job_swift.model.Job
+import com.toochi.job_swift.model.Notification
+import com.toochi.job_swift.model.PostJob
+import com.toochi.job_swift.util.Constants.Companion.FILE_TYPE
+import com.toochi.job_swift.util.Constants.Companion.JOB_APPLICATION
+import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
+import com.toochi.job_swift.util.Constants.Companion.USER_ID_KEY
+import com.toochi.job_swift.util.Utils.sendNotification
+import java.io.IOException
+import java.io.InputStream
 
 
-class ApplyJobDialogFragment(private val job: Job) : BottomSheetDialogFragment() {
+class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFragment() {
 
     private var _binding: FragmentApplyJobDialogBinding? = null
 
     private val binding get() = _binding!!
 
     private var userEmail: String? = null
+    private var profileId: String? = null
     private var userName: String? = null
     private var userId: String? = null
     private var userPhoneNumber: String? = null
@@ -58,28 +70,32 @@ class ApplyJobDialogFragment(private val job: Job) : BottomSheetDialogFragment()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         loadingDialog = LoadingDialog(requireContext())
 
+        initializeUI()
+    }
+
+    private fun initializeUI() {
         autoFillTextFields()
-
         uploadCV()
-
-        applyNow()
-
 
         binding.navigateUp.setOnClickListener {
             dismiss()
         }
+
+        binding.applyForJobButton.setOnClickListener {
+            checkIfAppliedJobBefore()
+        }
     }
 
     private fun autoFillTextFields() {
-        with(requireActivity().getSharedPreferences("loginDetail", Context.MODE_PRIVATE)) {
+        with(requireActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE)) {
             val firstname = getString("firstname", "")
             val lastname = getString("lastname", "")
             userPhoneNumber = getString("phone_number", "")
             userEmail = getString("email", "")
-            userId = getString("user_id", "")
+            userId = getString(USER_ID_KEY, "")
+            profileId = getString("profile_id", "")
 
             userName = "$firstname $lastname"
 
@@ -90,10 +106,10 @@ class ApplyJobDialogFragment(private val job: Job) : BottomSheetDialogFragment()
     }
 
     private fun uploadCV() {
-        binding.uploadLayout.isVisible = job.isProvideCV
+        binding.uploadLayout.isVisible = postJob.isProvideCV
 
         binding.uploadCVButton.setOnClickListener {
-            pdfLauncher.launch("application/pdf")
+            pdfLauncher.launch(FILE_TYPE)
         }
 
         binding.cvNameTxt.apply {
@@ -105,34 +121,57 @@ class ApplyJobDialogFragment(private val job: Job) : BottomSheetDialogFragment()
                 cvFile = null
             }
         }
-
-      
     }
+
 
     private fun onPickedPdf(uri: Uri?, fileName: String?) {
-        if (uri != null) {
-            loadingDialog.show()
+        try {
+            if (uri != null) {
+                loadingDialog.show()
 
-            val fileSizeInMB = uri.toFile().length() / (1024.0 * 1024.0)
+                val fileSizeInBytes = getFileSize(uri)
+                val fileSizeInMB = fileSizeInBytes / (1024.0 * 1024.0)
 
-            if (fileSizeInMB > 2048.0) {
-                loadingDialog.dismiss()
-                showToast("File size is larger than 2MB")
-            } else {
-                binding.cvNameTxt.apply {
-                    text = fileName
-                    isVisible = true
+                if (fileSizeInMB > 2048.0) {
+                    loadingDialog.dismiss()
+                    showToast(getString(R.string.file_size_is_larger_than_2mb))
+                } else {
+                    binding.cvNameTxt.apply {
+                        text = fileName
+                        isVisible = true
 
-                    postDelayed({
-                        loadingDialog.dismiss()
-                    }, 2000)
+                        postDelayed({
+                            loadingDialog.dismiss()
+                        }, 2000)
+                    }
+
+                    cvFile = uri
+                    cvName = fileName
                 }
-
-                cvFile = uri
-                cvName = fileName
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            showToast(e.message.toString())
         }
     }
+
+    private fun getFileSize(uri: Uri): Long {
+        var fileSize: Long = 0
+
+        try {
+            val inputStream: InputStream? = requireActivity().contentResolver.openInputStream(uri)
+            fileSize = inputStream?.available()?.toLong() ?: 0
+
+            // Close the input stream after obtaining the file size
+            inputStream?.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            showToast("An error occurred.")
+        }
+
+        return fileSize
+    }
+
 
     private fun isValidForm(): Boolean {
         userName = binding.fullNameTextField.text.toString().trim()
@@ -141,23 +180,23 @@ class ApplyJobDialogFragment(private val job: Job) : BottomSheetDialogFragment()
 
         return when {
             userName.isNullOrEmpty() -> {
-                showToast("Please provide name")
+                showToast(getString(R.string.please_provide_name))
                 false
             }
 
             userPhoneNumber.isNullOrEmpty() -> {
-                showToast("Please provide phone number")
+                showToast(getString(R.string.please_provide_phone_number))
                 false
             }
 
             userEmail.isNullOrEmpty() -> {
-                showToast("Please provide email")
+                showToast(getString(R.string.please_provide_email))
                 false
             }
 
             cvName.isNullOrEmpty() -> {
-                if (job.isProvideCV) {
-                    showToast("Please upload CV")
+                if (postJob.isProvideCV) {
+                    showToast(getString(R.string.please_upload_cv))
                     false
                 } else {
                     true
@@ -169,15 +208,21 @@ class ApplyJobDialogFragment(private val job: Job) : BottomSheetDialogFragment()
     }
 
     private fun applyNow() {
-        binding.applyButton.setOnClickListener {
+        try {
+            val job = getDataFromForm()
+
             if (isValidForm()) {
                 loadingDialog.show()
 
-                val details = ApplyJob("", userId ?: "", job.jobId, "Pending")
-                applyJob(details, cvFile, cvName) { success, errorMessage ->
+                applyJob("", job, cvFile, cvName ?: "") { success, errorMessage ->
                     if (success) {
-                        showToast("success")
-                        dismiss()
+                        applyJob(postJob.userId, job, cvFile, cvName ?: "") { isFinished, error ->
+                            if (isFinished) {
+                                notifyOwner()
+                            } else {
+                                showToast(error.toString())
+                            }
+                        }
                     } else {
                         showToast(errorMessage.toString())
                     }
@@ -185,8 +230,71 @@ class ApplyJobDialogFragment(private val job: Job) : BottomSheetDialogFragment()
                     loadingDialog.dismiss()
                 }
             }
+        } catch (e: ApiException) {
+            e.printStackTrace()
+            showToast("An error occurred.")
+        } finally {
+            loadingDialog.dismiss()
         }
     }
+
+    private fun checkIfAppliedJobBefore() {
+        try {
+            checkIfHaveAppliedJob(postJob.jobId) { haveApplied, exception ->
+                if (haveApplied) {
+                    showToast(getString(R.string.you_have_applied_for_this_job))
+                } else if (exception == null) {
+                    applyNow()
+                } else {
+                    showToast(exception.toString())
+                }
+            }
+        } catch (e: ApiException) {
+            e.printStackTrace()
+            showToast("An error occurred.")
+        }
+    }
+
+    private fun notifyOwner() {
+        try {
+            getUserToken(postJob.userId) { token, _ ->
+                if (token != null) {
+                    Notification(
+                        token = token,
+                        title = "New Job Application",
+                        body = "You have a new job application for the position of ${postJob.title}",
+                        userId = "$userId",
+                        employerId = postJob.userId,
+                        jobId = postJob.jobId,
+                        type = JOB_APPLICATION
+                    ).also {
+                        sendNotification(requireActivity(), it) { _, _ ->
+                            showCongratsMessage()
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+
+        }
+
+    }
+
+    private fun showCongratsMessage() {
+        AlertDialog.Builder(requireContext()).apply {
+            title = "Awesome!"
+            body = "Your application was submitted successfully."
+            isPositiveVisible = true
+            isNegativeVisible = false
+            positiveMessage = "Thank you"
+            positiveClickListener = {
+                dismiss()
+            }
+            build()
+        }
+    }
+
 
     private fun getFileName(uri: Uri): String? {
         requireActivity().contentResolver.query(
@@ -200,20 +308,27 @@ class ApplyJobDialogFragment(private val job: Job) : BottomSheetDialogFragment()
         return null
     }
 
+    private fun getDataFromForm(): ApplyJob {
+        return ApplyJob(
+            userId = userId ?: "",
+            employerId = postJob.userId,
+            jobTitle = postJob.title,
+            company = postJob.company,
+            jobId = postJob.jobId
+        )
+    }
+
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 }
 
 /**
- *
  * val myImageView: ImageView = findViewById(R.id.myImageView)
  *
  * // Set a click listener for the ImageView

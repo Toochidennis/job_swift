@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center"
                 android:layout_marginStart="@dimen/dimen_16"
-                android:text="Add experience"
+                android:text="@string/add_experience"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_24" />
 
@@ -48,7 +48,6 @@
         android:layout_height="match_parent"
         android:contentDescription="@string/nested_scroll_view"
         android:fillViewport="true"
-        android:scrollIndicators="right"
         android:scrollbars="vertical">
 
         <LinearLayout
@@ -62,7 +61,7 @@
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="* Indicates required"
+                android:text="@string/indicates_required"
                 android:textSize="@dimen/text_14" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -71,7 +70,7 @@
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_32"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="Title*"
+                android:text="@string/title"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
@@ -81,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:autofillHints=""
+                android:imeOptions="actionNext"
                 android:backgroundTint="@color/black"
                 android:hint="Ex: Mobile Dev"
                 android:inputType="textCapSentences"
@@ -93,7 +92,7 @@
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_32"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="Employee type"
+                android:text="@string/employee_type"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
@@ -106,7 +105,7 @@
                 android:backgroundTint="@color/black"
                 android:drawableEnd="@drawable/ic_arrow_drop_down"
                 android:focusableInTouchMode="false"
-                android:hint="Please select"
+                android:hint="@string/please_select"
                 android:inputType="textCapSentences"
                 android:textColor="@color/black" />
 
@@ -116,7 +115,7 @@
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_32"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="Company name*"
+                android:text="@string/company_name"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
@@ -126,8 +125,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
+                android:imeOptions="actionNext"
                 android:backgroundTint="@color/black"
-                android:hint="Ex: Digital Dreams Limited"
+                android:hint="@string/ex_digital_dreams_limited"
                 android:inputType="textCapSentences"
                 android:textColor="@color/black" />
 
@@ -137,7 +137,7 @@
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_32"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="Location"
+                android:text="@string/location"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
@@ -148,7 +148,8 @@
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
                 android:backgroundTint="@color/black"
-                android:hint="Ex: FUW"
+                android:hint="@string/ex_fuw"
+                android:imeOptions="actionDone"
                 android:inputType="textCapSentences"
                 android:textColor="@color/black" />
 
@@ -158,7 +159,7 @@
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_32"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="Location type"
+                android:text="@string/location_type"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
@@ -171,7 +172,7 @@
                 android:backgroundTint="@color/black"
                 android:drawableEnd="@drawable/ic_arrow_drop_down"
                 android:focusableInTouchMode="false"
-                android:hint="Please select"
+                android:hint="@string/please_select"
                 android:inputType="textCapSentences"
                 android:textColor="@color/black" />
 
@@ -183,7 +184,7 @@
                 android:layout_marginTop="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
                 android:padding="@dimen/dimen_16"
-                android:text="I am currently working in this role" />
+                android:text="@string/i_am_currently_working_in_this_role" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
@@ -191,7 +192,7 @@
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="Start date"
+                android:text="@string/start_date"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
@@ -204,7 +205,7 @@
                 android:backgroundTint="@color/black"
                 android:drawableEnd="@drawable/ic_calendar"
                 android:focusableInTouchMode="false"
-                android:hint="Ex: December, 2023"
+                android:hint="@string/december_2023"
                 android:inputType="date"
                 android:textColor="@color/black" />
 
@@ -214,7 +215,7 @@
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="End date"
+                android:text="@string/end_date"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
@@ -227,7 +228,7 @@
                 android:backgroundTint="@color/black"
                 android:drawableEnd="@drawable/ic_calendar"
                 android:focusableInTouchMode="false"
-                android:hint="Ex: December, 2023"
+                android:hint="@string/december_2023"
                 android:inputType="date"
                 android:textColor="@color/black" />
 
@@ -237,7 +238,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_16"
                 android:backgroundTint="@color/shade_green"
-                android:text="Save"
+                android:text="@string/save"
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@color/white"

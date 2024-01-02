@@ -1,7 +1,7 @@
 package com.toochi.job_swift.model
 
 data class Company(
-    val id: String = "",
+    var companyId: String = "",
     val title: String = "",
     val position: String = "",
     val noOfEmployees: String = "",

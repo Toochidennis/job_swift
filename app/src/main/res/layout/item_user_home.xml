@@ -6,7 +6,7 @@
 
         <variable
             name="job"
-            type="com.toochi.job_swift.model.Job" />
+            type="com.toochi.job_swift.model.PostJob" />
 
     </data>
 
@@ -17,22 +17,31 @@
         android:layout_marginStart="@dimen/dimen_16"
         android:layout_marginEnd="@dimen/dimen_16"
         android:layout_marginBottom="@dimen/dimen_16"
-        app:cardCornerRadius="@dimen/dimen_10"
-        app:contentPadding="@dimen/dimen_10"
-        app:cardElevation="2dp">
+        app:cardCornerRadius="@dimen/dimen_16"
+        app:contentPadding="@dimen/dimen_16">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/companyImageView"
+            <LinearLayout
+                android:id="@+id/jobIconLayout"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/ic_company"
+                android:background="@drawable/profile_bg"
+                android:backgroundTint="@color/shade_green"
+                android:gravity="center"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_jobs"
+                    app:tint="@color/pale_silver" />
+
+            </LinearLayout>
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/jobTitleTextView"
@@ -43,8 +52,9 @@
                 android:text="@{job.title}"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_16"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/saveJob"
-                app:layout_constraintStart_toEndOf="@id/companyImageView"
+                app:layout_constraintStart_toEndOf="@id/jobIconLayout"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -62,35 +72,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="@{job.location}"
-                android:textColor="@color/black"
                 android:textSize="@dimen/text_14"
-                app:layout_constraintEnd_toStartOf="@id/salaryTextview"
-                app:layout_constraintStart_toStartOf="@id/jobTitleTextView"
-                app:layout_constraintTop_toBottomOf="@id/jobTitleTextView" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/salaryTextview"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@{job.salary}"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_14"
                 app:layout_constraintEnd_toEndOf="@id/jobTitleTextView"
-                app:layout_constraintStart_toEndOf="@id/locationTextview"
+                app:layout_constraintStart_toStartOf="@id/jobTitleTextView"
                 app:layout_constraintTop_toBottomOf="@id/jobTitleTextView" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/jobTypeTextview"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10"
+                android:layout_marginTop="4dp"
                 android:text="@{job.jobType}"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_16"
-                app:layout_constraintEnd_toEndOf="@id/jobTitleTextView"
-                app:layout_constraintStart_toStartOf="@id/jobTitleTextView"
-                app:layout_constraintTop_toBottomOf="@id/salaryTextview" />
+                android:textSize="@dimen/text_14"
+                app:layout_constraintEnd_toEndOf="@id/locationTextview"
+                app:layout_constraintStart_toStartOf="@id/locationTextview"
+                app:layout_constraintTop_toBottomOf="@id/locationTextview" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

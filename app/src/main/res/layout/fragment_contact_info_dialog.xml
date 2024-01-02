@@ -10,7 +10,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Platform.MaterialComponents.Light"
+        android:background="@color/pale_silver"
         app:elevation="0dp">
 
         <LinearLayout
@@ -21,21 +21,22 @@
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
+                android:id="@+id/navigateUp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center"
                 android:layout_marginStart="6dp"
+                android:background="@drawable/button_bg"
                 android:contentDescription="@string/app_logo"
-                android:foreground="?android:attr/selectableItemBackground"
                 android:padding="@dimen/dimen_10"
                 android:src="@drawable/ic_x" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center"
                 android:layout_marginStart="@dimen/dimen_16"
-                android:text="Edit contact  info"
+                android:text="@string/edit_contact_info"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_18" />
 
@@ -58,116 +59,119 @@
             android:layout_alignParentTop="true"
             android:orientation="vertical">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="* Indicates required"
+                android:text="@string/indicates_required"
                 android:textSize="@dimen/text_12" />
 
-
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_32"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="Email"
+                android:text="@string/email"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/emailTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_10"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="@string/dennistoochi_gmail_com"
                 android:textColor="@color/shade_green"
                 android:textSize="@dimen/text_16" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_32"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="Phone number"
+                android:text="@string/phone_number"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/phoneNumberTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
                 android:autofillHints="phone"
-                android:hint="0900000000"
+                android:imeOptions="actionNext"
+                android:backgroundTint="@color/black"
+                android:hint="@string/_0000000000"
                 android:inputType="phone"
                 android:textColor="@color/black" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_32"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="Address"
+                android:text="@string/address"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/addressTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:autofillHints=""
-                android:hint="Ex: no 10 wukky"
-                android:inputType="textPostalAddress"
+                android:backgroundTint="@color/black"
+                android:hint="@string/ex_fuw"
+                android:imeOptions="actionDone"
+                android:inputType="textCapSentences"
                 android:textColor="@color/black" />
 
-
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_32"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:text="Birthday"
+                android:text="@string/birthday"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_14" />
 
-
-            <EditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/birthdayTextField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:autofillHints=""
+                android:backgroundTint="@color/black"
                 android:drawableEnd="@drawable/ic_calendar"
                 android:focusableInTouchMode="false"
-                android:hint="Ex: December, 2023"
+                android:hint="@string/december_2023"
                 android:inputType="date"
                 android:textColor="@color/black" />
 
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/saveButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_16"
                 android:layout_marginTop="@dimen/dimen_32"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:backgroundTint="@color/shade_green"
-                android:text="Save"
                 android:layout_marginBottom="@dimen/dimen_32"
+                android:backgroundTint="@color/shade_green"
+                android:text="@string/save"
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_16" />
 
         </LinearLayout>
-
 
     </androidx.core.widget.NestedScrollView>
 

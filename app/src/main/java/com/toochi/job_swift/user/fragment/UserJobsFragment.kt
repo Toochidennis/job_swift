@@ -1,6 +1,6 @@
 package com.toochi.job_swift.user.fragment
 
-import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +11,12 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.toochi.job_swift.common.fragments.AddJobBasicsDialogFragment
 import com.toochi.job_swift.databinding.FragmentUserJobsBinding
 import com.toochi.job_swift.user.adapters.FragmentAdapter
+import com.toochi.job_swift.util.Constants.Companion.EMPLOYER
+import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
 
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-
 
 class UserJobsFragment : Fragment() {
 
@@ -53,16 +54,15 @@ class UserJobsFragment : Fragment() {
         }
 
         binding.postJobButton.setOnClickListener {
-            with(requireActivity().getSharedPreferences("loginDetail", Context.MODE_PRIVATE)) {
-                val isHaveCompany = getBoolean("have_company", false)
+            with(requireActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE)) {
+                val isHaveCompany = getString("user_type", "")
 
-                if (isHaveCompany) {
+                if (isHaveCompany == EMPLOYER) {
                     AddJobBasicsDialogFragment().show(parentFragmentManager, "job basics")
                 } else {
                     JobIntroScreenDialogFragment().show(parentFragmentManager, "Intro")
                 }
             }
-
         }
 
         setUpViewPager()
@@ -74,7 +74,6 @@ class UserJobsFragment : Fragment() {
         val fragmentAdapter = FragmentAdapter(requireActivity()).apply {
             addFragment(PostedJobsFragment())
             addFragment(AppliedJobsFragment())
-            addFragment(SavedJobsFragment())
         }
 
         binding.viewPager.adapter = fragmentAdapter
@@ -87,18 +86,6 @@ class UserJobsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            UserJobsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 
 }

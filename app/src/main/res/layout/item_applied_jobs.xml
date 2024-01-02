@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="postJob"
+            type="com.toochi.job_swift.model.PostJob" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_16"
+        android:layout_marginTop="@dimen/dimen_16"
+        android:layout_marginEnd="@dimen/dimen_16"
+        app:cardCornerRadius="@dimen/dimen_16"
+        app:contentPadding="@dimen/dimen_16">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/jobIconLayout"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/profile_bg"
+                android:backgroundTint="@color/shade_green"
+                android:gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_jobs"
+                    app:tint="@color/pale_silver" />
+
+            </LinearLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/jobTitleTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="@dimen/dimen_10"
+                android:text="@{postJob.title}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_18"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/jobIconLayout"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/salaryTextview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/jobTitleTextView"
+                android:text="@{postJob.salary}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_16"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/jobTitleTextView"
+                app:layout_constraintTop_toBottomOf="@id/jobTitleTextView" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/jobTypeTextview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/jobTitleTextView"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:layout_marginEnd="@dimen/dimen_10"
+                android:layout_toEndOf="@id/jobIconLayout"
+                android:text="@{postJob.jobType}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_14"
+                app:layout_constraintEnd_toStartOf="@id/workplaceTextview"
+                app:layout_constraintStart_toStartOf="@id/salaryTextview"
+                app:layout_constraintTop_toBottomOf="@id/salaryTextview" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/workplaceTextview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/jobTitleTextView"
+                android:text="@{postJob.workplaceType}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/jobTypeTextview"
+                app:layout_constraintTop_toTopOf="@id/jobTypeTextview" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>
