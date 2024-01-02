@@ -60,7 +60,7 @@
                 android:layout_below="@id/titleTextView"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="@dimen/dimen_16"
-                android:layout_marginTop="@dimen/dimen_10"
+                android:layout_marginTop="@dimen/dimen_8"
                 android:layout_toEndOf="@id/notificationImageView"
                 android:text="@{notification.body}"
                 android:textSize="@dimen/text_14" />

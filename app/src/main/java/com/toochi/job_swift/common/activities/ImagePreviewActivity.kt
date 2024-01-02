@@ -9,7 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import com.squareup.picasso.Picasso
-import com.toochi.job_swift.backend.AuthenticationManager.updateProfileImage
+import com.toochi.job_swift.backend.PersonalDetailsManager.updateProfileImage
 import com.toochi.job_swift.common.dialogs.LoadingDialog
 import com.toochi.job_swift.databinding.ActivityImagePreviewBinding
 import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
@@ -37,6 +37,12 @@ class ImagePreviewActivity : AppCompatActivity() {
             ViewCompat.getTransitionName(binding.profileImageView) ?: ""
         )
 
+        val sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE)
+        val photoUrl = sharedPreferences.getString("photo_url", "")
+
+        if (!photoUrl.isNullOrEmpty())
+            Picasso.get().load(photoUrl).into(binding.profileImageView)
+
         val imageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
                 onPickedImage(uri, getFileName(uri))
@@ -54,31 +60,39 @@ class ImagePreviewActivity : AppCompatActivity() {
     private fun onPickedImage(uri: Uri?, fileName: String?) {
         val loadingDialog = LoadingDialog(this)
 
-        if (uri != null) {
-            loadingDialog.show()
+        try {
+            if (uri != null) {
+                loadingDialog.show()
 
-            val profileId =
-                getSharedPreferences(PREF_NAME, MODE_PRIVATE).getString("profile_id", "")
+                val profileId =
+                    getSharedPreferences(PREF_NAME, MODE_PRIVATE).getString("profile_id", "")
 
-            profileId?.let {
-                updateProfileImage(
-                    profileId = it,
-                    imageUri = uri,
-                    imageName = "$fileName"
-                ) { success, error ->
-                    if (success) {
-                        Picasso.get().load(uri).into(binding.profileImageView)
-                    } else {
-                        Toast.makeText(
-                            this@ImagePreviewActivity,
-                            error.toString(),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                profileId?.let {
+                    updateProfileImage(
+                        profileId = it,
+                        imageUri = uri,
+                        imageName = "$fileName"
+                    ) { success, error ->
+                        if (success) {
+                            Picasso.get().load(uri).into(binding.profileImageView)
+                        } else {
+                            Toast.makeText(
+                                this@ImagePreviewActivity,
+                                error.toString(),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        loadingDialog.dismiss()
                     }
-
-                    loadingDialog.dismiss()
                 }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(this@ImagePreviewActivity, "An error occurred.", Toast.LENGTH_SHORT)
+                .show()
+        } finally {
+            loadingDialog.dismiss()
         }
     }
 
