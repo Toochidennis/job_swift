@@ -70,6 +70,7 @@ class ContactInfoDialogFragment : DialogFragment() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            loadingDialog.dismiss()
             Toast.makeText(requireContext(), "An error occurred.", Toast.LENGTH_SHORT).show()
         }
     }
@@ -95,7 +96,6 @@ class ContactInfoDialogFragment : DialogFragment() {
 
     private fun processForm() {
         try {
-
             val user = getDataFromForm()
 
             val profileId = sharedPreferences.getString("profile_id", "")
