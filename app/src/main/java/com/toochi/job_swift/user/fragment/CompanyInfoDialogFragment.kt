@@ -10,10 +10,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager.createCompany
-import com.toochi.job_swift.backend.AuthenticationManager.getCompany
-import com.toochi.job_swift.backend.AuthenticationManager.updateCompany
-import com.toochi.job_swift.backend.AuthenticationManager.updateExistingUser
+import com.toochi.job_swift.backend.CompanyManager.createCompany
+import com.toochi.job_swift.backend.CompanyManager.getCompany
+import com.toochi.job_swift.backend.CompanyManager.updateCompany
+import com.toochi.job_swift.backend.PersonalDetailsManager.updateExistingUser
 import com.toochi.job_swift.common.dialogs.AlertDialog
 import com.toochi.job_swift.common.dialogs.CompanyPositionDialogFragment
 import com.toochi.job_swift.common.dialogs.LoadingDialog
@@ -27,6 +27,7 @@ import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
 class CompanyInfoDialogFragment : DialogFragment() {
 
     private var _binding: FragmentCompanyInfoDialogBinding? = null
+
     private val binding get() = _binding!!
 
     private var company: Company? = null
@@ -62,20 +63,28 @@ class CompanyInfoDialogFragment : DialogFragment() {
         loadingDialog = LoadingDialog(requireContext())
         loadingDialog.show()
 
-        getCompany { company, error ->
-            if (company != null) {
-                this.company = company
+        try {
 
-                binding.companyNameEditText.setText(company.title)
-                binding.numberOfEmployeesEditText.setText(company.noOfEmployees)
-                setDescriptionText(company.description)
-                binding.locationTextField.setText(company.location)
-                binding.positionTextField.setText(company.position)
-                binding.regNoTextField.setText(company.regNumber)
-            } else {
-                showToast(error.toString())
+            getCompany { company, error ->
+                if (company != null) {
+                    this.company = company
+
+                    binding.companyNameEditText.setText(company.title)
+                    binding.numberOfEmployeesEditText.setText(company.noOfEmployees)
+                    setDescriptionText(company.description)
+                    binding.locationTextField.setText(company.location)
+                    binding.positionTextField.setText(company.position)
+                    binding.regNoTextField.setText(company.regNumber)
+                } else {
+                    showToast(error.toString())
+                }
+
+                loadingDialog.dismiss()
             }
-
+        } catch (e: Exception) {
+            e.printStackTrace()
+            showToast("An error occurred.")
+        } finally {
             loadingDialog.dismiss()
         }
     }
@@ -116,35 +125,43 @@ class CompanyInfoDialogFragment : DialogFragment() {
         loadingDialog = LoadingDialog(requireContext())
         val data = getDataFromForm()
 
-        if (isValidForm(data)) {
-            loadingDialog.show()
+        try {
 
-            if (company == null) {
-                isFirstTime = true
-                createCompany(data) { success, error ->
-                    updateSharedPreference(data)
-                    handleAuthResult(success, error.toString())
-                }
-            } else {
-                isFirstTime = false
-                company?.companyId?.let {
-                    updateCompany(
-                        companyId = it,
-                        hashMapOf(
-                            "companyId" to it,
-                            "title" to data.title,
-                            "position" to data.position,
-                            "noOfEmployees" to data.noOfEmployees,
-                            "description" to data.description,
-                            "location" to data.location,
-                            "regNumber" to data.regNumber
-                        )
-                    ) { success, error ->
+            if (isValidForm(data)) {
+                loadingDialog.show()
+
+                if (company == null) {
+                    isFirstTime = true
+                    createCompany(data) { success, error ->
                         updateSharedPreference(data)
                         handleAuthResult(success, error.toString())
                     }
+                } else {
+                    isFirstTime = false
+                    company?.companyId?.let {
+                        updateCompany(
+                            companyId = it,
+                            hashMapOf(
+                                "companyId" to it,
+                                "title" to data.title,
+                                "position" to data.position,
+                                "noOfEmployees" to data.noOfEmployees,
+                                "description" to data.description,
+                                "location" to data.location,
+                                "regNumber" to data.regNumber
+                            )
+                        ) { success, error ->
+                            updateSharedPreference(data)
+                            handleAuthResult(success, error.toString())
+                        }
+                    }
                 }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            showToast("An error occurred.")
+        } finally {
+            loadingDialog.dismiss()
         }
     }
 

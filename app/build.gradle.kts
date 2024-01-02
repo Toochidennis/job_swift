@@ -1,6 +1,3 @@
-import com.android.build.api.dsl.Packaging
-import com.android.builder.model.PackagingOptions
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -30,10 +27,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-        }
-
-        getByName("debug") {
-            isDebuggable = true
         }
 
     }
@@ -79,10 +72,12 @@ dependencies {
     implementation("com.squareup.picasso:picasso:2.71828")
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation("jp.wasabeef:richeditor-android:2.0.0")
+    implementation ("com.github.afreakyelf:Pdf-Viewer:2.0.4")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.21")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
