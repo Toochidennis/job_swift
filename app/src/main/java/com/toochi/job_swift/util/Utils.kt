@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.google.auth.oauth2.GoogleCredentials
-import com.google.firebase.Timestamp
 import com.toochi.job_swift.backend.AuthenticationManager.auth
 import com.toochi.job_swift.model.Notification
 import com.toochi.job_swift.model.User
@@ -17,17 +16,14 @@ import com.toochi.job_swift.util.Constants.Companion.SCOPES
 import com.toochi.job_swift.util.Constants.Companion.USER_ID_KEY
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 import java.util.regex.Pattern
 
@@ -110,8 +106,9 @@ object Utils {
                       },
                       "data": {
                         "userId": "${notification.userId}",
-                        "ownerId": "${notification.ownerId}",
-                        "jobId": "${notification.jobId}"
+                        "employerId": "${notification.employerId}",
+                        "jobId": "${notification.jobId}",
+                        "type": "${notification.type}"
                       }
                    }
                 }

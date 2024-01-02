@@ -20,7 +20,6 @@ class UserSettingsFragment : Fragment() {
 
     private lateinit var binding: FragmentUserSettingsBinding
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
