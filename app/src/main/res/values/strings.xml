@@ -162,6 +162,13 @@
     <string name="call">Call</string>
     <string name="view_cv">View CV</string>
     <string name="job_description">Job description</string>
+    <string name="no_notifications">You have no notifications right now. Come back later</string>
+    <string name="best_regards">Best regards,</string>
+    <string name="update_on_your_job_application">Update on Your Job Application</string>
+    <string name="congratulations_your_job_application_was_accepted">Congratulations! Your Job Application was Accepted</string>
+    <string name="you_have_applied_for_this_job">You have applied for this job.</string>
+    <string name="file_size_is_larger_than_2mb">File size is larger than 2MB</string>
+    <string name="application_status">Application status:</string>
 
     <string-array name="heading_options">
         <item>Heading 1</item>

@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import com.squareup.picasso.Picasso
 import com.toochi.job_swift.BR
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager.getAllPostedJobs
+import com.toochi.job_swift.backend.PostJobManager.getAllPostedJobs
 import com.toochi.job_swift.common.dialogs.LoadingDialog
 import com.toochi.job_swift.common.fragments.PostedJobDetailsDialogFragment
 import com.toochi.job_swift.databinding.FragmentUserHomeBinding
@@ -71,28 +71,37 @@ class UserHomeFragment : Fragment() {
 
     private fun getAllJobs() {
         val loadingDialog = LoadingDialog(requireContext())
-        loadingDialog.show()
 
-        getAllPostedJobs { jobs, errorMessage ->
-            if (jobs != null) {
-                jobList.addAll(jobs)
+        try {
+            loadingDialog.show()
 
-                val copiedJobs = jobs.map { job ->
-                    val location = "${job.location} . ${formatAmount(job.salary, job.salaryRate)}"
-                    val jobType = "${job.jobType} . ${job.workplaceType}"
+            getAllPostedJobs { jobs, errorMessage ->
+                if (jobs != null) {
+                    jobList.addAll(jobs)
 
-                    PostJob(
-                        title = job.title,
-                        location = location,
-                        jobType = jobType
-                    )
+                    val copiedJobs = jobs.map { job ->
+                        val location =
+                            "${job.location} . ${formatAmount(job.salary, job.salaryRate)}"
+                        val jobType = "${job.jobType} . ${job.workplaceType}"
+
+                        PostJob(
+                            title = job.title,
+                            location = location,
+                            jobType = jobType
+                        )
+                    }
+
+                    setUpAdapter(copiedJobs.toMutableList())
+                } else {
+                    showToast(errorMessage.toString())
                 }
 
-                setUpAdapter(copiedJobs.toMutableList())
-            } else {
-                showToast(errorMessage.toString())
+                loadingDialog.dismiss()
             }
-
+        } catch (e: Exception) {
+            e.printStackTrace()
+            showToast("An error occurred.")
+        }finally {
             loadingDialog.dismiss()
         }
     }
