@@ -20,11 +20,16 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.toochi.job_swift.MainActivity
 import com.toochi.job_swift.R
+import com.toochi.job_swift.backend.AuthenticationManager.auth
 import com.toochi.job_swift.backend.NotificationsManager.createNotifications
 import com.toochi.job_swift.backend.PersonalDetailsManager.updateExistingUser
+import com.toochi.job_swift.util.Constants.Companion.ACCEPTED
 import com.toochi.job_swift.util.Constants.Companion.CHANNEL_ID
 import com.toochi.job_swift.util.Constants.Companion.CHANNEL_NAME
+import com.toochi.job_swift.util.Constants.Companion.JOB_APPLICATION
 import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
+import com.toochi.job_swift.util.Constants.Companion.REJECTED
+import com.toochi.job_swift.util.NotificationRepository
 import kotlin.random.Random
 
 class FirebaseService : FirebaseMessagingService() {
@@ -68,6 +73,12 @@ class FirebaseService : FirebaseMessagingService() {
             notificationManager.notify(notificationId, notification)
         }
 
+        saveNotification(message)
+
+        NotificationRepository.notifyNewNotification()
+    }
+
+    private fun saveNotification(message: RemoteMessage) {
         try {
             message.let {
                 com.toochi.job_swift.model.Notification(
@@ -84,6 +95,27 @@ class FirebaseService : FirebaseMessagingService() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
+    }
+
+    private fun isAcceptedOrRejected(notificationType: String?, userId: String?): Boolean {
+        return (notificationType == ACCEPTED || notificationType == REJECTED) && userId == auth.uid
+    }
+
+    private fun isJobApplication(employerId: String?, notificationType: String?): Boolean {
+        return notificationType == JOB_APPLICATION && employerId == auth.uid
+    }
+
+    private fun broadcastNotification(remoteMessage: RemoteMessage) {
+        val userId = remoteMessage.data["userId"]
+        val employerId = remoteMessage.data["employerId"]
+        val notificationType = remoteMessage.data["type"]
+
+        /*val intent = Intent(applicationContext, NotificationBroadcastReceiver::class.java)
+
+        if (isAcceptedOrRejected(notificationType, userId) || isJobApplication(employerId, notificationType)) {
+            sendBroadcast(intent)
+        }*/
     }
 
 

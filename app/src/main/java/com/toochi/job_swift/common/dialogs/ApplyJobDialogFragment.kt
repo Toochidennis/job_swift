@@ -3,8 +3,6 @@ package com.toochi.job_swift.common.dialogs
 import android.content.Context.MODE_PRIVATE
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.View
@@ -220,13 +218,13 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
                             if (isFinished) {
                                 notifyOwner()
                             } else {
-                                showToast(error.toString())
                                 loadingDialog.dismiss()
+                                showToast(error.toString())
                             }
                         }
                     } else {
-                        showToast(errorMessage.toString())
                         loadingDialog.dismiss()
+                        showToast(errorMessage.toString())
                     }
                 }
             } else {
@@ -245,6 +243,7 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
 
             checkIfHaveAppliedJob(postJob.jobId) { haveApplied, exception ->
                 if (haveApplied) {
+                    loadingDialog.dismiss()
                     showToast(getString(R.string.you_have_applied_for_this_job))
                 } else if (exception == null) {
                     applyNow()
@@ -282,6 +281,7 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
                 }
             }
         } catch (e: Exception) {
+            loadingDialog.dismiss()
             e.printStackTrace()
         }
     }
