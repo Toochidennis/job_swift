@@ -84,8 +84,6 @@ class CompanyInfoDialogFragment : DialogFragment() {
         } catch (e: Exception) {
             e.printStackTrace()
             showToast("An error occurred.")
-        } finally {
-            loadingDialog.dismiss()
         }
     }
 
@@ -160,8 +158,6 @@ class CompanyInfoDialogFragment : DialogFragment() {
         } catch (e: Exception) {
             e.printStackTrace()
             showToast("An error occurred.")
-        } finally {
-            loadingDialog.dismiss()
         }
     }
 

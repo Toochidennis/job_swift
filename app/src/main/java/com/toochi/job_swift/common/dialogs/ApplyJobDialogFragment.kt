@@ -233,8 +233,6 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
         } catch (e: ApiException) {
             e.printStackTrace()
             showToast("An error occurred.")
-        } finally {
-            loadingDialog.dismiss()
         }
     }
 
