@@ -107,24 +107,24 @@ class ApplicationResponseDialogFragment(private val notification: Notification) 
     ): String {
         return if (status == ACCEPTED) {
             """
-                Dear $name,
+               Dear $name,
                 
-                We are pleased to inform you that your application for the position of $jobTitle has been accepted. Congratulations! Welcome to our team.
+               We are pleased to inform you that your application for the position of $jobTitle has been accepted. Congratulations! Welcome to our team.
     
-                Please stay tuned for further details and instructions regarding the next steps.
+               Please stay tuned for further details and instructions regarding the next steps.
      
      
-                Best regards,
-                $companyName
+               Best regards,
+               $companyName
                 
             """.trimIndent()
         } else {
             """
-               Dear [Applicant's Name],
+              Dear $name,
      
-               We appreciate your interest in the position of $jobTitle at $companyName. After careful consideration, we regret to inform you that your application has not been successful at this time.
+              We appreciate your interest in the position of $jobTitle at $companyName. After careful consideration, we regret to inform you that your application has not been successful at this time.
      
-               We sincerely thank you for your effort and interest in our company. We encourage you to explore other opportunities and wish you success in your future endeavors.
+              We sincerely thank you for your effort and interest in our company. We encourage you to explore other opportunities and wish you success in your future endeavors.
      
      
               Best regards,

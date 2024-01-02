@@ -183,8 +183,6 @@ class ApplicationReviewActivity : AppCompatActivity() {
                             location = location
                         )
                     }
-                } else {
-                    loadingDialog.dismiss()
                 }
 
                 setUpExperienceAdapter(copiedExperiences.toMutableList())
@@ -210,8 +208,6 @@ class ApplicationReviewActivity : AppCompatActivity() {
                             grade = grade
                         )
                     }
-                } else {
-                    loadingDialog.dismiss()
                 }
 
                 setUpEducationAdapter(copiedEducations.toMutableList())

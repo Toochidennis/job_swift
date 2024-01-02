@@ -11,7 +11,7 @@
         android:name="com.google.android.gms.permission.AD_ID"
         tools:node="remove" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -73,6 +73,7 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/shade_green" />
+
     </application>
 
     <queries>
@@ -86,5 +87,6 @@
             <data android:scheme="tel" />
         </intent>
     </queries>
+
 
 </manifest>

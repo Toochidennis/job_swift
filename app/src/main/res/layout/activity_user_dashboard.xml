@@ -17,7 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:scrollIndicators="left"
         app:itemIconTint="@color/bottom_navigation_foreground"
         app:menu="@menu/menu_user_bottom_navigation_bar" />
 
