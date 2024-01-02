@@ -18,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -91,10 +92,10 @@ object Utils {
     fun sendNotification(
         context: Context,
         notification: Notification,
-        onComplete: (String?, String?) -> Unit
+        onComplete: (String?) -> Unit
     ) = CoroutineScope(Dispatchers.IO).launch {
         try {
-            val token = getAccessToken(context)
+            val serverKey = getAccessToken(context)
 
             val payload = """
                 {
@@ -118,22 +119,27 @@ object Utils {
                 .url(BASE_URL)
                 .post(payload.toRequestBody(CONTENT_TYPE.toMediaTypeOrNull()))
                 .header("Content-Type", CONTENT_TYPE)
-                .header("Authorization", "Bearer $token")
+                .header("Authorization", "Bearer $serverKey")
                 .build()
 
-            val response = OkHttpClient().newCall(request).execute()
-
-            if (response.isSuccessful) {
-                onComplete(response.message, null)
-            } else {
-                onComplete(null, response.code.toString())
+            val response = try {
+                OkHttpClient().newCall(request).execute()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return@launch
             }
+
+           withContext(Dispatchers.Main){
+               onComplete(response.code.toString())
+           }
 
             response.close()
 
         } catch (e: Exception) {
             e.printStackTrace()
-            onComplete(null, e.message)
+           withContext(Dispatchers.Main){
+               onComplete(e.message)
+           }
         }
     }
 

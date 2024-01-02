@@ -24,15 +24,15 @@ import com.toochi.job_swift.util.Constants.Companion.REJECTED
 
 class NotificationsFragment : Fragment() {
 
-    private var _binding: FragmentNotificationsBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentNotificationsBinding
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
+        binding = FragmentNotificationsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -58,25 +58,31 @@ class NotificationsFragment : Fragment() {
             getAllNotifications { notifications, error ->
                 if (notifications != null) {
                     notifications.forEach {
-                        it.userId = it.extractTime()
+                        it.token = it.extractTime()
                     }
+
+                    notifications.sortByDescending { it.token }
+
                     binding.errorImageView.isVisible = false
                     binding.errorTextView.isVisible = false
 
+                    loadingDialog.dismiss()
                     setUpAdapter(notifications)
                 } else if (error == "No notifications yet") {
+                    loadingDialog.dismiss()
                     binding.errorImageView.isVisible = true
                     binding.errorTextView.isVisible = true
                 } else {
+                    loadingDialog.dismiss()
                     binding.errorImageView.isVisible = true
                     binding.errorTextView.isVisible = false
                     Toast.makeText(requireContext(), error.toString(), Toast.LENGTH_SHORT).show()
                 }
 
-                loadingDialog.dismiss()
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            loadingDialog.show()
             Toast.makeText(requireContext(), "And error occurred.", Toast.LENGTH_SHORT).show()
         }
     }
@@ -100,7 +106,6 @@ class NotificationsFragment : Fragment() {
                     "response"
                 )
             }
-
         }
 
         binding.notificationRecyclerView.apply {
@@ -123,8 +128,4 @@ class NotificationsFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }
