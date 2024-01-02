@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager.createCompany
-import com.toochi.job_swift.backend.AuthenticationManager.updateExistingUser
+import com.toochi.job_swift.backend.CompanyManager.createCompany
+import com.toochi.job_swift.backend.PersonalDetailsManager.updateExistingUser
 import com.toochi.job_swift.common.dialogs.AlertDialog
 import com.toochi.job_swift.common.dialogs.CompanyPositionDialogFragment
 import com.toochi.job_swift.common.dialogs.LoadingDialog
@@ -51,24 +51,30 @@ class CreateEmployerAccountDialogFragment : DialogFragment() {
         viewClickListener()
     }
 
-
     private fun processForm() {
         val loadingDialog = LoadingDialog(requireContext())
-        val company = getDataFromForm()
+        try {
+            val company = getDataFromForm()
 
-        if (isValidForm(company)) {
-            loadingDialog.show()
+            if (isValidForm(company)) {
+                loadingDialog.show()
 
-            createCompany(company) { success, errorMessage ->
-                if (success) {
-                    updateSharedPreference(company)
-                    showWelcomeMessage()
-                } else {
-                    showToast(errorMessage.toString())
+                createCompany(company) { success, errorMessage ->
+                    if (success) {
+                        updateSharedPreference(company)
+                        showWelcomeMessage()
+                    } else {
+                        showToast(errorMessage.toString())
+                    }
+
+                    loadingDialog.dismiss()
                 }
-
-                loadingDialog.dismiss()
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            showToast("An error occurred.")
+        } finally {
+            loadingDialog.dismiss()
         }
     }
 

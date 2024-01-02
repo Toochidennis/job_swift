@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Gravity
-import android.view.ViewGroup
 import android.view.Window
 import com.toochi.job_swift.R
 import com.toochi.job_swift.databinding.DialogDatePickerBinding
