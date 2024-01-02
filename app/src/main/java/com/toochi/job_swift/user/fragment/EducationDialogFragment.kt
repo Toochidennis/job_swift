@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager.createUserEducation
-import com.toochi.job_swift.backend.AuthenticationManager.updateUserEducation
+import com.toochi.job_swift.backend.EducationManager.createUserEducation
+import com.toochi.job_swift.backend.EducationManager.updateUserEducation
 import com.toochi.job_swift.common.dialogs.DatePickerDialogFragment
 import com.toochi.job_swift.common.dialogs.LoadingDialog
 import com.toochi.job_swift.databinding.FragmentEducationDialogBinding
@@ -88,36 +88,42 @@ class EducationDialogFragment(
             val loadingDialog = LoadingDialog(requireContext())
             val data = getDataFromForm()
 
-            if (isValidForm(data)) {
-                loadingDialog.show()
+            try {
+                if (isValidForm(data)) {
+                    loadingDialog.show()
 
-                if (education != null) {
-                    updateUserEducation(
-                        educationId = education.educationId,
-                        data = hashMapOf(
-                            "school" to data.school,
-                            "degree" to data.degree,
-                            "discipline" to data.discipline,
-                            "startDate" to data.startDate,
-                            "endDate" to data.endDate,
-                            "grade" to data.grade
-                        )
-                    ) { success, error ->
-                        handleAuthResult(success, error.toString())
-                        loadingDialog.dismiss()
+                    if (education != null) {
+                        updateUserEducation(
+                            educationId = education.educationId,
+                            data = hashMapOf(
+                                "school" to data.school,
+                                "degree" to data.degree,
+                                "discipline" to data.discipline,
+                                "startDate" to data.startDate,
+                                "endDate" to data.endDate,
+                                "grade" to data.grade
+                            )
+                        ) { success, error ->
+                            handleAuthResult(success, error.toString())
+                            loadingDialog.dismiss()
+                        }
+                    } else {
+                        createUserEducation(data) { success, error ->
+                            handleAuthResult(success, error.toString())
+                            loadingDialog.dismiss()
+                        }
                     }
                 } else {
-                    createUserEducation(data) { success, error ->
-                        handleAuthResult(success, error.toString())
-                        loadingDialog.dismiss()
-                    }
-                }
-            } else {
-                showToast(getString(R.string.please_provide_school))
+                    showToast(getString(R.string.please_provide_school))
 
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                showToast("An error occurred.")
+            } finally {
+                loadingDialog.dismiss()
             }
         }
-
     }
 
     private fun handleAuthResult(success: Boolean, error: String) {
