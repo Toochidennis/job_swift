@@ -4,14 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.toochi.job_swift.BR
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager.getJobsAppliedFor
+import com.toochi.job_swift.backend.ApplyForJobManager.getJobsAppliedFor
+import com.toochi.job_swift.common.dialogs.AppliedJobsDetailsDialogFragment
 import com.toochi.job_swift.common.dialogs.LoadingDialog
 import com.toochi.job_swift.databinding.FragmentAppliedJobsBinding
+import com.toochi.job_swift.model.ApplyJob
 import com.toochi.job_swift.model.PostJob
 import com.toochi.job_swift.user.adapters.GenericAdapter
 import com.toochi.job_swift.util.Utils.currencyFormatter
@@ -21,6 +24,8 @@ class AppliedJobsFragment : Fragment() {
 
     private var _binding: FragmentAppliedJobsBinding? = null
     private val binding get() = _binding!!
+
+    private var appliedJobList = mutableListOf<ApplyJob>()
 
 
     override fun onCreateView(
@@ -45,39 +50,50 @@ class AppliedJobsFragment : Fragment() {
         val loadingDialog = LoadingDialog(requireContext())
         loadingDialog.show()
 
-        getJobsAppliedFor { postJobs, appliedJobs, error ->
-            binding.imageView.isVisible = postJobs.isNullOrEmpty()
-            binding.messageTextView.isVisible = postJobs.isNullOrEmpty()
-            if (postJobs != null) {
-                postJobs.forEach { item ->
-                    val currentAmount = item.salary
-                    val currentRate = item.salaryRate
+        try {
 
-                    val formattedAmount = formatAmount(currentAmount, currentRate)
+            getJobsAppliedFor { postJobs, appliedJobs, error ->
+                binding.imageView.isVisible = postJobs.isNullOrEmpty()
+                binding.messageTextView.isVisible = postJobs.isNullOrEmpty()
 
-                    item.salary = formattedAmount
+                if (postJobs != null && appliedJobs != null) {
+                    appliedJobList = appliedJobs
+
+                    postJobs.forEach { item ->
+                        val currentAmount = item.salary
+                        val currentRate = item.salaryRate
+
+                        val formattedAmount = formatAmount(currentAmount, currentRate)
+
+                        item.salary = formattedAmount
+                    }
+
+                    setUpAdapter(postJobs)
+                } else if (error == "empty") {
+                    binding.imageView.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_no_data
+                        )
+                    )
+                    binding.messageTextView.text =
+                        requireActivity().getString(R.string.have_not_applied_job)
+                } else {
+                    binding.imageView.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.no_internet
+                        )
+                    )
+                    binding.messageTextView.text = requireActivity().getString(R.string.no_internet)
                 }
 
-                setUpAdapter(postJobs)
-            } else if (error == "empty") {
-                binding.imageView.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_no_data
-                    )
-                )
-                binding.messageTextView.text =
-                    requireActivity().getString(R.string.have_not_applied_job)
-            } else {
-                binding.imageView.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.no_internet
-                    )
-                )
-                binding.messageTextView.text = requireActivity().getString(R.string.no_internet)
+                loadingDialog.dismiss()
             }
-
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(requireContext(), "An error occurred.", Toast.LENGTH_SHORT).show()
+        } finally {
             loadingDialog.dismiss()
         }
     }
@@ -108,7 +124,12 @@ class AppliedJobsFragment : Fragment() {
                 binding.setVariable(BR.postJob, model)
                 binding.executePendingBindings()
             }
-        ) {}
+        ) {
+            AppliedJobsDetailsDialogFragment(appliedJobList[it]).show(
+                parentFragmentManager,
+                "details"
+            )
+        }
 
         binding.appliedJobsRecyclerView.apply {
             hasFixedSize()
@@ -116,7 +137,7 @@ class AppliedJobsFragment : Fragment() {
         }
     }
 
-    private fun refreshData(){
+    private fun refreshData() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             getAllAppliedJobs()
             binding.swipeRefreshLayout.isRefreshing = false
