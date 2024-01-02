@@ -88,8 +88,6 @@ class ApplicationResponseDialogFragment(private val notification: Notification) 
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(requireContext(), "An error occurred.", Toast.LENGTH_SHORT).show()
-        }finally {
-            loadingDialog.dismiss()
         }
 
     }

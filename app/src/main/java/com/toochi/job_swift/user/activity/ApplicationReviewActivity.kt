@@ -85,8 +85,6 @@ class ApplicationReviewActivity : AppCompatActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
             showToast("An error occurred.")
-        } finally {
-            loadingDialog.dismiss()
         }
     }
 
@@ -241,8 +239,6 @@ class ApplicationReviewActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
                 showToast("An error occurred")
-            } finally {
-                loadingDialog.dismiss()
             }
         }
 
@@ -265,8 +261,6 @@ class ApplicationReviewActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
                 showToast("An error occurred")
-            } finally {
-                loadingDialog.dismiss()
             }
         }
 
