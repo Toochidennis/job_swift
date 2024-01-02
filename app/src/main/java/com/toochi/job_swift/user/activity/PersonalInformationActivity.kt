@@ -42,7 +42,6 @@ class PersonalInformationActivity : AppCompatActivity() {
     private var company = ""
     private var educationName = ""
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPersonalInformationBinding.inflate(layoutInflater)
@@ -81,6 +80,7 @@ class PersonalInformationActivity : AppCompatActivity() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            loadingDialog.dismiss()
             Toast.makeText(
                 this@PersonalInformationActivity,
                 "An error occurred.",
