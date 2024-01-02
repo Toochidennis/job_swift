@@ -91,8 +91,6 @@ class ImagePreviewActivity : AppCompatActivity() {
             e.printStackTrace()
             Toast.makeText(this@ImagePreviewActivity, "An error occurred.", Toast.LENGTH_SHORT)
                 .show()
-        } finally {
-            loadingDialog.dismiss()
         }
     }
 
