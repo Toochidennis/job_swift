@@ -8,7 +8,7 @@ import java.util.Locale
 
 data class Notification(
     val notificationId: String = "",
-    val token: String = "",
+    var token: String = "",
     val title: String = "",
     val body: String = "",
     var userId: String = "",
