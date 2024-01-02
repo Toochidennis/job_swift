@@ -48,6 +48,7 @@
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
         android:padding="@dimen/dimen_16"
+        android:textSize="@dimen/text_16"
         android:text="@string/full_time"
         android:textColor="@color/black" />
 
