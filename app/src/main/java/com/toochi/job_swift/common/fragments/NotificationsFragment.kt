@@ -72,15 +72,14 @@ class NotificationsFragment : Fragment() {
                     binding.errorTextView.isVisible = false
                     Toast.makeText(requireContext(), error.toString(), Toast.LENGTH_SHORT).show()
                 }
+
+                loadingDialog.dismiss()
             }
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(requireContext(), "And error occurred.", Toast.LENGTH_SHORT).show()
-        } finally {
-            loadingDialog.dismiss()
         }
     }
-
 
     private fun setUpAdapter(notificationList: MutableList<Notification>) {
         val notificationAdapter = GenericAdapter(

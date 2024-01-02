@@ -86,8 +86,6 @@ class PersonalInformationActivity : AppCompatActivity() {
                 "An error occurred.",
                 Toast.LENGTH_SHORT
             ).show()
-        } finally {
-            loadingDialog.dismiss()
         }
     }
 
@@ -245,7 +243,6 @@ class PersonalInformationActivity : AppCompatActivity() {
             startActivity(intent, options.toBundle())
         }
     }
-
 
     private fun refreshData() {
         binding.swipeRefreshLayout.setOnRefreshListener {
