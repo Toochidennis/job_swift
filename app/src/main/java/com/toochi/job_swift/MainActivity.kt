@@ -25,10 +25,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
         with(getSharedPreferences(PREF_NAME, MODE_PRIVATE)) {
-            println(getString("user_type", ""))
             val intent = when (getString("user_type", "")) {
                 ADMIN -> {
                     Intent(this@MainActivity, AdminDashboardActivity::class.java)

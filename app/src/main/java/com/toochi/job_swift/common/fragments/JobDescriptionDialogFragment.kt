@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager.postJob
+import com.toochi.job_swift.backend.PostJobManager
 import com.toochi.job_swift.common.dialogs.AlertDialog
 import com.toochi.job_swift.common.dialogs.DatePickerDialog
 import com.toochi.job_swift.common.dialogs.LoadingDialog
@@ -32,7 +32,6 @@ class JobDescriptionDialogFragment(private val postJob: PostJob) : DialogFragmen
     private var descriptionText: String = ""
     private var deadlineText: String? = null
     private var salaryText: String? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,20 +108,28 @@ class JobDescriptionDialogFragment(private val postJob: PostJob) : DialogFragmen
 
     private fun processForm() {
         val loadingDialog = LoadingDialog(requireContext())
-        val job = getDataFromForm()
 
-        if (isValidForm(job)) {
-            loadingDialog.show()
+        try {
+            val job = getDataFromForm()
 
-            postJob(job) { success, errorMessage ->
-                if (success) {
-                    showCongratsMessage()
-                } else {
-                    showToast(errorMessage.toString())
+            if (isValidForm(job)) {
+                loadingDialog.show()
+
+                PostJobManager.postJob(job) { success, errorMessage ->
+                    if (success) {
+                        showCongratsMessage()
+                    } else {
+                        showToast(errorMessage.toString())
+                    }
+
+                    loadingDialog.dismiss()
                 }
-
-                loadingDialog.dismiss()
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            showToast("An error occurred.")
+        } finally {
+            loadingDialog.dismiss()
         }
     }
 
