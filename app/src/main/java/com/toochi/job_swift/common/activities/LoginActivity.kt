@@ -93,7 +93,6 @@ class LoginActivity : AppCompatActivity() {
             editTextWatcher(binding.phoneNumberTextInput, PHONE_NUMBER)
 
             try {
-
                 if (isValidSignUpForm(user)) {
                     loadingDialog.show()
                     registerWithEmailAndPassword(user) { success, errorMessage ->
@@ -103,8 +102,6 @@ class LoginActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
                 showToast("An error occurred.")
-            }finally {
-                loadingDialog.dismiss()
             }
 
         }
@@ -144,12 +141,9 @@ class LoginActivity : AppCompatActivity() {
                     loadingDialog.dismiss()
                 }
             }
-
         } catch (e: Exception) {
             e.printStackTrace()
             showToast("An error occurred.")
-        }finally {
-            loadingDialog.dismiss()
         }
     }
 
@@ -179,8 +173,6 @@ class LoginActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
                 showToast("An error occurred.")
-            }finally {
-                loadingDialog.dismiss()
             }
         }
 

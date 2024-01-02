@@ -128,8 +128,6 @@ class JobDescriptionDialogFragment(private val postJob: PostJob) : DialogFragmen
         } catch (e: Exception) {
             e.printStackTrace()
             showToast("An error occurred.")
-        } finally {
-            loadingDialog.dismiss()
         }
     }
 
