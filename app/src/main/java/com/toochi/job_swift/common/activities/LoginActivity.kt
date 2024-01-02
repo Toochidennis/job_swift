@@ -101,6 +101,7 @@ class LoginActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                loadingDialog.dismiss()
                 showToast("An error occurred.")
             }
 
@@ -136,13 +137,14 @@ class LoginActivity : AppCompatActivity() {
                             handleAuthenticationResult(success, error, user)
                         }
                     } else {
+                        loadingDialog.dismiss()
                         showToast(errorMessage.toString())
                     }
-                    loadingDialog.dismiss()
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            loadingDialog.dismiss()
             showToast("An error occurred.")
         }
     }
@@ -163,15 +165,15 @@ class LoginActivity : AppCompatActivity() {
                                 handleAuthenticationResult(success, error, user)
                             }
                         } else {
+                            loadingDialog.dismiss()
                             showToast(errorMessage.toString())
                         }
-
-                        loadingDialog.dismiss()
                     }
                 }
 
             } catch (e: Exception) {
                 e.printStackTrace()
+                loadingDialog.dismiss()
                 showToast("An error occurred.")
             }
         }
@@ -269,15 +271,16 @@ class LoginActivity : AppCompatActivity() {
 
     private fun handleAuthenticationResult(success: Boolean, errorMessage: String?, user: User?) {
         if (success) {
+            loadingDialog.dismiss()
             user?.let {
                 updateSharedPreferences(it, sharedPreferences)
                 launchDashboardActivity(it.userType)
             }
         } else {
+            loadingDialog.dismiss()
             showToast(errorMessage.toString())
         }
 
-        loadingDialog.dismiss()
     }
 
     private fun launchDashboardActivity(who: String) {

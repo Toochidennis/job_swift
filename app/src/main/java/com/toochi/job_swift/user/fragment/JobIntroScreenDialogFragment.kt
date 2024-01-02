@@ -39,6 +39,7 @@ class JobIntroScreenDialogFragment : DialogFragment() {
             dismiss()
         }
 
+        //Fixing tomorrow
         binding.navigateUp.setOnClickListener {
             dismiss()
         }
