@@ -296,8 +296,8 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
             positiveClickListener = {
                 dismiss()
             }
-            build()
-        }.show()
+            build().show()
+        }
     }
 
     private fun getFileName(uri: Uri): String? {

@@ -27,7 +27,6 @@ class AppliedJobsFragment : Fragment() {
 
     private var appliedJobList = mutableListOf<ApplyJob>()
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -60,6 +59,8 @@ class AppliedJobsFragment : Fragment() {
                     appliedJobList = appliedJobs
 
                     postJobs.forEach { item ->
+                        loadingDialog.dismiss()
+
                         val currentAmount = item.salary
                         val currentRate = item.salaryRate
 
@@ -70,6 +71,7 @@ class AppliedJobsFragment : Fragment() {
 
                     setUpAdapter(postJobs)
                 } else if (error == "empty") {
+                    loadingDialog.dismiss()
                     binding.imageView.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
@@ -79,6 +81,7 @@ class AppliedJobsFragment : Fragment() {
                     binding.messageTextView.text =
                         requireActivity().getString(R.string.have_not_applied_job)
                 } else {
+                    loadingDialog.dismiss()
                     binding.imageView.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
@@ -88,10 +91,10 @@ class AppliedJobsFragment : Fragment() {
                     binding.messageTextView.text = requireActivity().getString(R.string.no_internet)
                 }
 
-                loadingDialog.dismiss()
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            loadingDialog.dismiss()
             Toast.makeText(requireContext(), "An error occurred.", Toast.LENGTH_SHORT).show()
         }
     }

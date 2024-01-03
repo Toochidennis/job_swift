@@ -68,12 +68,16 @@ class ApplicationResponseDialogFragment(private val notification: Notification) 
         val loadingDialog = LoadingDialog(requireContext())
 
         try {
+            loadingDialog.show()
+
             getJobsAppliedForById(
                 notification.userId,
                 notification.jobId,
                 notification.employerId
             ) { applyJob, errorMessage ->
                 if (applyJob != null) {
+                    loadingDialog.dismiss()
+
                     binding.titleTextView.text = if (applyJob.status == ACCEPTED)
                         getString(R.string.congratulations_your_job_application_was_accepted) else
                         getString(R.string.update_on_your_job_application)
@@ -85,17 +89,16 @@ class ApplicationResponseDialogFragment(private val notification: Notification) 
                         applyJob.company
                     )
                 } else {
+                    loadingDialog.dismiss()
                     Toast.makeText(requireContext(), errorMessage.toString(), Toast.LENGTH_SHORT)
                         .show()
                 }
-
-                loadingDialog.dismiss()
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            loadingDialog.dismiss()
             Toast.makeText(requireContext(), "An error occurred.", Toast.LENGTH_SHORT).show()
         }
-
     }
 
 
