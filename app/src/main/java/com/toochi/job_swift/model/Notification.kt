@@ -15,6 +15,8 @@ data class Notification(
     val employerId: String = "",
     val jobId: String = "",
     val type: String = "",
+    val comments: String = "",
+    val adminId: String = "",
     @ServerTimestamp
     val notificationDate: Date = Date()
 ) {
