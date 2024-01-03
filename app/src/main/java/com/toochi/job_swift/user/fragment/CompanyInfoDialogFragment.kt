@@ -35,7 +35,6 @@ class CompanyInfoDialogFragment : DialogFragment() {
     private var isFirstTime = false
     private var description: String = ""
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
@@ -67,6 +66,8 @@ class CompanyInfoDialogFragment : DialogFragment() {
 
             getCompany { company, error ->
                 if (company != null) {
+                    loadingDialog.dismiss()
+
                     this.company = company
 
                     binding.companyNameEditText.setText(company.title)
@@ -76,13 +77,13 @@ class CompanyInfoDialogFragment : DialogFragment() {
                     binding.positionTextField.setText(company.position)
                     binding.regNoTextField.setText(company.regNumber)
                 } else {
+                    loadingDialog.dismiss()
                     showToast(error.toString())
                 }
-
-                loadingDialog.dismiss()
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            loadingDialog.dismiss()
             showToast("An error occurred.")
         }
     }
@@ -124,7 +125,6 @@ class CompanyInfoDialogFragment : DialogFragment() {
         val data = getDataFromForm()
 
         try {
-
             if (isValidForm(data)) {
                 loadingDialog.show()
 
@@ -157,6 +157,7 @@ class CompanyInfoDialogFragment : DialogFragment() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            loadingDialog.dismiss()
             showToast("An error occurred.")
         }
     }
@@ -166,6 +167,7 @@ class CompanyInfoDialogFragment : DialogFragment() {
             loadingDialog.dismiss()
             showCongratulationsMessage()
         } else {
+            loadingDialog.dismiss()
             showToast(error)
         }
     }
@@ -192,11 +194,12 @@ class CompanyInfoDialogFragment : DialogFragment() {
                 positiveClickListener = {
                     dismiss()
                 }
-                build()
-            }.show()
+                build().show()
+            }
 
         } else {
             dismiss()
+            showToast(getString(R.string.saved_successfully))
         }
 
     }
