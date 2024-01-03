@@ -25,12 +25,16 @@ class Constants {
         const val IMAGE_STORAGE_PATH = "images"
         const val PERMISSION_REQUESTED_CODE = 100
         const val JOB_APPLICATION = "Job application"
-        const val ACCOUNT_DISABLED = "Account disabled"
+        const val REPORT = "Report"
         const val JOBS_APPLIED_FOR = "jobsAppliedFor"
         const val JOBS_APPLIED_BY_OTHERS = "jobsAppliedByOthers"
         const val PERSONAL_DETAILS = "personalDetails"
         const val PENDING = "Pending"
         const val REJECTED = "Rejected"
         const val ACCEPTED = "Accepted"
+        const val NOT_AVAILABLE = "Not available"
+        const val POSTED_JOBS = "postedJobs"
+        const val VIEW_JOB = "View job"
+        const val DELETE_JOB = "Delete job"
     }
 }
