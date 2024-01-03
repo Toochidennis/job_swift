@@ -23,6 +23,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -97,23 +98,27 @@ object Utils {
         try {
             val serverKey = getAccessToken(context)
 
-            val payload = """
-                {
-                   "message":{
-                      "token": "${notification.token}",
-                      "notification":{
-                        "title":"${notification.title}",
-                        "body":"${notification.body}"
-                      },
-                      "data": {
-                        "userId": "${notification.userId}",
-                        "employerId": "${notification.employerId}",
-                        "jobId": "${notification.jobId}",
-                        "type": "${notification.type}"
-                      }
-                   }
-                }
-            """.trimIndent()
+            val payloadJson = JSONObject().apply {
+                put("message", JSONObject().apply {
+                    put("token", notification.token)
+
+                    put("notification", JSONObject().apply {
+                        put("title", notification.title)
+                        put("body", notification.body)
+                    })
+
+                    put("data", JSONObject().apply {
+                        put("userId", notification.userId)
+                        put("employerId", notification.employerId)
+                        put("jobId", notification.jobId)
+                        put("type", notification.type)
+                        put("comments", notification.comments)
+                    })
+                })
+            }
+
+            val payload = payloadJson.toString()
+
 
             val request = Request.Builder()
                 .url(BASE_URL)
@@ -129,17 +134,17 @@ object Utils {
                 return@launch
             }
 
-           withContext(Dispatchers.Main){
-               onComplete(response.code.toString())
-           }
+            withContext(Dispatchers.Main) {
+                onComplete(response.code.toString())
+            }
 
             response.close()
 
         } catch (e: Exception) {
             e.printStackTrace()
-           withContext(Dispatchers.Main){
-               onComplete(e.message)
-           }
+            withContext(Dispatchers.Main) {
+                onComplete(e.message)
+            }
         }
     }
 
