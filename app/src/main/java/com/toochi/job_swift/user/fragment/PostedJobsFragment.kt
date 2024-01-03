@@ -53,6 +53,8 @@ class PostedJobsFragment : Fragment() {
                 binding.messageTextView.isVisible = postJobs.isNullOrEmpty()
 
                 if (postJobs != null) {
+                    loadingDialog.dismiss()
+
                     postJobs.forEach { item ->
                         val currentAmount = item.salary
                         val currentRate = item.salaryRate
@@ -64,6 +66,7 @@ class PostedJobsFragment : Fragment() {
 
                     setUpAdapter(postJobs)
                 } else if (error == "empty") {
+                    loadingDialog.dismiss()
                     binding.imageView.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
@@ -73,6 +76,7 @@ class PostedJobsFragment : Fragment() {
                     binding.messageTextView.text =
                         requireActivity().getString(R.string.have_not_posted_job)
                 } else {
+                    loadingDialog.dismiss()
                     binding.imageView.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
@@ -82,10 +86,10 @@ class PostedJobsFragment : Fragment() {
                     binding.messageTextView.text = requireActivity().getString(R.string.no_internet)
                 }
 
-                loadingDialog.dismiss()
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            loadingDialog.dismiss()
            Toast.makeText(requireContext(), "An error occurred", Toast.LENGTH_SHORT).show()
         }
     }

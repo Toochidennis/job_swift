@@ -1,6 +1,8 @@
 package com.toochi.job_swift.backend
 
 import android.net.Uri
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.UploadTask
 import com.toochi.job_swift.backend.AuthenticationManager.auth
@@ -8,9 +10,25 @@ import com.toochi.job_swift.backend.AuthenticationManager.storageRef
 import com.toochi.job_swift.backend.AuthenticationManager.usersCollection
 import com.toochi.job_swift.model.User
 import com.toochi.job_swift.util.Constants
+import com.toochi.job_swift.util.Constants.Companion.ADMIN
+import com.toochi.job_swift.util.Constants.Companion.NOT_AVAILABLE
 import com.toochi.job_swift.util.Constants.Companion.PERSONAL_DETAILS
 
+/**
+ * The `PersonalDetailsManager` module provides functions for managing user personal details,
+ * interacting with Firebase Firestore, and handling user authentication.
+ *
+ * @property usersCollection Reference to the Firestore collection storing user data.
+ */
+
 object PersonalDetailsManager {
+
+    /**
+     * Creates, retrieves, and updates user personal details in the Firestore database.
+     * Manages user authentication-related tasks and interactions with Firebase Storage.
+     *
+     * @property usersCollection Reference to the Firestore collection storing user data.
+     */
 
     fun createNewUser(
         userId: String,
@@ -171,9 +189,102 @@ object PersonalDetailsManager {
             val token = querySnapshot.documents[0].getString("token")
             onComplete.invoke(token, null)
         } else {
-            onComplete.invoke(null, "Token not found")
+            onComplete.invoke(null, NOT_AVAILABLE)
         }
     }
 
+    fun getAdminToken(onComplete: (String?, String?, String?) -> Unit) {
+        usersCollection
+            .whereEqualTo("userType", ADMIN)
+            .get()
+            .addOnSuccessListener {
+                handleAdminTokenQuerySnapshot(it, onComplete)
+            }
+            .addOnFailureListener { error ->
+                onComplete.invoke(null, null, error.message)
+            }
+    }
+
+    private fun handleAdminTokenQuerySnapshot(
+        querySnapshot: QuerySnapshot,
+        onComplete: (String?, String?, String?) -> Unit
+    ) {
+        if (!querySnapshot.isEmpty) {
+            val adminId = querySnapshot.documents.firstOrNull()?.id
+
+            val adminPersonalCollection =
+                adminId?.let { usersCollection.document(it).collection(PERSONAL_DETAILS) }
+
+            adminPersonalCollection
+                ?.get()
+                ?.addOnSuccessListener {
+                    val token = querySnapshot.documents.firstOrNull()?.getString("token")
+                    onComplete.invoke(token, adminId, null)
+                }
+                ?.addOnFailureListener { exception ->
+                    onComplete.invoke(null, null, exception.message)
+                }
+
+        } else {
+            onComplete.invoke(null, null, NOT_AVAILABLE)
+        }
+    }
+
+    fun getAllUsers(onComplete: (MutableList<User>?, String?) -> Unit) {
+        usersCollection
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (querySnapshot.isEmpty) {
+                    onComplete.invoke(null, NOT_AVAILABLE)
+                } else {
+                    handleAllUsersQuerySnapShot(querySnapshot, onComplete)
+                }
+            }
+            .addOnFailureListener { exception ->
+                onComplete.invoke(null, exception.message)
+            }
+    }
+
+    private fun handleAllUsersQuerySnapShot(
+        querySnapshot: QuerySnapshot,
+        onComplete: (MutableList<User>?, String?) -> Unit
+    ) {
+        val usersList = mutableListOf<User>()
+        val tasks = mutableListOf<Task<QuerySnapshot>>()
+
+        querySnapshot.documents.forEach { documentSnapshot ->
+            val userId = documentSnapshot.id
+            val userPersonalDetailCollection =
+                usersCollection.document(userId).collection(PERSONAL_DETAILS)
+
+            val task = userPersonalDetailCollection.get()
+            tasks.add(task)
+
+            // Add an onCompleteListener to each inner task to process the result
+            task.addOnCompleteListener { innerTask ->
+                if (innerTask.isSuccessful) {
+                    val innerQuerySnapshot = innerTask.result
+                    innerQuerySnapshot?.documents?.forEach { innerDocumentSnapshot ->
+                        val user = innerDocumentSnapshot.toObject(User::class.java)
+                        if (user != null && user.userType != ADMIN) {
+                            user.profileId = innerDocumentSnapshot.id
+                            usersList.add(user)
+                        }
+                    }
+                } else {
+                    onComplete.invoke(null, innerTask.exception?.message)
+                }
+            }
+        }
+
+        // Wait for all inner tasks to complete before invoking the outer onComplete
+        Tasks.whenAllSuccess<QuerySnapshot>(tasks)
+            .addOnSuccessListener {
+                onComplete(usersList, null)
+            }
+            .addOnFailureListener { exception ->
+                onComplete(null, exception.message)
+            }
+    }
 
 }
