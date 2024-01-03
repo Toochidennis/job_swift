@@ -169,6 +169,14 @@
     <string name="you_have_applied_for_this_job">You have applied for this job.</string>
     <string name="file_size_is_larger_than_2mb">File size is larger than 2MB</string>
     <string name="application_status">Application status:</string>
+    <string name="no_job_have_been_posted_yet">No job have been posted yet</string>
+    <string name="report">Report</string>
+    <string name="tell_us_what_happened">What is your reason?</string>
+    <string name="no_registered_users_yet">No registered users yet</string>
+    <string name="user_type">User type:</string>
+    <string name="delete_job">Delete job</string>
+    <string name="reset">Reset</string>
+    <string name="saved_successfully">Saved successfully</string>
 
     <string-array name="heading_options">
         <item>Heading 1</item>

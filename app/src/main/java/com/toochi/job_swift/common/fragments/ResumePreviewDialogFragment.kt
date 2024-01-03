@@ -59,5 +59,4 @@ class ResumePreviewDialogFragment(private val pdfUrl: String) : DialogFragment()
         _binding = null
     }
 
-
 }
