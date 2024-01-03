@@ -8,15 +8,15 @@
     android:background="@color/light_silver"
     tools:context=".user.fragment.UserHomeFragment">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
+        android:layout_height="match_parent">
 
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:background="@color/pale_silver"
             app:elevation="0dp">
 
@@ -32,8 +32,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginEnd="@dimen/dimen_16"
-                    android:layout_toStartOf="@id/profileButton"
-                    android:text="@string/good_morning"
+                    android:layout_toStartOf="@id/profileLayout"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_16" />
 
@@ -43,24 +42,23 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/greetingsTextView"
                     android:layout_alignParentStart="true"
-                    android:layout_toStartOf="@id/profileButton"
-                    android:text="@string/toochukwu_dennis"
+                    android:layout_toStartOf="@id/profileLayout"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_18"
                     android:textStyle="bold" />
 
                 <LinearLayout
-                    android:id="@+id/profileButton"
+                    android:id="@+id/profileLayout"
                     android:layout_width="@dimen/dimen_38"
                     android:layout_height="@dimen/dimen_38"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/dimen_16"
                     android:background="@drawable/image_border"
-                    android:foreground="?android:attr/selectableItemBackground"
                     android:gravity="center">
 
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/profileButton"
                         android:layout_width="34dp"
                         android:layout_height="34dp"
                         app:cardCornerRadius="34dp"
@@ -85,23 +83,11 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_16"
-            android:layout_marginTop="@dimen/dimen_32"
-            android:layout_marginEnd="@dimen/dimen_16"
-            android:layout_marginBottom="@dimen/dimen_16"
-            android:text="@string/search_job_dream"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_28"
-            android:textStyle="bold"
-            android:visibility="gone" />
-
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/searchTextField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/appBar"
             android:layout_marginStart="@dimen/dimen_16"
             android:layout_marginTop="@dimen/dimen_32"
             android:layout_marginEnd="@dimen/dimen_16"
@@ -116,10 +102,32 @@
             android:id="@+id/jobRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/searchTextField"
             android:layout_marginTop="@dimen/dimen_32"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_user_home" />
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/noDataImageView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="280dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_no_data"
+            android:visibility="invisible" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/errorTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/noDataImageView"
+            android:text="@string/no_job_have_been_posted_yet"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_20"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
