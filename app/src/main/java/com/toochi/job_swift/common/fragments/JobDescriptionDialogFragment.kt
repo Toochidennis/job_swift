@@ -117,16 +117,17 @@ class JobDescriptionDialogFragment(private val postJob: PostJob) : DialogFragmen
 
                 PostJobManager.postJob(job) { success, errorMessage ->
                     if (success) {
+                        loadingDialog.dismiss()
                         showCongratsMessage()
                     } else {
+                        loadingDialog.dismiss()
                         showToast(errorMessage.toString())
                     }
-
-                    loadingDialog.dismiss()
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            loadingDialog.dismiss()
             showToast("An error occurred.")
         }
     }
@@ -177,7 +178,7 @@ class JobDescriptionDialogFragment(private val postJob: PostJob) : DialogFragmen
             isProvideCV = binding.cvCheckBox.isChecked
             deadline = deadlineText ?: ""
             salary = salaryText ?: ""
-            salaryRate = binding.salaryEditText.text.toString()
+            salaryRate = binding.rateEditText.text.toString()
         }
     }
 
