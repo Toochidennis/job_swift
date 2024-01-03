@@ -134,17 +134,19 @@ class AboutDialogFragment(
                     )
                 ) { success, error ->
                     if (success) {
+                        loadingDialog.dismiss()
                         onSave.invoke()
                         dismiss()
+                        showToast(getString(R.string.saved_successfully))
                     } else {
+                        loadingDialog.dismiss()
                         showToast(error.toString())
                     }
-
-                    loadingDialog.dismiss()
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            loadingDialog.dismiss()
             showToast("An error occurred.")
         }
 
