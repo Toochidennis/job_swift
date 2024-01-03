@@ -1,7 +1,10 @@
 package com.toochi.job_swift.model
 
 import com.google.firebase.firestore.ServerTimestamp
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 data class PostJob(
     var jobId: String = "",
@@ -34,7 +37,14 @@ data class PostJob(
             days == 0L -> "Today"
             days == 1L -> "Yesterday"
             days < 7L -> "$days days ago"
-            else -> "$days days ago" // You can customize this further if needed
+            else -> {
+                val calendar = Calendar.getInstance()
+                calendar.time = datePosted
+
+                // If more than 7 days ago, show the actual date
+                val dateFormat = SimpleDateFormat("d MMM, yy", Locale.getDefault())
+                dateFormat.format(datePosted)
+            }
         }
     }
 }
