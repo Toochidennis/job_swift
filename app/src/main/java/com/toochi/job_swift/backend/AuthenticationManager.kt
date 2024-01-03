@@ -117,4 +117,14 @@ object AuthenticationManager {
         return GoogleSignIn.getClient(context, gso)
     }
 
+    fun sendPasswordResetEmail(email: String, onComplete: (Boolean, String?) -> Unit) {
+        auth.sendPasswordResetEmail(email)
+            .addOnSuccessListener {
+                onComplete.invoke(true, null)
+            }
+            .addOnFailureListener { exception ->
+                onComplete.invoke(false, exception.message)
+            }
+    }
+
 }

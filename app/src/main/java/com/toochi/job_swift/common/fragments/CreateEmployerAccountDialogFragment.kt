@@ -62,16 +62,17 @@ class CreateEmployerAccountDialogFragment : DialogFragment() {
                 createCompany(company) { success, errorMessage ->
                     if (success) {
                         updateSharedPreference(company)
+                        loadingDialog.dismiss()
                         showWelcomeMessage()
                     } else {
+                        loadingDialog.dismiss()
                         showToast(errorMessage.toString())
                     }
-
-                    loadingDialog.dismiss()
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            loadingDialog.dismiss()
             showToast("An error occurred.")
         }
     }
