@@ -6,19 +6,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.squareup.picasso.Picasso
 import com.toochi.job_swift.BR
 import com.toochi.job_swift.R
+import com.toochi.job_swift.backend.AuthenticationManager.auth
 import com.toochi.job_swift.backend.PostJobManager.getAllPostedJobs
 import com.toochi.job_swift.common.dialogs.LoadingDialog
+import com.toochi.job_swift.common.dialogs.OnReportBottomDialog
 import com.toochi.job_swift.common.fragments.PostedJobDetailsDialogFragment
 import com.toochi.job_swift.databinding.FragmentUserHomeBinding
 import com.toochi.job_swift.model.PostJob
 import com.toochi.job_swift.user.activity.PersonalInformationActivity
 import com.toochi.job_swift.user.adapters.GenericAdapter
+import com.toochi.job_swift.util.Constants.Companion.NOT_AVAILABLE
 import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
+import com.toochi.job_swift.util.Constants.Companion.REPORT
 import com.toochi.job_swift.util.Utils.currencyFormatter
 import java.util.Calendar
 
@@ -46,6 +53,8 @@ class UserHomeFragment : Fragment() {
         setUpProfile()
 
         getAllJobs()
+
+        refreshData()
     }
 
     private fun setUpProfile() {
@@ -85,16 +94,31 @@ class UserHomeFragment : Fragment() {
                         val jobType = "${job.jobType} . ${job.workplaceType}"
 
                         PostJob(
+                            userId = job.userId,
                             title = job.title,
                             location = location,
-                            jobType = jobType
+                            jobType = jobType,
+                            jobEmail = job.calculateDaysAgo()
                         )
                     }
 
                     loadingDialog.dismiss()
+                    binding.errorTextView.isVisible = false
+                    binding.noDataImageView.isVisible = false
                     setUpAdapter(copiedJobs.toMutableList())
+                } else if (errorMessage == NOT_AVAILABLE) {
+                    binding.errorTextView.isVisible = true
+                    binding.noDataImageView.isVisible = true
                 } else {
                     loadingDialog.dismiss()
+                    binding.noDataImageView.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.no_internet
+                        )
+                    )
+                    binding.noDataImageView.isVisible = true
+                    binding.errorTextView.isVisible = false
                     showToast(errorMessage.toString())
                 }
             }
@@ -120,6 +144,14 @@ class UserHomeFragment : Fragment() {
             bindItem = { binding, model ->
                 binding.setVariable(BR.job, model)
                 binding.executePendingBindings()
+
+                val saveButton: ImageView = binding.root.findViewById(R.id.saveButton)
+                saveButton.isVisible = model.userId != auth.uid
+
+            },
+            onLongClick = { position ->
+                OnReportBottomDialog(jobList[position])
+                    .show(parentFragmentManager, REPORT)
             }
         ) { position ->
             PostedJobDetailsDialogFragment(jobList[position]).show(
@@ -145,8 +177,17 @@ class UserHomeFragment : Fragment() {
         }
     }
 
+
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun refreshData() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            setUpProfile()
+            getAllJobs()
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
     }
 
     override fun onDestroyView() {
