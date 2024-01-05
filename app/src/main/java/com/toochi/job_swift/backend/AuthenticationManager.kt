@@ -13,6 +13,7 @@ import com.toochi.job_swift.backend.PersonalDetailsManager.checkIfUserExists
 import com.toochi.job_swift.backend.PersonalDetailsManager.createNewUser
 import com.toochi.job_swift.backend.PersonalDetailsManager.updateExistingUser
 import com.toochi.job_swift.model.User
+import com.toochi.job_swift.util.Constants.Companion.EMPLOYEE
 
 object AuthenticationManager {
 
@@ -23,7 +24,13 @@ object AuthenticationManager {
     fun registerWithEmailAndPassword(user: User, onComplete: (Boolean, String?) -> Unit) {
         auth.createUserWithEmailAndPassword(user.email, user.password)
             .addOnSuccessListener {
-                handleRegistrationSuccess(user, onComplete)
+                val userId = auth.currentUser?.uid
+
+                if (userId != null) {
+                    user.userId = userId
+                    handleRegistrationSuccess(user, onComplete)
+                }
+
             }
             .addOnFailureListener { error ->
                 onComplete.invoke(false, error.message)
@@ -34,7 +41,7 @@ object AuthenticationManager {
         val currentUser = auth.currentUser
         val userId = currentUser?.uid
         if (userId != null) {
-            createNewUser(userId, user, onComplete)
+            createNewUser(user, onComplete)
         }
     }
 
@@ -63,27 +70,18 @@ object AuthenticationManager {
         val userId = currentUser?.uid
 
         if (userId != null) {
-            checkIfUserExists(userId) { exists, profileId ->
+            checkIfUserExists(userId) { exists, _ ->
                 if (exists) {
-                    if (profileId != null) {
-                        updateExistingUser(
-                            profileId,
-                            hashMapOf(
-                                "firstname" to account.givenName.toString(),
-                                "lastname" to account.familyName.toString(),
-                                "profilePhotoUrl" to account.photoUrl.toString()
-                            ), onComplete
-                        )
-                    }
+                    onComplete.invoke(true, null)
                 } else {
                     createNewUser(
-                        userId,
                         User(
+                            userId = userId,
                             email = account.email ?: "",
                             firstname = account.givenName ?: "",
                             lastname = account.familyName ?: "",
                             profilePhotoUrl = account.photoUrl.toString(),
-                            userType = "employee"
+                            userType = EMPLOYEE
                         ),
                         onComplete
                     )
@@ -99,12 +97,11 @@ object AuthenticationManager {
         onComplete: (Boolean, String?) -> Unit
     ) {
         auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    onComplete.invoke(true, null)
-                } else {
-                    onComplete.invoke(false, task.exception?.message)
-                }
+            .addOnSuccessListener {
+                onComplete.invoke(true, null)
+            }
+            .addOnFailureListener {
+                onComplete.invoke(false, it.message)
             }
     }
 

@@ -5,9 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import com.squareup.picasso.Picasso
 import com.toochi.job_swift.BR
 import com.toochi.job_swift.R
 import com.toochi.job_swift.backend.PersonalDetailsManager.getAllUsers
@@ -24,6 +26,8 @@ class AdminInsightsFragment : Fragment() {
 
     private val binding get() = _binding!!
 
+    private var picasso = Picasso.get()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,7 +36,6 @@ class AdminInsightsFragment : Fragment() {
         _binding = FragmentAdminInsightsBinding.inflate(inflater, container, false)
         return binding.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,6 +56,7 @@ class AdminInsightsFragment : Fragment() {
     private fun getUsers() {
         val loadingDialog = LoadingDialog(requireContext())
         try {
+            loadingDialog.show()
             getAllUsers { users, exception ->
                 if (users != null) {
                     users.forEach { user ->
@@ -86,10 +90,15 @@ class AdminInsightsFragment : Fragment() {
             bindItem = { binding, model ->
                 binding.setVariable(BR.user, model)
                 binding.executePendingBindings()
-            }
-        ) {
 
-        }
+                val imageView: ImageView = binding.root.findViewById(R.id.userImageView)
+
+                if (model.profilePhotoUrl.isNotEmpty()) {
+                    picasso.load(model.profilePhotoUrl).into(imageView)
+                }
+
+            }
+        ) {}
 
         binding.employeeRecyclerView.apply {
             hasFixedSize()
