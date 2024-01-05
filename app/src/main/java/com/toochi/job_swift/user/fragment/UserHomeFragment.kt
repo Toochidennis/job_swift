@@ -96,7 +96,6 @@ class UserHomeFragment : Fragment() {
     private fun getAllJobs() {
         val loadingDialog = LoadingDialog(requireContext())
 
-
         try {
             loadingDialog.show()
             jobList.clear()
@@ -175,8 +174,9 @@ class UserHomeFragment : Fragment() {
 
             },
             onLongClick = { position ->
-                OnReportBottomDialog(jobList[position])
-                    .show(parentFragmentManager, REPORT)
+                OnReportBottomDialog(jobList[position]) {
+                    getAllJobs()
+                }.show(parentFragmentManager, REPORT)
             }
         ) { position ->
             PostedJobDetailsDialogFragment(jobList[position]).show(

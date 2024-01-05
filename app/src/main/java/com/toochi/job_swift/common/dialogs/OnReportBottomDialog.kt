@@ -13,7 +13,10 @@ import com.toochi.job_swift.databinding.DialogOnReportBinding
 import com.toochi.job_swift.model.PostJob
 import com.toochi.job_swift.util.Constants.Companion.REPORT
 
-class OnReportBottomDialog(private val postJob: PostJob) : BottomSheetDialogFragment() {
+class OnReportBottomDialog(
+    private val postJob: PostJob,
+    private val onDeleted: () -> Unit
+) : BottomSheetDialogFragment() {
 
     private lateinit var binding: DialogOnReportBinding
 
@@ -68,6 +71,7 @@ class OnReportBottomDialog(private val postJob: PostJob) : BottomSheetDialogFrag
             deleteUserPost(postJob.userId, postJob.jobId) { deleted, exception ->
                 if (deleted) {
                     loadingDialog.dismiss()
+                    onDeleted.invoke()
                     dismiss()
                     showToast("Job deleted successfully")
                 } else {

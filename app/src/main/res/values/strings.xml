@@ -193,6 +193,14 @@
     <string name="privacy_statement">Privacy statement</string>
     <string name="contact_info">Contact info</string>
     <string name="about_company">About company</string>
+    <string name="maximum_size_of_2mb_pdf_only">* Maximum size of 2MB - PDF only</string>
+    <string name="cv">CV*</string>
+    <string name="example_gmail_com">example@gmail.com</string>
+    <string name="email_">Email*</string>
+    <string name="_00000000000">00000000000</string>
+    <string name="phone_number_">Phone number*</string>
+    <string name="full_name">Full name*</string>
+    <string name="your_profile_information_will_be_shared_with_your_employer">* Your profile information will be shared with your employer</string>
 
     <string-array name="heading_options">
         <item>Heading 1</item>
