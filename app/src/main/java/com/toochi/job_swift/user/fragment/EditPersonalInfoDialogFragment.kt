@@ -49,8 +49,11 @@ class EditPersonalInfoDialogFragment(
         binding.navigateUp.setOnClickListener {
             dismiss()
         }
-    }
 
+        binding.contactInfo.setOnClickListener {
+            ContactInfoDialogFragment().show(parentFragmentManager, "")
+        }
+    }
 
     private fun fillFieldsWithData() {
         if (user != null) {
