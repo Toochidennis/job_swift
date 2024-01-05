@@ -94,7 +94,6 @@
                             android:layout_marginStart="@dimen/dimen_16"
                             android:background="@drawable/profile_bg"
                             android:backgroundTint="@color/pale_silver"
-                            android:foreground="?android:attr/selectableItemBackground"
                             android:gravity="center"
                             android:padding="4dp"
                             app:layout_constraintBottom_toBottomOf="@id/showcaseLayout"
