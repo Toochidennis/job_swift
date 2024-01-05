@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.squareup.picasso.Picasso
 import com.toochi.job_swift.BR
 import com.toochi.job_swift.R
@@ -24,6 +25,7 @@ import com.toochi.job_swift.model.PostJob
 import com.toochi.job_swift.user.activity.PersonalInformationActivity
 import com.toochi.job_swift.user.adapters.GenericAdapter
 import com.toochi.job_swift.util.Constants.Companion.NOT_AVAILABLE
+import com.toochi.job_swift.util.Constants.Companion.POSTED_JOBS
 import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
 import com.toochi.job_swift.util.Constants.Companion.REPORT
 import com.toochi.job_swift.util.Utils.currencyFormatter
@@ -35,6 +37,7 @@ class UserHomeFragment : Fragment() {
     private var _binding: FragmentUserHomeBinding? = null
 
     private val binding get() = _binding!!
+    private val picasso = Picasso.get()
 
     private var jobList = mutableListOf<PostJob>()
 
@@ -50,26 +53,32 @@ class UserHomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setUpProfile()
-
-        getAllJobs()
-
-        refreshData()
+        initData()
     }
 
-    private fun setUpProfile() {
+
+    private fun initData() {
+        setUpFields()
+        getAllJobs()
+        refreshData()
+        setUpProfile()
+    }
+
+    private fun setUpFields() {
         with(requireActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE)) {
             val firstname = getString("firstname", "")
             val lastname = getString("lastname", "")
             val photoUrl = getString("photo_url", "")
+            val headline = getString("headline", "")
 
             val fullName = "$firstname $lastname"
 
             binding.userNameTextView.text = fullName
             binding.greetingsTextView.text = getGreetingMessage()
+            binding.profileCard.isVisible = headline?.isNotBlank() == false
 
             if (!photoUrl.isNullOrEmpty()) {
-                Picasso.get().load(photoUrl).into(binding.userImageView)
+                picasso.load(photoUrl).into(binding.userImageView)
             }
         }
 
@@ -78,11 +87,19 @@ class UserHomeFragment : Fragment() {
         }
     }
 
+    private fun setUpProfile() {
+        binding.setupButton.setOnClickListener {
+            findNavController().navigate(R.id.action_userHomeFragment_to_personalInformationActivity)
+        }
+    }
+
     private fun getAllJobs() {
         val loadingDialog = LoadingDialog(requireContext())
 
+
         try {
             loadingDialog.show()
+            jobList.clear()
 
             getAllPostedJobs { jobs, errorMessage ->
                 if (jobs != null) {
@@ -98,15 +115,17 @@ class UserHomeFragment : Fragment() {
                             title = job.title,
                             location = location,
                             jobType = jobType,
-                            jobEmail = job.calculateDaysAgo()
+                            jobEmail = job.calculateDaysAgo(),
+                            companyPhotoUrl = job.companyPhotoUrl
                         )
-                    }
+                    }.sortedBy { it.datePosted }
 
                     loadingDialog.dismiss()
                     binding.errorTextView.isVisible = false
                     binding.noDataImageView.isVisible = false
                     setUpAdapter(copiedJobs.toMutableList())
                 } else if (errorMessage == NOT_AVAILABLE) {
+                    loadingDialog.dismiss()
                     binding.errorTextView.isVisible = true
                     binding.noDataImageView.isVisible = true
                 } else {
@@ -148,6 +167,12 @@ class UserHomeFragment : Fragment() {
                 val saveButton: ImageView = binding.root.findViewById(R.id.saveButton)
                 saveButton.isVisible = model.userId != auth.uid
 
+                val imageView: ImageView = binding.root.findViewById(R.id.companyImageView)
+
+                if (model.companyPhotoUrl.isNotEmpty()) {
+                    picasso.load(model.companyPhotoUrl).into(imageView)
+                }
+
             },
             onLongClick = { position ->
                 OnReportBottomDialog(jobList[position])
@@ -156,7 +181,7 @@ class UserHomeFragment : Fragment() {
         ) { position ->
             PostedJobDetailsDialogFragment(jobList[position]).show(
                 parentFragmentManager,
-                "job details"
+                POSTED_JOBS
             )
         }
 
@@ -184,7 +209,7 @@ class UserHomeFragment : Fragment() {
 
     private fun refreshData() {
         binding.swipeRefreshLayout.setOnRefreshListener {
-            setUpProfile()
+            setUpFields()
             getAllJobs()
             binding.swipeRefreshLayout.isRefreshing = false
         }

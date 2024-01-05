@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Swift Job</string>
+    <string name="app_name">SwiftJob</string>
     <string name="default_web_client_id">"409813508550-l1tio9td84hm979tr4qv57d5eeqdv5f9.apps.googleusercontent.com"</string>
     <string name="sign_in">Sign in</string>
     <string name="create_an_account">Create an account</string>
@@ -177,6 +177,22 @@
     <string name="delete_job">Delete job</string>
     <string name="reset">Reset</string>
     <string name="saved_successfully">Saved successfully</string>
+    <string name="insights">Insights</string>
+    <string name="jobs">Jobs</string>
+    <string name="next">Next</string>
+    <string name="finish">Finish</string>
+    <string name="third_screen_tour">For employers, SwiftJob is more than a recruitment tool—it\'s your strategic hiring companion. Discover exceptional talent effortlessly and build your dream team.</string>
+    <string name="empower_your_hiring_experience">Empower Your Hiring Experience</string>
+    <string name="unlock_your_career_potential">Unlock Your Career Potential</string>
+    <string name="second_screen_tour">Embark on a journey where every click opens doors to new possibilities. SwiftJob is not just a platform; it\'s a partner in your professional growth.</string>
+    <string name="first_screen_tour">Explore a world of opportunities tailored just for you. Whether you\'re seeking the perfect job or looking to hire top talent, SwiftJob is your gateway to success.</string>
+    <string name="welcome_to_swiftjob">Welcome to SwiftJob</string>
+    <string name="take_a_moment_to_set_up_your_profile_let_employers_and_fellow_job_seekers_get_to_know_the_amazing_professional_that_you_are">Take a moment to set up your profile. Let employers and fellow job seekers get to know the amazing professional that you are.</string>
+    <string name="setup">Setup</string>
+    <string name="by_continuing_you_agree_to_our">By continuing you agree to our</string>
+    <string name="privacy_statement">Privacy statement</string>
+    <string name="contact_info">Contact info</string>
+    <string name="about_company">About company</string>
 
     <string-array name="heading_options">
         <item>Heading 1</item>

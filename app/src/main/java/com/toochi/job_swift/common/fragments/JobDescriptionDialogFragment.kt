@@ -51,7 +51,6 @@ class JobDescriptionDialogFragment(private val postJob: PostJob) : DialogFragmen
         super.onViewCreated(view, savedInstanceState)
 
         handleViewClicks()
-
     }
 
     private fun handleViewClicks() {
