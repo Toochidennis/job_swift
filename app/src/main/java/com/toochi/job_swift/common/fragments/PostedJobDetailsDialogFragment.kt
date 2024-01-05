@@ -9,7 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import com.squareup.picasso.Picasso
 import com.toochi.job_swift.R
 import com.toochi.job_swift.backend.CompanyManager.getCompany
 import com.toochi.job_swift.backend.PostJobManager.checkIfOwnerOfJob
@@ -78,6 +80,10 @@ class PostedJobDetailsDialogFragment(private val postJob: PostJob) : DialogFragm
         binding.jobTypeTxt.text = postJob.jobType
         binding.workplaceTypeTxt.text = postJob.workplaceType
 
+        if (postJob.companyPhotoUrl.isNotEmpty()) {
+            Picasso.get().load(postJob.companyPhotoUrl).into(binding.imageView)
+        }
+
         val daysAgoString = "Posted ${postJob.calculateDaysAgo()}"
         binding.timeTxt.text = daysAgoString
 
@@ -119,8 +125,10 @@ class PostedJobDetailsDialogFragment(private val postJob: PostJob) : DialogFragm
                     aboutCompany = company.description
                     binding.companyNameTxt.text = company.title
                     fillFieldsWithData()
+                    binding.applyForJobButton.isVisible = true
                 } else {
                     loadingDialog.dismiss()
+                    binding.applyForJobButton.isVisible = false
                     showToast(errorMessage.toString())
                 }
             }

@@ -11,6 +11,7 @@ data class PostJob(
     val userId: String = "",
     val title: String = "",
     val company: String = "",
+    val companyPhotoUrl: String = "",
     var location: String = "",
     val workplaceType: String = "",
     var jobType: String = "",

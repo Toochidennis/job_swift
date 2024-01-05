@@ -1,8 +1,6 @@
 package com.toochi.job_swift.backend
 
 import android.net.Uri
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.UploadTask
 import com.toochi.job_swift.backend.AuthenticationManager.auth
@@ -31,11 +29,10 @@ object PersonalDetailsManager {
      */
 
     fun createNewUser(
-        userId: String,
         user: User,
         onComplete: (Boolean, String?) -> Unit
     ) {
-        usersCollection.document(userId).let {
+        usersCollection.document(user.userId).let {
             it.collection("personalDetails")
                 .add(user).addOnSuccessListener {
                     onComplete.invoke(true, null)
@@ -54,8 +51,7 @@ object PersonalDetailsManager {
             .get()
             .addOnSuccessListener { querySnapShot ->
                 if (!querySnapShot.isEmpty) {
-                    val profileDocument = querySnapShot.documents[0]
-                    val profileId = profileDocument.id
+                    val profileId = querySnapShot.documents.firstOrNull()?.id
 
                     onComplete.invoke(true, profileId)
                 } else {
@@ -105,7 +101,7 @@ object PersonalDetailsManager {
 
             onComplete.invoke(user, null)
         } else {
-            onComplete.invoke(null, "User details not available")
+            onComplete.invoke(null, NOT_AVAILABLE)
         }
     }
 
@@ -116,7 +112,7 @@ object PersonalDetailsManager {
     ) {
         auth.currentUser?.uid?.let {
             usersCollection.document(it).let { personalDocument ->
-                personalDocument.collection("personalDetails")
+                personalDocument.collection(PERSONAL_DETAILS)
                     .document(profileId)
                     .update(hashMap)
                     .addOnSuccessListener {
@@ -169,7 +165,7 @@ object PersonalDetailsManager {
 
     fun getUserToken(userId: String, onComplete: (String?, String?) -> Unit) {
         val personalDetailsCollection =
-            usersCollection.document(userId).collection("personalDetails")
+            usersCollection.document(userId).collection(PERSONAL_DETAILS)
 
         personalDetailsCollection.get()
             .addOnSuccessListener { querySnapshot ->
@@ -194,8 +190,8 @@ object PersonalDetailsManager {
     }
 
     fun getAdminToken(onComplete: (String?, String?, String?) -> Unit) {
-        usersCollection
-            .whereEqualTo("userType", ADMIN)
+        val usersCollectionGroup = FirestoreDB.instance.collectionGroup(PERSONAL_DETAILS)
+        usersCollectionGroup
             .get()
             .addOnSuccessListener {
                 handleAdminTokenQuerySnapshot(it, onComplete)
@@ -210,76 +206,35 @@ object PersonalDetailsManager {
         onComplete: (String?, String?, String?) -> Unit
     ) {
         if (!querySnapshot.isEmpty) {
-            val adminId = querySnapshot.documents.firstOrNull()?.id
+            querySnapshot.documents.map { documentSnapshot ->
+                val userType = documentSnapshot.getString("userType")
 
-            val adminPersonalCollection =
-                adminId?.let { usersCollection.document(it).collection(PERSONAL_DETAILS) }
-
-            adminPersonalCollection
-                ?.get()
-                ?.addOnSuccessListener {
-                    val token = querySnapshot.documents.firstOrNull()?.getString("token")
+                if (userType == ADMIN) {
+                    val adminId = documentSnapshot.getString("userId")
+                    val token = documentSnapshot.getString("token")
+                    println("Admin Id: $adminId   token $token")
                     onComplete.invoke(token, adminId, null)
                 }
-                ?.addOnFailureListener { exception ->
-                    onComplete.invoke(null, null, exception.message)
-                }
-
+            }
         } else {
             onComplete.invoke(null, null, NOT_AVAILABLE)
         }
     }
 
     fun getAllUsers(onComplete: (MutableList<User>?, String?) -> Unit) {
-        usersCollection
+        val usersList = mutableListOf<User>()
+
+        FirestoreDB.instance
+            .collectionGroup(PERSONAL_DETAILS)
             .get()
             .addOnSuccessListener { querySnapshot ->
-                if (querySnapshot.isEmpty) {
-                    onComplete.invoke(null, NOT_AVAILABLE)
-                } else {
-                    handleAllUsersQuerySnapShot(querySnapshot, onComplete)
-                }
-            }
-            .addOnFailureListener { exception ->
-                onComplete.invoke(null, exception.message)
-            }
-    }
-
-    private fun handleAllUsersQuerySnapShot(
-        querySnapshot: QuerySnapshot,
-        onComplete: (MutableList<User>?, String?) -> Unit
-    ) {
-        val usersList = mutableListOf<User>()
-        val tasks = mutableListOf<Task<QuerySnapshot>>()
-
-        querySnapshot.documents.forEach { documentSnapshot ->
-            val userId = documentSnapshot.id
-            val userPersonalDetailCollection =
-                usersCollection.document(userId).collection(PERSONAL_DETAILS)
-
-            val task = userPersonalDetailCollection.get()
-            tasks.add(task)
-
-            // Add an onCompleteListener to each inner task to process the result
-            task.addOnCompleteListener { innerTask ->
-                if (innerTask.isSuccessful) {
-                    val innerQuerySnapshot = innerTask.result
-                    innerQuerySnapshot?.documents?.forEach { innerDocumentSnapshot ->
-                        val user = innerDocumentSnapshot.toObject(User::class.java)
-                        if (user != null && user.userType != ADMIN) {
-                            user.profileId = innerDocumentSnapshot.id
-                            usersList.add(user)
-                        }
+                for (document in querySnapshot) {
+                    val user = document.toObject(User::class.java)
+                    if (user.userType != ADMIN) {
+                        user.profileId = document.id
+                        usersList.add(user)
                     }
-                } else {
-                    onComplete.invoke(null, innerTask.exception?.message)
                 }
-            }
-        }
-
-        // Wait for all inner tasks to complete before invoking the outer onComplete
-        Tasks.whenAllSuccess<QuerySnapshot>(tasks)
-            .addOnSuccessListener {
                 onComplete(usersList, null)
             }
             .addOnFailureListener { exception ->
