@@ -4,37 +4,32 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.google.firebase.messaging.FirebaseMessaging
 import com.toochi.job_swift.R
-import com.toochi.job_swift.admin.fragment.AdminHomeFragment
-import com.toochi.job_swift.admin.fragment.AdminInsightsFragment
 import com.toochi.job_swift.backend.PersonalDetailsManager.updateExistingUser
-import com.toochi.job_swift.common.fragments.NotificationsFragment
 import com.toochi.job_swift.databinding.ActivityAdminDashboardBinding
 import com.toochi.job_swift.util.Constants
 import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
 import com.toochi.job_swift.util.NotificationViewModel
-import com.toochi.job_swift.util.Utils.loadFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class AdminDashboardActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAdminDashboardBinding
-    private val userActivityScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private val adminActivityScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private val viewModel: NotificationViewModel by viewModels()
 
-    private var doubleBackToExitPressedOnce = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,79 +41,32 @@ class AdminDashboardActivity : AppCompatActivity() {
     }
 
 
-    private fun initData(){
-        bottomBarNavigation()
+    private fun initData() {
+        setUpNavigation()
 
-        onBackClicked()
-
-        userActivityScope.launch {
+        adminActivityScope.launch {
             saveTokenInBackground()
         }
 
         viewModel.newNotification.observe(this) {
-            badgeSetUp(R.id.notifications)
+            badgeSetUp(R.id.notificationsFragment)
         }
     }
 
-    private fun bottomBarNavigation() {
-        val container = R.id.adminContainer
-        loadFragment(this, AdminHomeFragment(), container)
+    private fun setUpNavigation() {
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
+        val navController = navHostFragment.findNavController()
+        binding.bottomNavigation.setupWithNavController(navController)
 
-        binding.bottomNavigation.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.home -> {
-                    loadFragment(this, AdminHomeFragment(), container)
-                    true
-                }
-
-                R.id.insight -> {
-                    loadFragment(this, AdminInsightsFragment(), container)
-                    true
-                }
-
-                R.id.notifications -> {
-                    loadFragment(this, NotificationsFragment(), container)
-                    clearBadge(R.id.notifications)
-                    requestPermission()
-                    true
-                }
-
-
-                else -> false
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.notificationsFragment) {
+                requestPermission()
+                clearBadge(R.id.notificationsFragment)
             }
         }
     }
 
-    private fun isHomeFragmentVisible(): Boolean {
-        return binding.bottomNavigation.selectedItemId == R.id.home
-    }
-
-    private fun onBackClicked() {
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (isHomeFragmentVisible()) {
-                    if (doubleBackToExitPressedOnce) {
-                        finish()
-                    } else {
-                        doubleBackToExitPressedOnce = true
-                        Toast.makeText(
-                            this@AdminDashboardActivity,
-                            "Press back again to exit",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            doubleBackToExitPressedOnce = false
-                        }, 2000)
-                    }
-                } else {
-                    bottomBarNavigation()
-                    binding.bottomNavigation.selectedItemId = R.id.home
-                }
-            }
-        }
-        onBackPressedDispatcher.addCallback(this, callback)
-    }
 
     private fun requestPermission() {
         if (ActivityCompat.checkSelfPermission(
@@ -135,13 +83,6 @@ class AdminDashboardActivity : AppCompatActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
 
     private fun badgeSetUp(id: Int) {
         val badge = binding.bottomNavigation.getOrCreateBadge(id)
@@ -161,6 +102,7 @@ class AdminDashboardActivity : AppCompatActivity() {
             val userToken = FirebaseMessaging.getInstance().token.await()
             val profileId =
                 getSharedPreferences(PREF_NAME, MODE_PRIVATE).getString("profile_id", "")
+
             // Perform database update here using the obtained FCM token
             if (profileId != null) {
                 updateExistingUser(
@@ -172,6 +114,11 @@ class AdminDashboardActivity : AppCompatActivity() {
             // Handle exceptions, such as token retrieval failure or database update failure
             e.printStackTrace()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        adminActivityScope.cancel()
     }
 
 }
