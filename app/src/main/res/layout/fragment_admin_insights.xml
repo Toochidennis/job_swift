@@ -25,13 +25,22 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/employeeRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/appBar"
-            tools:listitem="@layout/item_admin_insights"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+       <androidx.core.widget.NestedScrollView
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:fillViewport="true"
+           android:layout_below="@id/appBar"
+           android:contentDescription="@string/nested_scroll_view">
+
+           <androidx.recyclerview.widget.RecyclerView
+               android:id="@+id/employeeRecyclerView"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_below="@id/appBar"
+               tools:listitem="@layout/item_admin_insights"
+               app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+       </androidx.core.widget.NestedScrollView>
 
         <ImageView
             android:id="@+id/noDataImageView"
@@ -41,7 +50,7 @@
             android:layout_marginTop="280dp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_no_data"
-            android:visibility="invisible" />
+            android:visibility="gone" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/errorTextView"
@@ -52,7 +61,7 @@
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="@dimen/text_20"
-            android:visibility="invisible" />
+            android:visibility="gone" />
 
     </RelativeLayout>
 

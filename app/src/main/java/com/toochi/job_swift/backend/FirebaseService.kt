@@ -29,7 +29,6 @@ import com.toochi.job_swift.util.NotificationRepository
 import kotlin.random.Random
 
 class FirebaseService : FirebaseMessagingService() {
-
     override fun onNewToken(token: String) {
         super.onNewToken(token)
 
@@ -83,7 +82,9 @@ class FirebaseService : FirebaseMessagingService() {
                     userId = it.data["userId"] ?: "",
                     employerId = it.data["employerId"] ?: "",
                     jobId = it.data["jobId"] ?: "",
-                    type = it.data["type"] ?: ""
+                    type = it.data["type"] ?: "",
+                    comments = it.data["comments"] ?: "",
+                    adminId = it.data["adminId"] ?: ""
                 ).also { notification ->
                     createNotifications(notification) { _, _ -> }
                 }
@@ -91,9 +92,9 @@ class FirebaseService : FirebaseMessagingService() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
-        @RequiresApi(Build.VERSION_CODES.O)
+
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel(notificationManager: NotificationManager) {
         NotificationChannel(CHANNEL_ID, CHANNEL_NAME, IMPORTANCE_HIGH).apply {
             name = "Job Application Notifications"
