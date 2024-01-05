@@ -6,6 +6,7 @@ import java.util.Date
 
 data class User(
     var profileId: String = "",
+    var userId:String ="",
     var email: String = "",
     var password: String = "",
     var firstname: String = "",
