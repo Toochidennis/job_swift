@@ -72,6 +72,7 @@ class PasswordResetDialogFragment : DialogFragment() {
         val loadingDialog = LoadingDialog(requireContext())
 
         try {
+            loadingDialog.show()
             sendPasswordResetEmail(email) { sent, exception ->
                 if (sent) {
                     loadingDialog.dismiss()
