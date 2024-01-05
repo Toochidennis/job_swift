@@ -12,7 +12,6 @@ object NotificationsManager {
         notification: Notification,
         onComplete: (Boolean, String?) -> Unit
     ) {
-
         val ownerDocument = when (notification.type) {
             ACCEPTED, REJECTED -> usersCollection.document(notification.userId)
             REPORT -> usersCollection.document(notification.adminId)

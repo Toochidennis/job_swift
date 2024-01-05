@@ -20,7 +20,6 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.toochi.job_swift.MainActivity
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.NotificationsManager.createNotifications
 import com.toochi.job_swift.backend.PersonalDetailsManager.updateExistingUser
 import com.toochi.job_swift.util.Constants.Companion.CHANNEL_ID
 import com.toochi.job_swift.util.Constants.Companion.CHANNEL_NAME
@@ -68,31 +67,10 @@ class FirebaseService : FirebaseMessagingService() {
             notificationManager.notify(notificationId, notification)
         }
 
-        saveNotification(message)
 
         NotificationRepository.notifyNewNotification()
     }
 
-    private fun saveNotification(message: RemoteMessage) {
-        try {
-            message.let {
-                com.toochi.job_swift.model.Notification(
-                    title = it.notification?.title ?: "",
-                    body = it.notification?.body ?: "",
-                    userId = it.data["userId"] ?: "",
-                    employerId = it.data["employerId"] ?: "",
-                    jobId = it.data["jobId"] ?: "",
-                    type = it.data["type"] ?: "",
-                    comments = it.data["comments"] ?: "",
-                    adminId = it.data["adminId"] ?: ""
-                ).also { notification ->
-                    createNotifications(notification) { _, _ -> }
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel(notificationManager: NotificationManager) {
