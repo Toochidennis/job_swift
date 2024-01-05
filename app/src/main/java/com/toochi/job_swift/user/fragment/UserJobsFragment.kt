@@ -69,7 +69,7 @@ class UserJobsFragment : Fragment() {
     }
 
     private fun setUpViewPager() {
-        val fragmentTitles = listOf("Posted jobs", "Applied jobs", "Saved jobs")
+        val fragmentTitles = listOf("Posted jobs", "Applied jobs")
 
         val fragmentAdapter = FragmentAdapter(requireActivity()).apply {
             addFragment(PostedJobsFragment())

@@ -3,11 +3,7 @@ package com.toochi.job_swift.util
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Patterns
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import com.google.auth.oauth2.GoogleCredentials
-import com.toochi.job_swift.backend.AuthenticationManager.auth
 import com.toochi.job_swift.model.Notification
 import com.toochi.job_swift.model.User
 import com.toochi.job_swift.util.Constants.Companion.BASE_URL
@@ -30,12 +26,6 @@ import java.util.Locale
 import java.util.regex.Pattern
 
 object Utils {
-
-    fun loadFragment(activity: AppCompatActivity, fragment: Fragment, container: Int) {
-        activity.supportFragmentManager.commit {
-            replace(container, fragment)
-        }
-    }
 
     fun currencyFormatter(amount: Double): String {
         return DecimalFormat("#,###.##").format(amount)
@@ -113,6 +103,7 @@ object Utils {
                         put("jobId", notification.jobId)
                         put("type", notification.type)
                         put("comments", notification.comments)
+                        put("adminId", notification.adminId)
                     })
                 })
             }
@@ -151,7 +142,7 @@ object Utils {
 
     fun updateSharedPreferences(user: User, sharedPreferences: SharedPreferences) {
         sharedPreferences.edit().run {
-            putString(USER_ID_KEY, auth.currentUser?.uid)
+            putString(USER_ID_KEY, user.userId)
             putString("profile_id", user.profileId)
             putString("email", user.email)
             putString("lastname", user.lastname)
@@ -162,6 +153,7 @@ object Utils {
             putString("phone_number", user.phoneNumber)
             putString("dob", user.dateOfBirth)
             putString("address", user.address)
+            putString("headline", user.headline)
             apply()
         }
     }
