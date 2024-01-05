@@ -1,6 +1,7 @@
 package com.toochi.job_swift.common.fragments
 
 import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -31,6 +32,8 @@ class CreateEmployerAccountDialogFragment : DialogFragment() {
 
     private var description: String = ""
 
+    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog2)
@@ -48,6 +51,9 @@ class CreateEmployerAccountDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        sharedPreferences = requireContext().getSharedPreferences(PREF_NAME, MODE_PRIVATE)
+
+
         viewClickListener()
     }
 
@@ -61,7 +67,7 @@ class CreateEmployerAccountDialogFragment : DialogFragment() {
 
                 createCompany(company) { success, errorMessage ->
                     if (success) {
-                        updateSharedPreference(company)
+                        updateUserDetails()
                         loadingDialog.dismiss()
                         showWelcomeMessage()
                     } else {
@@ -78,15 +84,8 @@ class CreateEmployerAccountDialogFragment : DialogFragment() {
     }
 
 
-    private fun updateSharedPreference(company: Company) {
-        val sharedPreferences = requireContext().getSharedPreferences(PREF_NAME, MODE_PRIVATE)
-        sharedPreferences.edit().apply {
-            putString("user_type", EMPLOYER)
-            putString("company_name", company.title)
-            putString("company_location", company.location)
-            apply()
-        }
-
+    private fun updateUserDetails() {
+        sharedPreferences.edit().putString("userType", EMPLOYER).apply()
         val profileId = sharedPreferences.getString("profile_id", "")
 
         profileId?.let {

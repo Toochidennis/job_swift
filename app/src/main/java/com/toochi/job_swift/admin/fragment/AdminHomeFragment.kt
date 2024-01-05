@@ -1,11 +1,15 @@
 package com.toochi.job_swift.admin.fragment
 
 import android.content.Context.MODE_PRIVATE
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -13,8 +17,9 @@ import androidx.fragment.app.Fragment
 import com.squareup.picasso.Picasso
 import com.toochi.job_swift.BR
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.AuthenticationManager
+import com.toochi.job_swift.backend.AuthenticationManager.getGoogleSignInClient
 import com.toochi.job_swift.backend.PostJobManager
+import com.toochi.job_swift.common.activities.LoginActivity
 import com.toochi.job_swift.common.dialogs.LoadingDialog
 import com.toochi.job_swift.common.dialogs.OnDeleteJobBottomDialog
 import com.toochi.job_swift.databinding.FragmentAdminHomeBinding
@@ -23,6 +28,7 @@ import com.toochi.job_swift.user.adapters.GenericAdapter
 import com.toochi.job_swift.util.Constants
 import com.toochi.job_swift.util.Constants.Companion.DELETE_JOB
 import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
+import com.toochi.job_swift.util.Constants.Companion.SIGN_OUT
 import com.toochi.job_swift.util.Utils
 import java.util.Calendar
 
@@ -32,8 +38,12 @@ class AdminHomeFragment : Fragment() {
     private var _binding: FragmentAdminHomeBinding? = null
 
     private val binding get() = _binding!!
+    private val picasso = Picasso.get()
 
     private var jobList = mutableListOf<PostJob>()
+
+    private lateinit var sharedPreferences: SharedPreferences
+    private var userId: String? = null
 
 
     override fun onCreateView(
@@ -52,18 +62,46 @@ class AdminHomeFragment : Fragment() {
     }
 
     private fun initData() {
+        sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE)
+
         setUpProfile()
 
         getAllJobs()
 
         refreshData()
+
+        signOut()
+    }
+
+    private fun signOut() {
+        binding.profileButton.setOnClickListener {
+            PopupMenu(requireContext(), it, Gravity.START).run {
+                inflate(R.menu.menu_admin_sign_out)
+
+                setOnMenuItemClickListener { item ->
+                    if (item.itemId == R.id.signOutButton) {
+                        sharedPreferences.edit().clear().apply()
+                        sharedPreferences.edit().putString("user_type", SIGN_OUT).apply()
+
+                        getGoogleSignInClient(requireContext()).signOut()
+
+                        startActivity(Intent(requireActivity(), LoginActivity::class.java))
+                        requireActivity().finish()
+                    }
+                    false
+                }
+
+                show()
+            }
+        }
     }
 
     private fun setUpProfile() {
-        with(requireActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE)) {
+        with(sharedPreferences) {
             val firstname = getString("firstname", "")
             val lastname = getString("lastname", "")
             val photoUrl = getString("photo_url", "")
+            userId = getString(Constants.USER_ID_KEY, "")
 
             val fullName = "$firstname $lastname"
 
@@ -71,7 +109,7 @@ class AdminHomeFragment : Fragment() {
             binding.greetingsTextView.text = getGreetingMessage()
 
             if (!photoUrl.isNullOrEmpty()) {
-                Picasso.get().load(photoUrl).into(binding.userImageView)
+                picasso.load(photoUrl).into(binding.userImageView)
             }
         }
     }
@@ -81,6 +119,7 @@ class AdminHomeFragment : Fragment() {
 
         try {
             loadingDialog.show()
+            jobList.clear()
 
             PostJobManager.getAllPostedJobs { jobs, errorMessage ->
                 if (jobs != null) {
@@ -96,7 +135,8 @@ class AdminHomeFragment : Fragment() {
                             title = job.title,
                             location = location,
                             jobType = jobType,
-                            jobEmail = job.calculateDaysAgo()
+                            jobEmail = job.calculateDaysAgo(),
+                            companyPhotoUrl = job.companyPhotoUrl
                         )
                     }
 
@@ -105,6 +145,7 @@ class AdminHomeFragment : Fragment() {
                     binding.noDataImageView.isVisible = false
                     setUpAdapter(copiedJobs.toMutableList())
                 } else if (errorMessage == Constants.NOT_AVAILABLE) {
+                    loadingDialog.dismiss()
                     binding.errorTextView.isVisible = true
                     binding.noDataImageView.isVisible = true
                 } else {
@@ -145,7 +186,13 @@ class AdminHomeFragment : Fragment() {
                 binding.executePendingBindings()
 
                 val saveButton: ImageView = binding.root.findViewById(R.id.saveButton)
-                saveButton.isVisible = model.userId != AuthenticationManager.auth.uid
+                saveButton.isVisible = model.userId != userId
+
+                val imageView: ImageView = binding.root.findViewById(R.id.companyImageView)
+
+                if (model.companyPhotoUrl.isNotEmpty()) {
+                    picasso.load(model.companyPhotoUrl).into(imageView)
+                }
 
             }
         ) { position ->
@@ -170,7 +217,6 @@ class AdminHomeFragment : Fragment() {
         }
     }
 
-
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
@@ -181,7 +227,6 @@ class AdminHomeFragment : Fragment() {
             binding.swipeRefreshLayout.isRefreshing = false
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
