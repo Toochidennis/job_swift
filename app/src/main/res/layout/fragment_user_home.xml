@@ -83,11 +83,56 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/profileCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/appBar"
+            android:layout_marginStart="@dimen/dimen_16"
+            android:layout_marginTop="@dimen/dimen_16"
+            android:layout_marginEnd="@dimen/dimen_16"
+            android:backgroundTint="@color/shade_green"
+            app:cardCornerRadius="@dimen/dimen_16"
+            app:cardElevation="0dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dimen_16">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/take_a_moment_to_set_up_your_profile_let_employers_and_fellow_job_seekers_get_to_know_the_amazing_professional_that_you_are"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_16" />
+
+                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:id="@+id/setupButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:backgroundTint="@color/mint_green"
+                    android:contentDescription="@string/setup"
+                    android:text="@string/setup"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black" />
+
+            </RelativeLayout>
+
+
+        </com.google.android.material.card.MaterialCardView>
+
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/searchTextField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/appBar"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_below="@id/profileCard"
             android:layout_marginStart="@dimen/dimen_16"
             android:layout_marginTop="@dimen/dimen_32"
             android:layout_marginEnd="@dimen/dimen_16"
@@ -95,6 +140,7 @@
             android:drawableStart="@drawable/ic_search"
             android:drawablePadding="@dimen/dimen_10"
             android:hint="@string/search_job"
+            android:imeOptions="actionSearch"
             android:inputType="textCapSentences"
             android:padding="@dimen/dimen_10" />
 
@@ -112,7 +158,7 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="280dp"
+            android:layout_marginTop="350dp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_no_data"
             android:visibility="invisible" />
