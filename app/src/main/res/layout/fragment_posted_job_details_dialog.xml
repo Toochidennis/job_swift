@@ -76,10 +76,8 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/introCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/appBar"
                     android:layout_marginTop="@dimen/dimen_10"
                     app:cardElevation="0dp"
                     app:contentPadding="@dimen/dimen_16">
@@ -88,26 +86,37 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <LinearLayout
+                        <RelativeLayout
                             android:id="@+id/companyImageView"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:layout_marginStart="@dimen/dimen_16"
                             android:background="@drawable/profile_bg"
-                            android:backgroundTint="@color/shade_green"
+                            android:backgroundTint="@color/pale_silver"
                             android:gravity="center"
-                            android:orientation="vertical"
+                            android:padding="4dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
 
-                            <ImageView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:contentDescription="@string/app_logo"
-                                android:src="@drawable/ic_jobs"
-                                app:tint="@color/white" />
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                app:cardCornerRadius="120dp"
+                                app:cardElevation="0dp">
 
-                        </LinearLayout>
+                                <ImageView
+                                    android:id="@+id/imageView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:contentDescription="@string/app_logo"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/ic_jobs"
+                                    android:transitionName="profileImage" />
+
+                            </com.google.android.material.card.MaterialCardView>
+
+                        </RelativeLayout>
 
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/jobTitleTxt"
@@ -206,7 +215,6 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_below="@id/introCard"
                     android:layout_marginTop="@dimen/dimen_10"
                     app:cardCornerRadius="@dimen/dimen_16"
                     app:cardElevation="0dp">
@@ -220,7 +228,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/dimen_16"
-                            android:text="About company"
+                            android:text="@string/about_company"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_18"
                             android:textStyle="bold" />
