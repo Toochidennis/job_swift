@@ -131,7 +131,7 @@ class CompanyInfoDialogFragment : DialogFragment() {
                 if (company == null) {
                     isFirstTime = true
                     createCompany(data) { success, error ->
-                        updateSharedPreference(data)
+                        updateSharedPreference()
                         handleAuthResult(success, error.toString())
                     }
                 } else {
@@ -149,7 +149,7 @@ class CompanyInfoDialogFragment : DialogFragment() {
                                 "regNumber" to data.regNumber
                             )
                         ) { success, error ->
-                            updateSharedPreference(data)
+                            updateSharedPreference()
                             handleAuthResult(success, error.toString())
                         }
                     }
@@ -225,15 +225,9 @@ class CompanyInfoDialogFragment : DialogFragment() {
         }
     }
 
-    private fun updateSharedPreference(company: Company) {
+    private fun updateSharedPreference() {
         val sharedPreferences = requireContext().getSharedPreferences(PREF_NAME, MODE_PRIVATE)
-        sharedPreferences.edit().apply {
-            putString("user_type", EMPLOYER)
-            putString("company_name", company.title)
-            putString("company_location", company.location)
-            apply()
-        }
-
+        sharedPreferences.edit().putString("userType", EMPLOYER).apply()
         val profileId = sharedPreferences.getString("profile_id", "")
 
         profileId?.let {

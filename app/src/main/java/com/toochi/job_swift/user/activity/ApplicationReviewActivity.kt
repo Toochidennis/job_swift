@@ -74,6 +74,8 @@ class ApplicationReviewActivity : AppCompatActivity() {
         initData()
 
         handleViewClicks()
+
+        refreshData()
     }
 
     private fun initData() {
@@ -447,6 +449,13 @@ class ApplicationReviewActivity : AppCompatActivity() {
 
     private fun showToast(message: String) {
         Toast.makeText(this@ApplicationReviewActivity, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun refreshData(){
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            initData()
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
     }
 
 
