@@ -16,6 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.toochi.job_swift.R
 import com.toochi.job_swift.backend.ApplyForJobManager.applyJob
 import com.toochi.job_swift.backend.ApplyForJobManager.checkIfHaveAppliedJob
+import com.toochi.job_swift.backend.NotificationsManager.createNotifications
 import com.toochi.job_swift.backend.PersonalDetailsManager.getUserToken
 import com.toochi.job_swift.databinding.FragmentApplyJobDialogBinding
 import com.toochi.job_swift.model.ApplyJob
@@ -261,7 +262,7 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
 
     private fun notifyOwner() {
         try {
-            getUserToken(postJob.userId) { token, _ ->
+            getUserToken(postJob.userId) { token, exception ->
                 if (token != null) {
                     Notification(
                         token = token,
@@ -272,12 +273,22 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
                         jobId = postJob.jobId,
                         type = JOB_APPLICATION
                     ).also {
-                        sendNotification(requireActivity(), it) { _ ->
-                            loadingDialog.dismiss()
+                        createNotifications(it) { isCreated, error ->
+                            if (isCreated) {
+                                sendNotification(requireActivity(), it) { _ ->
+                                    loadingDialog.dismiss()
 
-                            showCongratsMessage()
+                                    showCongratsMessage()
+                                }
+                            } else {
+                                loadingDialog.dismiss()
+                                showToast(error.toString())
+                            }
                         }
                     }
+                } else {
+                    loadingDialog.dismiss()
+                    showToast(exception.toString())
                 }
             }
         } catch (e: Exception) {

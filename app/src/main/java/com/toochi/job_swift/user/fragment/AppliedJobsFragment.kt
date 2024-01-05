@@ -17,6 +17,7 @@ import com.toochi.job_swift.databinding.FragmentAppliedJobsBinding
 import com.toochi.job_swift.model.ApplyJob
 import com.toochi.job_swift.model.PostJob
 import com.toochi.job_swift.user.adapters.GenericAdapter
+import com.toochi.job_swift.util.Constants.Companion.NOT_AVAILABLE
 import com.toochi.job_swift.util.Utils.currencyFormatter
 import java.util.Locale
 
@@ -26,6 +27,7 @@ class AppliedJobsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var appliedJobList = mutableListOf<ApplyJob>()
+    private lateinit var loadingDialog: LoadingDialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +41,8 @@ class AppliedJobsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        loadingDialog = LoadingDialog(requireContext())
+
         getAllAppliedJobs()
 
         refreshData()
@@ -46,10 +50,9 @@ class AppliedJobsFragment : Fragment() {
 
 
     private fun getAllAppliedJobs() {
-        val loadingDialog = LoadingDialog(requireContext())
-        loadingDialog.show()
-
         try {
+            loadingDialog.show()
+            appliedJobList.clear()
 
             getJobsAppliedFor { postJobs, appliedJobs, error ->
                 binding.imageView.isVisible = postJobs.isNullOrEmpty()
@@ -59,8 +62,6 @@ class AppliedJobsFragment : Fragment() {
                     appliedJobList = appliedJobs
 
                     postJobs.forEach { item ->
-                        loadingDialog.dismiss()
-
                         val currentAmount = item.salary
                         val currentRate = item.salaryRate
 
@@ -70,7 +71,8 @@ class AppliedJobsFragment : Fragment() {
                     }
 
                     setUpAdapter(postJobs)
-                } else if (error == "empty") {
+                    loadingDialog.dismiss()
+                } else if (error == NOT_AVAILABLE) {
                     loadingDialog.dismiss()
                     binding.imageView.setImageDrawable(
                         ContextCompat.getDrawable(
