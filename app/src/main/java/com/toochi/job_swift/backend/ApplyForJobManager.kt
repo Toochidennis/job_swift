@@ -2,7 +2,6 @@ package com.toochi.job_swift.backend
 
 import android.net.Uri
 import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.StorageReference
 import com.toochi.job_swift.backend.AuthenticationManager.auth
@@ -12,6 +11,7 @@ import com.toochi.job_swift.model.ApplyJob
 import com.toochi.job_swift.model.PostJob
 import com.toochi.job_swift.util.Constants
 import com.toochi.job_swift.util.Constants.Companion.JOBS_APPLIED_FOR
+import com.toochi.job_swift.util.Constants.Companion.NOT_AVAILABLE
 
 object ApplyForJobManager {
 
@@ -32,14 +32,14 @@ object ApplyForJobManager {
 
             cvUri?.let { uri ->
                 uploadCVAndApplyJob(
-                    Constants.JOBS_APPLIED_FOR,
+                    JOBS_APPLIED_FOR,
                     usersDocument,
                     applyJob,
                     uri,
                     cvName,
                     onComplete
                 )
-            } ?: applyJobWithoutCV(Constants.JOBS_APPLIED_FOR, usersDocument, applyJob, onComplete)
+            } ?: applyJobWithoutCV(JOBS_APPLIED_FOR, usersDocument, applyJob, onComplete)
         } else {
             val usersDocument = usersCollection.document(userId)
             cvUri?.let { uri ->
@@ -128,7 +128,7 @@ object ApplyForJobManager {
         val usersDocument = currentUser?.let { usersCollection.document(it.uid) }
 
         // Reference to the "postedJobs" collection under the user's document
-        val postedJobsCollection = usersDocument?.collection("jobsAppliedFor")
+        val postedJobsCollection = usersDocument?.collection(JOBS_APPLIED_FOR)
 
         postedJobsCollection?.whereEqualTo("jobId", jobId)
             ?.get()
@@ -205,16 +205,17 @@ object ApplyForJobManager {
                 val employerId = document.getString("employerId")
 
                 if (jobId != null && employerId != null) {
-                    fetchPostedJob(jobId, employerId, allPostJobs, allAppliedJobs, onComplete)
+                    fetchPostedJob(querySnapshot,jobId, employerId, allPostJobs, allAppliedJobs, onComplete)
                 }
             }
         } else {
-            onComplete.invoke(null, null, "empty")
+            onComplete.invoke(null, null, NOT_AVAILABLE)
         }
     }
 
 
     private fun fetchPostedJob(
+        querySnapshot: QuerySnapshot,
         jobId: String,
         userId: String,
         allPostJobs: MutableList<PostJob>,
@@ -226,37 +227,24 @@ object ApplyForJobManager {
             .document(jobId)
             .get()
             .addOnSuccessListener { documentSnapshot ->
-                handlePostedJobQuerySnapshot(
-                    documentSnapshot,
-                    allPostJobs,
-                    allAppliedJobs,
-                    onComplete
-                )
+                val postJob = documentSnapshot.toObject(PostJob::class.java)
+
+                if (postJob != null) {
+                    postJob.jobId = documentSnapshot.id
+                    allPostJobs.add(postJob)
+                }
+
+                completedCount++
+
+                if (completedCount == querySnapshot.size()) {
+                    onComplete.invoke(allPostJobs, allAppliedJobs, null)
+                }
             }
             .addOnFailureListener { error ->
                 onComplete.invoke(null, null, error.message)
             }
     }
 
-    private fun handlePostedJobQuerySnapshot(
-        documentSnapshot: DocumentSnapshot,
-        allPostJobs: MutableList<PostJob>,
-        allAppliedJobs: MutableList<ApplyJob>,
-        onComplete: (MutableList<PostJob>?, MutableList<ApplyJob>?, String?) -> Unit
-    ) {
-        val postJob = documentSnapshot.toObject(PostJob::class.java)
-
-        if (postJob != null) {
-            postJob.jobId = documentSnapshot.id
-            allPostJobs.add(postJob)
-        }
-
-        completedCount++
-
-        if (completedCount == allAppliedJobs.size) {
-            onComplete.invoke(allPostJobs, allAppliedJobs, null)
-        }
-    }
 
     fun getJobsAppliedForById(
         userId: String = "",

@@ -2,10 +2,10 @@ package com.toochi.job_swift.user.activity
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.squareup.picasso.Picasso
 import com.toochi.job_swift.BR
@@ -17,6 +17,7 @@ import com.toochi.job_swift.backend.EducationManager.getUserEducationDetails
 import com.toochi.job_swift.backend.ExperienceManager.getUserExperienceDetails
 import com.toochi.job_swift.backend.JobAppliedByOthersManager.getJobsAppliedByOthers
 import com.toochi.job_swift.backend.JobAppliedByOthersManager.updateJobsAppliedByOthers
+import com.toochi.job_swift.backend.NotificationsManager.createNotifications
 import com.toochi.job_swift.backend.PersonalDetailsManager.getUserPersonalDetails
 import com.toochi.job_swift.backend.PersonalDetailsManager.getUserToken
 import com.toochi.job_swift.common.dialogs.AlertDialog
@@ -367,19 +368,26 @@ class ApplicationReviewActivity : AppCompatActivity() {
                             jobId = jobId ?: "",
                             type = status
                         ).also {
-                            sendNotification(this, it) { _ ->
-                                loadingDialog.dismiss()
+                            createNotifications(it) { isCreated, error ->
+                                if (isCreated) {
+                                    sendNotification(this, it) { _ ->
+                                        loadingDialog.dismiss()
 
-                                if (status == REJECTED) {
-                                    showMessageToEmployer(
-                                        title = "The job has been rejected",
-                                        body = "Thank you for your consideration."
-                                    )
+                                        if (status == REJECTED) {
+                                            showMessageToEmployer(
+                                                title = "The job has been rejected",
+                                                body = "Thank you for your consideration."
+                                            )
+                                        } else {
+                                            showMessageToEmployer(
+                                                title = "Congratulations!",
+                                                body = "The job has been accepted."
+                                            )
+                                        }
+                                    }
                                 } else {
-                                    showMessageToEmployer(
-                                        title = "Congratulations!",
-                                        body = "The job has been accepted."
-                                    )
+                                    loadingDialog.dismiss()
+                                    showToast(error.toString())
                                 }
                             }
                         }
@@ -389,13 +397,13 @@ class ApplicationReviewActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateJobStatus(from:String, updateFunction: (String) -> Unit) {
+    private fun updateJobStatus(from: String, updateFunction: (String) -> Unit) {
         if (from == EMPLOYER) {
             val applicationId = applyJob?.applicationId
             applicationId?.let {
                 updateFunction(it)
             }
-        }else{
+        } else {
             employeeApplicationId?.let {
                 updateFunction(it)
             }
@@ -410,12 +418,12 @@ class ApplicationReviewActivity : AppCompatActivity() {
                     applicationId = applicationId,
                     hashMapOf("status" to status)
                 ) { success, error ->
-                   if (success){
-                       updateEmployerJobStatus(title, body, status)
-                   }else{
-                       loadingDialog.dismiss()
-                       showToast(error.toString())
-                   }
+                    if (success) {
+                        updateEmployerJobStatus(title, body, status)
+                    } else {
+                        loadingDialog.dismiss()
+                        showToast(error.toString())
+                    }
                 }
             }
         }
@@ -451,7 +459,7 @@ class ApplicationReviewActivity : AppCompatActivity() {
         Toast.makeText(this@ApplicationReviewActivity, message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun refreshData(){
+    private fun refreshData() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             initData()
             binding.swipeRefreshLayout.isRefreshing = false
