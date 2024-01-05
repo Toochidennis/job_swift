@@ -31,7 +31,6 @@ class OnDeleteJobBottomDialog(private val postJob: PostJob) :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         binding.viewJobTextView.setOnClickListener {
             PostedJobDetailsDialogFragment(postJob)
                 .show(
@@ -48,7 +47,6 @@ class OnDeleteJobBottomDialog(private val postJob: PostJob) :
             )
             dismiss()
         }
-
     }
 
 

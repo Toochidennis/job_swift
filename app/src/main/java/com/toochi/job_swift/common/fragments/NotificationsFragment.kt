@@ -20,6 +20,7 @@ import com.toochi.job_swift.user.adapters.GenericAdapter
 import com.toochi.job_swift.util.Constants.Companion.ACCEPTED
 import com.toochi.job_swift.util.Constants.Companion.JOB_APPLICATION
 import com.toochi.job_swift.util.Constants.Companion.REJECTED
+import com.toochi.job_swift.util.Constants.Companion.REPORT
 
 
 class NotificationsFragment : Fragment() {
@@ -98,13 +99,19 @@ class NotificationsFragment : Fragment() {
         ) { position ->
             val selectedPosition = notificationList[position]
 
-            if (selectedPosition.type == JOB_APPLICATION) {
-                launchReviewActivity(selectedPosition)
-            } else if (selectedPosition.type == ACCEPTED || selectedPosition.type == REJECTED) {
-                ApplicationResponseDialogFragment(selectedPosition).show(
-                    parentFragmentManager,
-                    "response"
-                )
+            when (selectedPosition.type) {
+                JOB_APPLICATION -> launchReviewActivity(selectedPosition)
+
+                ACCEPTED, REJECTED -> {
+                    ApplicationResponseDialogFragment(selectedPosition).show(
+                        parentFragmentManager,
+                        ACCEPTED
+                    )
+                }
+
+                REPORT -> {
+                    ReportReviewDialogFragment(selectedPosition).show(parentFragmentManager, REPORT)
+                }
             }
         }
 
