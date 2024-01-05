@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
 import com.toochi.job_swift.backend.AuthenticationManager
+import com.toochi.job_swift.backend.NotificationsManager.createNotifications
 import com.toochi.job_swift.backend.PersonalDetailsManager.getUserToken
 import com.toochi.job_swift.backend.PostJobManager.deleteUserPost
 import com.toochi.job_swift.databinding.FragmentDeleteJobDialogBinding
@@ -118,10 +119,17 @@ class DeleteJobDialogFragment(private val postJob: PostJob) : DialogFragment() {
                             type = DELETE_JOB,
                             comments = report,
                         ).also {
-                            sendNotification(requireActivity(), it) { _ ->
-                                loadingDialog.dismiss()
-                                dismiss()
-                                showToast("Job deleted successfully")
+                            createNotifications(it) { isCreated, error ->
+                                if (isCreated) {
+                                    sendNotification(requireActivity(), it) { _ ->
+                                        loadingDialog.dismiss()
+                                        dismiss()
+                                        showToast("Job deleted successfully")
+                                    }
+                                } else {
+                                    loadingDialog.dismiss()
+                                    showToast(error.toString())
+                                }
                             }
                         }
                     }

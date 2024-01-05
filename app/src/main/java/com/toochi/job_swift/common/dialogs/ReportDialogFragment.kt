@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
 import com.toochi.job_swift.backend.AuthenticationManager.auth
+import com.toochi.job_swift.backend.NotificationsManager.createNotifications
 import com.toochi.job_swift.backend.PersonalDetailsManager.getAdminToken
 import com.toochi.job_swift.databinding.FragmentReportBinding
 import com.toochi.job_swift.model.Notification
@@ -99,10 +100,17 @@ class ReportDialogFragment(private val postJob: PostJob) : DialogFragment() {
                             comments = report,
                             adminId = adminId
                         ).also {
-                            sendNotification(requireActivity(), it) { _ ->
-                                loadingDialog.dismiss()
-                                dismiss()
-                                showToast("Your report has been submitted successfully.")
+                            createNotifications(it) { isCreated, error ->
+                                if (isCreated) {
+                                    sendNotification(requireActivity(), it) { _ ->
+                                        loadingDialog.dismiss()
+                                        dismiss()
+                                        showToast("Your report has been submitted successfully.")
+                                    }
+                                } else {
+                                    loadingDialog.dismiss()
+                                    showToast(error.toString())
+                                }
                             }
                         }
                     }
