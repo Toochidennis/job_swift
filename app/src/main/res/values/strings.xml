@@ -3,8 +3,7 @@
     <string name="default_web_client_id">"409813508550-l1tio9td84hm979tr4qv57d5eeqdv5f9.apps.googleusercontent.com"</string>
     <string name="sign_in">Sign in</string>
     <string name="create_an_account">Create an account</string>
-    <string name="create_new">Create new</string>
-    <string name="account">account</string>
+    <string name="create_new">Create new account</string>
     <string name="enter_your_password">Password</string>
     <string name="enter_your_email">Email</string>
     <string name="firstname">Firstname</string>

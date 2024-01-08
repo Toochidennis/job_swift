@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".common.fragments.SignUpFragment">
 
     <LinearLayout
-        android:id="@+id/signUpLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -17,19 +16,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_16"
-            android:layout_marginTop="@dimen/dimen_32"
+            android:layout_marginTop="@dimen/dimen_16"
             android:text="@string/create_new"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_32"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_16"
-            android:text="@string/account"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_32"
+            android:textSize="@dimen/text_24"
             android:textStyle="bold" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -165,26 +155,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/dimen_16">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/by_continuing_you_agree_to_our"
-                android:textColor="@color/black" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_5"
-                android:text="@string/privacy_statement"
-                android:textColor="@color/shade_green" />
-
-        </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/signUpButton"
@@ -204,7 +174,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_16"
-            android:padding="@dimen/dimen_16">
+            android:paddingStart="@dimen/dimen_16"
+            android:paddingEnd="@dimen/dimen_16">
 
             <View
                 android:id="@+id/leftSeparator"
@@ -271,14 +242,13 @@
                 android:id="@+id/signInButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="@dimen/dimen_16"
                 android:text="@string/login"
-                android:padding="@dimen/dimen_10"
                 android:textColor="@color/shade_green"
                 android:textSize="@dimen/text_16" />
 
         </LinearLayout>
 
     </LinearLayout>
-
 
 </androidx.core.widget.NestedScrollView>
