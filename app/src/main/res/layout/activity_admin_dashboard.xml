@@ -24,10 +24,10 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"
         app:itemIconTint="@color/bottom_navigation_foreground"
+        app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:labelVisibilityMode="unlabeled"
         app:menu="@menu/menu_admin_bottom_navigation_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
