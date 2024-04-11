@@ -110,7 +110,6 @@ object AuthenticationManager {
             .requestIdToken(context.getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
-
         return GoogleSignIn.getClient(context, gso)
     }
 
