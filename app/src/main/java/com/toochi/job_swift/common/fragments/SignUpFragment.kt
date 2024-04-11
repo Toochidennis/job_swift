@@ -87,6 +87,8 @@ class SignUpFragment : Fragment() {
                 val data: Intent? = result?.data
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 handleGoogleSignInResult(task)
+            }else{
+                showToast("Login failed. Please use another method to create account")
             }
         }
 

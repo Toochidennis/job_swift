@@ -76,13 +76,11 @@ class SignInFragment : Fragment() {
         }
 
 
-
         binding.forgotPasswordButton.setOnClickListener {
             PasswordResetDialogFragment().show(parentFragmentManager, "")
         }
 
     }
-
 
     private val googleSignInLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -90,6 +88,8 @@ class SignInFragment : Fragment() {
                 val data: Intent? = result?.data
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 handleGoogleSignInResult(task)
+            }else{
+                showToast("Login failed. Please try using another method")
             }
         }
 
@@ -155,7 +155,6 @@ class SignInFragment : Fragment() {
             loadingDialog.dismiss()
             showToast("An error occurred.")
         }
-
     }
 
 

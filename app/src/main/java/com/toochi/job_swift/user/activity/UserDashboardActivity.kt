@@ -39,7 +39,6 @@ class UserDashboardActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initData()
-
     }
 
     private fun initData(){
@@ -52,7 +51,6 @@ class UserDashboardActivity : AppCompatActivity() {
         viewModel.newNotification.observe(this) {
             badgeSetUp(R.id.notificationsFragment)
         }
-
     }
 
 

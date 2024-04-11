@@ -36,5 +36,7 @@
         android:id="@+id/thirdScreenFragment"
         android:name="com.toochi.job_swift.common.fragments.ThirdScreenFragment"
         android:label="fragment_third_screen"
-        tools:layout="@layout/fragment_third_screen"></fragment>
+        tools:layout="@layout/fragment_third_screen">
+
+    </fragment>
 </navigation>

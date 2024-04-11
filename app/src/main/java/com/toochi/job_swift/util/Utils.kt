@@ -88,7 +88,7 @@ object Utils {
         try {
             val serverKey = getAccessToken(context)
 
-            val payloadJson = JSONObject().apply {
+            val payload = JSONObject().apply {
                 put("message", JSONObject().apply {
                     put("token", notification.token)
 
@@ -106,10 +106,7 @@ object Utils {
                         put("adminId", notification.adminId)
                     })
                 })
-            }
-
-            val payload = payloadJson.toString()
-
+            }.toString()
 
             val request = Request.Builder()
                 .url(BASE_URL)

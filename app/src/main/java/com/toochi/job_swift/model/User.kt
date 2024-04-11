@@ -1,12 +1,11 @@
 package com.toochi.job_swift.model
 
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ServerTimestamp
 import java.util.Date
 
 data class User(
     var profileId: String = "",
-    var userId:String ="",
+    var userId: String = "",
     var email: String = "",
     var password: String = "",
     var firstname: String = "",
@@ -24,6 +23,9 @@ data class User(
     var userType: String = "",
     var token: String = "",
     var profilePhotoUrl: String = "",
+   // var deviceId: String = "",
     @ServerTimestamp
     val regDate: Date = Date()
 )
+
+//TCTV55H9LV9QLLKASNBNGMLX

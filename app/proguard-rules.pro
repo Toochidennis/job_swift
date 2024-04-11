@@ -30,9 +30,4 @@
 -dontwarn org.openjsse.javax.net.ssl.SSLParameters
 -dontwarn org.openjsse.javax.net.ssl.SSLSocket
 -dontwarn org.openjsse.net.ssl.OpenJSSE
-
--keep class v8.i.* {*;}
-
--keepclassmembers class v8.i {
-    public <init>();
-}
+-dontwarn org.conscrypt.OpenSSLProvider
