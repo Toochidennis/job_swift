@@ -35,7 +35,6 @@ class CompanyInfoDialogFragment : DialogFragment() {
     private var isFirstTime = false
     private var description: String = ""
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
@@ -67,6 +66,8 @@ class CompanyInfoDialogFragment : DialogFragment() {
 
             getCompany { company, error ->
                 if (company != null) {
+                    loadingDialog.dismiss()
+
                     this.company = company
 
                     binding.companyNameEditText.setText(company.title)
@@ -76,16 +77,14 @@ class CompanyInfoDialogFragment : DialogFragment() {
                     binding.positionTextField.setText(company.position)
                     binding.regNoTextField.setText(company.regNumber)
                 } else {
+                    loadingDialog.dismiss()
                     showToast(error.toString())
                 }
-
-                loadingDialog.dismiss()
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            showToast("An error occurred.")
-        } finally {
             loadingDialog.dismiss()
+            showToast("An error occurred.")
         }
     }
 
@@ -126,14 +125,13 @@ class CompanyInfoDialogFragment : DialogFragment() {
         val data = getDataFromForm()
 
         try {
-
             if (isValidForm(data)) {
                 loadingDialog.show()
 
                 if (company == null) {
                     isFirstTime = true
                     createCompany(data) { success, error ->
-                        updateSharedPreference(data)
+                        updateSharedPreference()
                         handleAuthResult(success, error.toString())
                     }
                 } else {
@@ -151,7 +149,7 @@ class CompanyInfoDialogFragment : DialogFragment() {
                                 "regNumber" to data.regNumber
                             )
                         ) { success, error ->
-                            updateSharedPreference(data)
+                            updateSharedPreference()
                             handleAuthResult(success, error.toString())
                         }
                     }
@@ -159,9 +157,8 @@ class CompanyInfoDialogFragment : DialogFragment() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            showToast("An error occurred.")
-        } finally {
             loadingDialog.dismiss()
+            showToast("An error occurred.")
         }
     }
 
@@ -170,6 +167,7 @@ class CompanyInfoDialogFragment : DialogFragment() {
             loadingDialog.dismiss()
             showCongratulationsMessage()
         } else {
+            loadingDialog.dismiss()
             showToast(error)
         }
     }
@@ -196,11 +194,12 @@ class CompanyInfoDialogFragment : DialogFragment() {
                 positiveClickListener = {
                     dismiss()
                 }
-                build()
-            }.show()
+                build().show()
+            }
 
         } else {
             dismiss()
+            showToast(getString(R.string.saved_successfully))
         }
 
     }
@@ -226,15 +225,9 @@ class CompanyInfoDialogFragment : DialogFragment() {
         }
     }
 
-    private fun updateSharedPreference(company: Company) {
+    private fun updateSharedPreference() {
         val sharedPreferences = requireContext().getSharedPreferences(PREF_NAME, MODE_PRIVATE)
-        sharedPreferences.edit().apply {
-            putString("user_type", EMPLOYER)
-            putString("company_name", company.title)
-            putString("company_location", company.location)
-            apply()
-        }
-
+        sharedPreferences.edit().putString("userType", EMPLOYER).apply()
         val profileId = sharedPreferences.getString("profile_id", "")
 
         profileId?.let {

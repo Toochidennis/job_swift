@@ -49,8 +49,11 @@ class EditPersonalInfoDialogFragment(
         binding.navigateUp.setOnClickListener {
             dismiss()
         }
-    }
 
+        binding.contactInfo.setOnClickListener {
+            ContactInfoDialogFragment().show(parentFragmentManager, "")
+        }
+    }
 
     private fun fillFieldsWithData() {
         if (user != null) {
@@ -114,21 +117,22 @@ class EditPersonalInfoDialogFragment(
                         )
                     ) { success, error ->
                         if (success) {
+                            loadingDialog.dismiss()
                             onSave.invoke()
                             dismiss()
+                            showToast(getString(R.string.saved_successfully))
                         } else {
+                            loadingDialog.dismiss()
                             showToast(error.toString())
                         }
 
-                        loadingDialog.dismiss()
                     }
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            showToast("An error occurred.")
-        } finally {
             loadingDialog.dismiss()
+            showToast("An error occurred.")
         }
     }
 

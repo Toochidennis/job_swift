@@ -20,19 +20,20 @@ import com.toochi.job_swift.user.adapters.GenericAdapter
 import com.toochi.job_swift.util.Constants.Companion.ACCEPTED
 import com.toochi.job_swift.util.Constants.Companion.JOB_APPLICATION
 import com.toochi.job_swift.util.Constants.Companion.REJECTED
+import com.toochi.job_swift.util.Constants.Companion.REPORT
 
 
 class NotificationsFragment : Fragment() {
 
-    private var _binding: FragmentNotificationsBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentNotificationsBinding
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
+        binding = FragmentNotificationsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -58,29 +59,34 @@ class NotificationsFragment : Fragment() {
             getAllNotifications { notifications, error ->
                 if (notifications != null) {
                     notifications.forEach {
-                        it.userId = it.extractTime()
+                        it.token = it.extractTime()
                     }
+
+                    notifications.sortByDescending { it.token }
+
                     binding.errorImageView.isVisible = false
                     binding.errorTextView.isVisible = false
 
+                    loadingDialog.dismiss()
                     setUpAdapter(notifications)
                 } else if (error == "No notifications yet") {
+                    loadingDialog.dismiss()
                     binding.errorImageView.isVisible = true
                     binding.errorTextView.isVisible = true
                 } else {
+                    loadingDialog.dismiss()
                     binding.errorImageView.isVisible = true
                     binding.errorTextView.isVisible = false
                     Toast.makeText(requireContext(), error.toString(), Toast.LENGTH_SHORT).show()
                 }
+
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            loadingDialog.show()
             Toast.makeText(requireContext(), "And error occurred.", Toast.LENGTH_SHORT).show()
-        } finally {
-            loadingDialog.dismiss()
         }
     }
-
 
     private fun setUpAdapter(notificationList: MutableList<Notification>) {
         val notificationAdapter = GenericAdapter(
@@ -93,15 +99,20 @@ class NotificationsFragment : Fragment() {
         ) { position ->
             val selectedPosition = notificationList[position]
 
-            if (selectedPosition.type == JOB_APPLICATION) {
-                launchReviewActivity(selectedPosition)
-            } else if (selectedPosition.type == ACCEPTED || selectedPosition.type == REJECTED) {
-                ApplicationResponseDialogFragment(selectedPosition).show(
-                    parentFragmentManager,
-                    "response"
-                )
-            }
+            when (selectedPosition.type) {
+                JOB_APPLICATION -> launchReviewActivity(selectedPosition)
 
+                ACCEPTED, REJECTED -> {
+                    ApplicationResponseDialogFragment(selectedPosition).show(
+                        parentFragmentManager,
+                        ACCEPTED
+                    )
+                }
+
+                REPORT -> {
+                    ReportReviewDialogFragment(selectedPosition).show(parentFragmentManager, REPORT)
+                }
+            }
         }
 
         binding.notificationRecyclerView.apply {
@@ -124,8 +135,4 @@ class NotificationsFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }

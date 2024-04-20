@@ -16,6 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.toochi.job_swift.R
 import com.toochi.job_swift.backend.ApplyForJobManager.applyJob
 import com.toochi.job_swift.backend.ApplyForJobManager.checkIfHaveAppliedJob
+import com.toochi.job_swift.backend.NotificationsManager.createNotifications
 import com.toochi.job_swift.backend.PersonalDetailsManager.getUserToken
 import com.toochi.job_swift.databinding.FragmentApplyJobDialogBinding
 import com.toochi.job_swift.model.ApplyJob
@@ -212,52 +213,56 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
             val job = getDataFromForm()
 
             if (isValidForm()) {
-                loadingDialog.show()
-
                 applyJob("", job, cvFile, cvName ?: "") { success, errorMessage ->
                     if (success) {
                         applyJob(postJob.userId, job, cvFile, cvName ?: "") { isFinished, error ->
                             if (isFinished) {
                                 notifyOwner()
                             } else {
+                                loadingDialog.dismiss()
                                 showToast(error.toString())
                             }
                         }
                     } else {
+                        loadingDialog.dismiss()
                         showToast(errorMessage.toString())
                     }
-
-                    loadingDialog.dismiss()
                 }
+            } else {
+                loadingDialog.dismiss()
             }
         } catch (e: ApiException) {
             e.printStackTrace()
-            showToast("An error occurred.")
-        } finally {
             loadingDialog.dismiss()
+            showToast("An error occurred.")
         }
     }
 
     private fun checkIfAppliedJobBefore() {
         try {
+            loadingDialog.show()
+
             checkIfHaveAppliedJob(postJob.jobId) { haveApplied, exception ->
                 if (haveApplied) {
+                    loadingDialog.dismiss()
                     showToast(getString(R.string.you_have_applied_for_this_job))
                 } else if (exception == null) {
                     applyNow()
                 } else {
+                    loadingDialog.dismiss()
                     showToast(exception.toString())
                 }
             }
         } catch (e: ApiException) {
             e.printStackTrace()
+            loadingDialog.dismiss()
             showToast("An error occurred.")
         }
     }
 
     private fun notifyOwner() {
         try {
-            getUserToken(postJob.userId) { token, _ ->
+            getUserToken(postJob.userId) { token, exception ->
                 if (token != null) {
                     Notification(
                         token = token,
@@ -268,21 +273,32 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
                         jobId = postJob.jobId,
                         type = JOB_APPLICATION
                     ).also {
-                        sendNotification(requireActivity(), it) { _, _ ->
-                            showCongratsMessage()
+                        createNotifications(it) { isCreated, error ->
+                            if (isCreated) {
+                                sendNotification(requireActivity(), it) { _ ->
+                                    loadingDialog.dismiss()
+
+                                    showCongratsMessage()
+                                }
+                            } else {
+                                loadingDialog.dismiss()
+                                showToast(error.toString())
+                            }
                         }
                     }
+                } else {
+                    loadingDialog.dismiss()
+                    showToast(exception.toString())
                 }
             }
         } catch (e: Exception) {
+            loadingDialog.dismiss()
             e.printStackTrace()
-
         }
-
     }
 
     private fun showCongratsMessage() {
-        AlertDialog.Builder(requireContext()).apply {
+        AlertDialog.Builder(requireContext()).run {
             title = "Awesome!"
             body = "Your application was submitted successfully."
             isPositiveVisible = true
@@ -291,10 +307,9 @@ class ApplyJobDialogFragment(private val postJob: PostJob) : BottomSheetDialogFr
             positiveClickListener = {
                 dismiss()
             }
-            build()
+            build().show()
         }
     }
-
 
     private fun getFileName(uri: Uri): String? {
         requireActivity().contentResolver.query(

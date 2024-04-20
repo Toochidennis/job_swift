@@ -33,7 +33,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dimen_16"
-                android:text="@string/send_mail"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_18"
                 android:textStyle="bold" />
@@ -44,7 +43,6 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="@dimen/dimen_16"
                 android:paddingEnd="@dimen/dimen_16"
-                android:text="@string/send_mail"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_16" />
 

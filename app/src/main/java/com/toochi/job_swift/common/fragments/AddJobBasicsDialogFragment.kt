@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
+import com.toochi.job_swift.backend.CompanyManager.getCompany
 import com.toochi.job_swift.common.dialogs.JobTitleDialogFragment
 import com.toochi.job_swift.common.dialogs.JobTypeDialogFragment
 import com.toochi.job_swift.common.dialogs.WorkplaceDialogFragment
 import com.toochi.job_swift.databinding.FragmentAddJobBasicsDialogBinding
 import com.toochi.job_swift.model.PostJob
+import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
 import com.toochi.job_swift.util.Constants.Companion.USER_ID_KEY
 
 
@@ -29,6 +31,7 @@ class AddJobBasicsDialogFragment : DialogFragment() {
 
     private var userId: String? = null
     private var email: String? = null
+    private var companyPhoto: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,15 +55,13 @@ class AddJobBasicsDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val sharedPreferences = requireActivity().getSharedPreferences("loginDetail", MODE_PRIVATE)
+        val sharedPreferences = requireActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE)
         with(sharedPreferences) {
-            val company = getString("company_name", "")
-            val jobLocation = getString("company_location", "")
             userId = getString(USER_ID_KEY, "")
             email = getString("email", "")
+            companyPhoto = sharedPreferences.getString("photo_url", "")
 
-            binding.companyTitleTxt.text = company ?: ""
-            binding.locationTitleTxt.text = jobLocation ?: ""
+            getCompanyDetails()
         }
 
         handleViewClicks()
@@ -94,6 +95,19 @@ class AddJobBasicsDialogFragment : DialogFragment() {
             processForm()
         }
 
+    }
+
+    private fun getCompanyDetails() {
+        try {
+            getCompany { company, _ ->
+                if (company != null) {
+                    binding.companyTitleTxt.text = company.title
+                    binding.locationTitleTxt.text = company.location
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun isValidForm(job: PostJob): Boolean {
@@ -132,6 +146,7 @@ class AddJobBasicsDialogFragment : DialogFragment() {
             userId = userId ?: "",
             title = binding.jobTitleTxt.text.toString(),
             company = binding.companyTitleTxt.text.toString(),
+            companyPhotoUrl = companyPhoto ?: "",
             location = binding.locationTitleTxt.text.toString(),
             workplaceType = binding.workTitleTxt.text.toString(),
             jobEmail = email ?: "",

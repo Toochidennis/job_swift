@@ -3,11 +3,7 @@ package com.toochi.job_swift.util
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Patterns
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import com.google.auth.oauth2.GoogleCredentials
-import com.toochi.job_swift.backend.AuthenticationManager.auth
 import com.toochi.job_swift.model.Notification
 import com.toochi.job_swift.model.User
 import com.toochi.job_swift.util.Constants.Companion.BASE_URL
@@ -18,22 +14,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.regex.Pattern
 
 object Utils {
-
-    fun loadFragment(activity: AppCompatActivity, fragment: Fragment, container: Int) {
-        activity.supportFragmentManager.commit {
-            replace(container, fragment)
-        }
-    }
 
     fun currencyFormatter(amount: Double): String {
         return DecimalFormat("#,###.##").format(amount)
@@ -91,56 +83,63 @@ object Utils {
     fun sendNotification(
         context: Context,
         notification: Notification,
-        onComplete: (String?, String?) -> Unit
+        onComplete: (String?) -> Unit
     ) = CoroutineScope(Dispatchers.IO).launch {
         try {
-            val token = getAccessToken(context)
+            val serverKey = getAccessToken(context)
 
-            val payload = """
-                {
-                   "message":{
-                      "token": "${notification.token}",
-                      "notification":{
-                        "title":"${notification.title}",
-                        "body":"${notification.body}"
-                      },
-                      "data": {
-                        "userId": "${notification.userId}",
-                        "employerId": "${notification.employerId}",
-                        "jobId": "${notification.jobId}",
-                        "type": "${notification.type}"
-                      }
-                   }
-                }
-            """.trimIndent()
+            val payload = JSONObject().apply {
+                put("message", JSONObject().apply {
+                    put("token", notification.token)
+
+                    put("notification", JSONObject().apply {
+                        put("title", notification.title)
+                        put("body", notification.body)
+                    })
+
+                    put("data", JSONObject().apply {
+                        put("userId", notification.userId)
+                        put("employerId", notification.employerId)
+                        put("jobId", notification.jobId)
+                        put("type", notification.type)
+                        put("comments", notification.comments)
+                        put("adminId", notification.adminId)
+                    })
+                })
+            }.toString()
 
             val request = Request.Builder()
                 .url(BASE_URL)
                 .post(payload.toRequestBody(CONTENT_TYPE.toMediaTypeOrNull()))
                 .header("Content-Type", CONTENT_TYPE)
-                .header("Authorization", "Bearer $token")
+                .header("Authorization", "Bearer $serverKey")
                 .build()
 
-            val response = OkHttpClient().newCall(request).execute()
+            val response = try {
+                OkHttpClient().newCall(request).execute()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return@launch
+            }
 
-            if (response.isSuccessful) {
-                onComplete(response.message, null)
-            } else {
-                onComplete(null, response.code.toString())
+            withContext(Dispatchers.Main) {
+                onComplete(response.code.toString())
             }
 
             response.close()
 
         } catch (e: Exception) {
             e.printStackTrace()
-            onComplete(null, e.message)
+            withContext(Dispatchers.Main) {
+                onComplete(e.message)
+            }
         }
     }
 
 
     fun updateSharedPreferences(user: User, sharedPreferences: SharedPreferences) {
         sharedPreferences.edit().run {
-            putString(USER_ID_KEY, auth.currentUser?.uid)
+            putString(USER_ID_KEY, user.userId)
             putString("profile_id", user.profileId)
             putString("email", user.email)
             putString("lastname", user.lastname)
@@ -151,6 +150,7 @@ object Utils {
             putString("phone_number", user.phoneNumber)
             putString("dob", user.dateOfBirth)
             putString("address", user.address)
+            putString("headline", user.headline)
             apply()
         }
     }

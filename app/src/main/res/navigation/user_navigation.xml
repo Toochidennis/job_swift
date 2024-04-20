@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/user_navigation"
+    app:startDestination="@id/userHomeFragment">
+
+    <fragment
+        android:id="@+id/userHomeFragment"
+        android:name="com.toochi.job_swift.user.fragment.UserHomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_user_home">
+
+        <action
+            android:id="@+id/action_userHomeFragment_to_personalInformationActivity"
+            app:destination="@id/personalInformationActivity"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/userHomeFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/userJobsFragment"
+        android:name="com.toochi.job_swift.user.fragment.UserJobsFragment"
+        android:label="Jobs"
+        tools:layout="@layout/fragment_user_jobs" />
+
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.toochi.job_swift.common.fragments.NotificationsFragment"
+        android:label="Notifications"
+        tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.toochi.job_swift.user.fragment.UserSettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/fragment_user_settings" />
+    <activity
+        android:id="@+id/personalInformationActivity"
+        android:name="com.toochi.job_swift.user.activity.PersonalInformationActivity"
+        android:label="activity_personal_information"
+        tools:layout="@layout/activity_personal_information" />
+
+</navigation>

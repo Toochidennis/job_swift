@@ -23,7 +23,6 @@ class EducationDialogFragment(
     private var _binding: FragmentEducationDialogBinding? = null
     private val binding get() = _binding!!
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
@@ -104,13 +103,13 @@ class EducationDialogFragment(
                                 "grade" to data.grade
                             )
                         ) { success, error ->
-                            handleAuthResult(success, error.toString())
                             loadingDialog.dismiss()
+                            handleAuthResult(success, error.toString())
                         }
                     } else {
                         createUserEducation(data) { success, error ->
-                            handleAuthResult(success, error.toString())
                             loadingDialog.dismiss()
+                            handleAuthResult(success, error.toString())
                         }
                     }
                 } else {
@@ -120,8 +119,6 @@ class EducationDialogFragment(
             } catch (e: Exception) {
                 e.printStackTrace()
                 showToast("An error occurred.")
-            } finally {
-                loadingDialog.dismiss()
             }
         }
     }
@@ -130,6 +127,7 @@ class EducationDialogFragment(
         if (success) {
             onSave.invoke()
             dismiss()
+            showToast(getString(R.string.saved_successfully))
         } else {
             showToast(error)
         }

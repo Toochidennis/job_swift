@@ -19,6 +19,7 @@ class GenericAdapter<Model>(
     private val itemList: MutableList<Model>,
     private val itemResLayout: Int,
     private val bindItem: (binding: ViewDataBinding, model: Model) -> Unit,
+    private val onLongClick: ((position: Int) -> Unit)? = null,
     private val onItemClick: (position: Int) -> Unit
 ) : RecyclerView.Adapter<GenericAdapter<Model>.ViewHolder>() {
 
@@ -40,6 +41,11 @@ class GenericAdapter<Model>(
 
         holder.itemView.setOnClickListener {
             onItemClick(position)
+        }
+
+        holder.itemView.setOnLongClickListener {
+            onLongClick?.invoke(position)
+            true
         }
     }
 

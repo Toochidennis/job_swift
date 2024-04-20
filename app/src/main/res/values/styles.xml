@@ -22,7 +22,7 @@
     </style>
 
     <style name="DialogAnimationFromRight">
-        <item name="android:windowEnterAnimation">@anim/dialog_enter_anim_right</item>
+        <item name="android:windowEnterAnimation">@anim/slide_in_right</item>
     </style>
 
     <style name="BottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
@@ -70,8 +70,8 @@
     </style>
 
     <style name="DialogAnimation">
-        <item name="android:windowEnterAnimation">@anim/slide_in</item>
-        <item name="android:windowExitAnimation">@anim/slide_out</item>
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
     </style>
 
 </resources>

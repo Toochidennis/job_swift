@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_HIGH
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -19,23 +20,26 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.toochi.job_swift.MainActivity
 import com.toochi.job_swift.R
-import com.toochi.job_swift.backend.NotificationsManager.createNotifications
 import com.toochi.job_swift.backend.PersonalDetailsManager.updateExistingUser
 import com.toochi.job_swift.util.Constants.Companion.CHANNEL_ID
 import com.toochi.job_swift.util.Constants.Companion.CHANNEL_NAME
 import com.toochi.job_swift.util.Constants.Companion.PREF_NAME
+import com.toochi.job_swift.util.NotificationRepository
 import kotlin.random.Random
 
 class FirebaseService : FirebaseMessagingService() {
-
     override fun onNewToken(token: String) {
         super.onNewToken(token)
 
-        val profileId = getSharedPreferences(PREF_NAME, MODE_PRIVATE)
-            .getString("profile_id", "")
+        try {
+            val profileId = getSharedPreferences(PREF_NAME, MODE_PRIVATE)
+                .getString("profile_id", "")
 
-        profileId?.let {
-            updateExistingUser(it, hashMapOf("token" to token)) { _, _ -> }
+            profileId?.let {
+                updateExistingUser(it, hashMapOf("token" to token)) { _, _ -> }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -51,7 +55,7 @@ class FirebaseService : FirebaseMessagingService() {
 
         val pendingIntent = PendingIntent.getActivity(
             this, 0, intent,
-            FLAG_UPDATE_CURRENT
+            FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
         )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -63,18 +67,8 @@ class FirebaseService : FirebaseMessagingService() {
             notificationManager.notify(notificationId, notification)
         }
 
-        message.let {
-            com.toochi.job_swift.model.Notification(
-                title = it.notification?.title ?: "",
-                body = it.notification?.body ?: "",
-                userId = it.data["userId"] ?: "",
-                employerId = it.data["employerId"] ?: "",
-                jobId = it.data["jobId"] ?: "",
-                type = it.data["type"] ?: ""
-            ).also { notification ->
-                createNotifications(notification) { _, _ -> }
-            }
-        }
+
+        NotificationRepository.notifyNewNotification()
     }
 
 

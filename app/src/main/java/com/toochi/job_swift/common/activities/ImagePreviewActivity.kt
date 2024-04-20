@@ -74,25 +74,24 @@ class ImagePreviewActivity : AppCompatActivity() {
                         imageName = "$fileName"
                     ) { success, error ->
                         if (success) {
+                            loadingDialog.dismiss()
                             Picasso.get().load(uri).into(binding.profileImageView)
                         } else {
+                            loadingDialog.dismiss()
                             Toast.makeText(
                                 this@ImagePreviewActivity,
                                 error.toString(),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-
-                        loadingDialog.dismiss()
                     }
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            loadingDialog.dismiss()
             Toast.makeText(this@ImagePreviewActivity, "An error occurred.", Toast.LENGTH_SHORT)
                 .show()
-        } finally {
-            loadingDialog.dismiss()
         }
     }
 

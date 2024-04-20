@@ -8,15 +8,31 @@ import com.toochi.job_swift.backend.AuthenticationManager.storageRef
 import com.toochi.job_swift.backend.AuthenticationManager.usersCollection
 import com.toochi.job_swift.model.User
 import com.toochi.job_swift.util.Constants
+import com.toochi.job_swift.util.Constants.Companion.ADMIN
+import com.toochi.job_swift.util.Constants.Companion.NOT_AVAILABLE
+import com.toochi.job_swift.util.Constants.Companion.PERSONAL_DETAILS
+
+/**
+ * The `PersonalDetailsManager` module provides functions for managing user personal details,
+ * interacting with Firebase Firestore, and handling user authentication.
+ *
+ * @property usersCollection Reference to the Firestore collection storing user data.
+ */
 
 object PersonalDetailsManager {
 
+    /**
+     * Creates, retrieves, and updates user personal details in the Firestore database.
+     * Manages user authentication-related tasks and interactions with Firebase Storage.
+     *
+     * @property usersCollection Reference to the Firestore collection storing user data.
+     */
+
     fun createNewUser(
-        userId: String,
         user: User,
         onComplete: (Boolean, String?) -> Unit
     ) {
-        usersCollection.document(userId).let {
+        usersCollection.document(user.userId).let {
             it.collection("personalDetails")
                 .add(user).addOnSuccessListener {
                     onComplete.invoke(true, null)
@@ -35,8 +51,7 @@ object PersonalDetailsManager {
             .get()
             .addOnSuccessListener { querySnapShot ->
                 if (!querySnapShot.isEmpty) {
-                    val profileDocument = querySnapShot.documents[0]
-                    val profileId = profileDocument.id
+                    val profileId = querySnapShot.documents.firstOrNull()?.id
 
                     onComplete.invoke(true, profileId)
                 } else {
@@ -55,11 +70,11 @@ object PersonalDetailsManager {
         // Reference to the user's personal details collection
         val userPersonalDetailsCollection = if (userId.isEmpty()) {
             currentId?.let {
-                AuthenticationManager.usersCollection.document(it)
-                    .collection(Constants.PERSONAL_DETAILS)
+                usersCollection.document(it)
+                    .collection(PERSONAL_DETAILS)
             }
         } else {
-            usersCollection.document(userId).collection(Constants.PERSONAL_DETAILS)
+            usersCollection.document(userId).collection(PERSONAL_DETAILS)
         }
 
         // Retrieve personal details
@@ -86,7 +101,7 @@ object PersonalDetailsManager {
 
             onComplete.invoke(user, null)
         } else {
-            onComplete.invoke(null, "User details not available")
+            onComplete.invoke(null, NOT_AVAILABLE)
         }
     }
 
@@ -97,7 +112,7 @@ object PersonalDetailsManager {
     ) {
         auth.currentUser?.uid?.let {
             usersCollection.document(it).let { personalDocument ->
-                personalDocument.collection("personalDetails")
+                personalDocument.collection(PERSONAL_DETAILS)
                     .document(profileId)
                     .update(hashMap)
                     .addOnSuccessListener {
@@ -150,7 +165,7 @@ object PersonalDetailsManager {
 
     fun getUserToken(userId: String, onComplete: (String?, String?) -> Unit) {
         val personalDetailsCollection =
-            usersCollection.document(userId).collection("personalDetails")
+            usersCollection.document(userId).collection(PERSONAL_DETAILS)
 
         personalDetailsCollection.get()
             .addOnSuccessListener { querySnapshot ->
@@ -170,9 +185,61 @@ object PersonalDetailsManager {
             val token = querySnapshot.documents[0].getString("token")
             onComplete.invoke(token, null)
         } else {
-            onComplete.invoke(null, "Token not found")
+            onComplete.invoke(null, NOT_AVAILABLE)
         }
     }
 
+    fun getAdminToken(onComplete: (String?, String?, String?) -> Unit) {
+        val usersCollectionGroup = FirestoreDB.instance.collectionGroup(PERSONAL_DETAILS)
+        usersCollectionGroup
+            .get()
+            .addOnSuccessListener {
+                handleAdminTokenQuerySnapshot(it, onComplete)
+            }
+            .addOnFailureListener { error ->
+                onComplete.invoke(null, null, error.message)
+            }
+    }
+
+    private fun handleAdminTokenQuerySnapshot(
+        querySnapshot: QuerySnapshot,
+        onComplete: (String?, String?, String?) -> Unit
+    ) {
+        if (!querySnapshot.isEmpty) {
+            querySnapshot.documents.map { documentSnapshot ->
+                val userType = documentSnapshot.getString("userType")
+
+                if (userType == ADMIN) {
+                    val adminId = documentSnapshot.getString("userId")
+                    val token = documentSnapshot.getString("token")
+                    println("Admin Id: $adminId   token $token")
+                    onComplete.invoke(token, adminId, null)
+                }
+            }
+        } else {
+            onComplete.invoke(null, null, NOT_AVAILABLE)
+        }
+    }
+
+    fun getAllUsers(onComplete: (MutableList<User>?, String?) -> Unit) {
+        val usersList = mutableListOf<User>()
+
+        FirestoreDB.instance
+            .collectionGroup(PERSONAL_DETAILS)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                for (document in querySnapshot) {
+                    val user = document.toObject(User::class.java)
+                    if (user.userType != ADMIN) {
+                        user.profileId = document.id
+                        usersList.add(user)
+                    }
+                }
+                onComplete(usersList, null)
+            }
+            .addOnFailureListener { exception ->
+                onComplete(null, exception.message)
+            }
+    }
 
 }

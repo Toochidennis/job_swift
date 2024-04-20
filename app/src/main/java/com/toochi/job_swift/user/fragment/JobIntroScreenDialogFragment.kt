@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.toochi.job_swift.R
-import com.toochi.job_swift.common.fragments.AddJobBasicsDialogFragment
+import com.toochi.job_swift.common.fragments.CreateEmployerAccountDialogFragment
 import com.toochi.job_swift.databinding.FragmentJobIntroScreenDialogBinding
 
 
@@ -35,10 +35,11 @@ class JobIntroScreenDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.getStartedButton.setOnClickListener {
-            AddJobBasicsDialogFragment().show(parentFragmentManager, "job basics")
+            CreateEmployerAccountDialogFragment().show(parentFragmentManager, "job basics")
             dismiss()
         }
 
+        //Fixing tomorrow
         binding.navigateUp.setOnClickListener {
             dismiss()
         }

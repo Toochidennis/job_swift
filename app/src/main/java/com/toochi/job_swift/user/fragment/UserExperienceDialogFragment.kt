@@ -26,7 +26,6 @@ class UserExperienceDialogFragment(
     private var _binding: FragmentUserExperienceDialogBinding? = null
     private val binding get() = _binding!!
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
@@ -154,6 +153,7 @@ class UserExperienceDialogFragment(
                 loadingDialog.show()
 
                 if (experienceModel != null) {
+                    loadingDialog.dismiss()
                     updateUserExperience(
                         experienceId = experienceModel.experienceId,
                         data = hashMapOf(
@@ -166,22 +166,21 @@ class UserExperienceDialogFragment(
                             "endDate" to experience.endDate
                         )
                     ) { success, error ->
-                        handleAuthResult(success, error.toString())
                         loadingDialog.dismiss()
+                        handleAuthResult(success, error.toString())
                     }
 
                 } else {
                     createUserExperience(experience) { success, error ->
-                        handleAuthResult(success, error.toString())
                         loadingDialog.dismiss()
+                        handleAuthResult(success, error.toString())
                     }
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            showToast("An error occurred.")
-        } finally {
             loadingDialog.dismiss()
+            showToast("An error occurred.")
         }
     }
 
@@ -205,6 +204,7 @@ class UserExperienceDialogFragment(
         if (success) {
             onSave.invoke()
             dismiss()
+            showToast(getString(R.string.saved_successfully))
         } else {
             showToast(error)
         }

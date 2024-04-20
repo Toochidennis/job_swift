@@ -4,6 +4,8 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.toochi.job_swift.backend.AuthenticationManager.auth
 import com.toochi.job_swift.backend.AuthenticationManager.usersCollection
 import com.toochi.job_swift.model.PostJob
+import com.toochi.job_swift.util.Constants.Companion.NOT_AVAILABLE
+import com.toochi.job_swift.util.Constants.Companion.POSTED_JOBS
 
 object PostJobManager {
 
@@ -47,15 +49,19 @@ object PostJobManager {
     ) {
         val allPostJobs = mutableListOf<PostJob>()
 
-        for (document in querySnapshot) {
-            // Extract postJob details from the query snapshot
-            val postJob = document.toObject(PostJob::class.java).apply {
-                jobId = document.id
+        if (querySnapshot.isEmpty) {
+            onComplete.invoke(null, NOT_AVAILABLE)
+        } else {
+            for (document in querySnapshot) {
+                // Extract postJob details from the query snapshot
+                val postJob = document.toObject(PostJob::class.java).apply {
+                    jobId = document.id
+                }
+                allPostJobs.add(postJob)
             }
-            allPostJobs.add(postJob)
-        }
 
-        onComplete.invoke(allPostJobs, null)
+            onComplete.invoke(allPostJobs, null)
+        }
     }
 
     fun getPostedJobsByUserId(onComplete: (MutableList<PostJob>?, String?) -> Unit) {
@@ -66,7 +72,7 @@ object PostJobManager {
         val usersDocument = currentUser?.let { usersCollection.document(it.uid) }
 
         // Reference to the "postedJobs" collection under the user's document
-        val postedJobsCollection = usersDocument?.collection("postedJobs")
+        val postedJobsCollection = usersDocument?.collection(POSTED_JOBS)
 
         postedJobsCollection?.get()
             ?.addOnSuccessListener { querySnapshot ->
@@ -110,7 +116,7 @@ object PostJobManager {
         val usersDocument = currentUser?.let { usersCollection.document(it.uid) }
 
         // Reference to the "postedJobs" collection under the user's document
-        val postedJobsCollection = usersDocument?.collection("postedJobs")?.document(jobId)
+        val postedJobsCollection = usersDocument?.collection(POSTED_JOBS)?.document(jobId)
 
         postedJobsCollection?.get()
             ?.addOnSuccessListener {
@@ -122,6 +128,19 @@ object PostJobManager {
             }
             ?.addOnFailureListener { exception ->
                 onComplete(false, exception.message)
+            }
+    }
+
+    fun deleteUserPost(userId: String, jobId: String, onComplete: (Boolean, String?) -> Unit) {
+        val jobCollection = usersCollection.document(userId).collection(POSTED_JOBS).document(jobId)
+
+        jobCollection
+            .delete()
+            .addOnSuccessListener {
+                onComplete.invoke(true, null)
+            }
+            .addOnFailureListener { exception ->
+                onComplete.invoke(false, exception.message)
             }
     }
 }

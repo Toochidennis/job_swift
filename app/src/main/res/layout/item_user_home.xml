@@ -26,22 +26,37 @@
 
             <LinearLayout
                 android:id="@+id/jobIconLayout"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/profile_bg"
-                android:backgroundTint="@color/shade_green"
-                android:gravity="center"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentStart="true"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/image_border"
+                android:gravity="center">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/ic_jobs"
-                    app:tint="@color/pale_silver" />
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/profileButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:cardCornerRadius="48dp"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:id="@+id/companyImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/app_name"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_jobs" />
+
+                </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
+
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/jobTitleTextView"
@@ -53,14 +68,26 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_16"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@id/saveJob"
+                app:layout_constraintEnd_toStartOf="@id/datePostedTexView"
                 app:layout_constraintStart_toEndOf="@id/jobIconLayout"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/saveJob"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/datePostedTexView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dimen_10"
+                android:text="@{job.jobEmail}"
+                android:textSize="@dimen/text_12"
+                app:layout_constraintEnd_toStartOf="@id/saveButton"
+                app:layout_constraintStart_toEndOf="@id/jobTitleTextView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/saveButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_bg"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/ic_bookmark"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -71,10 +98,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:layout_marginEnd="@dimen/dimen_10"
                 android:text="@{job.location}"
-                android:textSize="@dimen/text_14"
                 android:textColor="@color/black"
-                app:layout_constraintEnd_toEndOf="@id/jobTitleTextView"
+                android:textSize="@dimen/text_14"
+                app:layout_constraintEnd_toStartOf="@id/saveButton"
                 app:layout_constraintStart_toStartOf="@id/jobTitleTextView"
                 app:layout_constraintTop_toBottomOf="@id/jobTitleTextView" />
 

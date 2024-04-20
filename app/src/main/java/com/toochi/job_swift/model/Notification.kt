@@ -8,13 +8,15 @@ import java.util.Locale
 
 data class Notification(
     val notificationId: String = "",
-    val token: String = "",
+    var token: String = "",
     val title: String = "",
     val body: String = "",
     var userId: String = "",
     val employerId: String = "",
     val jobId: String = "",
     val type: String = "",
+    val comments: String = "",
+    val adminId: String = "",
     @ServerTimestamp
     val notificationDate: Date = Date()
 ) {

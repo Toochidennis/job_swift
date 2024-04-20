@@ -68,30 +68,37 @@ class ApplicationResponseDialogFragment(private val notification: Notification) 
         val loadingDialog = LoadingDialog(requireContext())
 
         try {
+            loadingDialog.show()
+
             getJobsAppliedForById(
+                notification.userId,
                 notification.jobId,
                 notification.employerId
             ) { applyJob, errorMessage ->
                 if (applyJob != null) {
+                    loadingDialog.dismiss()
+
                     binding.titleTextView.text = if (applyJob.status == ACCEPTED)
                         getString(R.string.congratulations_your_job_application_was_accepted) else
                         getString(R.string.update_on_your_job_application)
 
-                    getMessage(applyJob.status, userName ?: "", applyJob.jobTitle, applyJob.company)
+                    binding.messageTextView.text = getMessage(
+                        applyJob.status,
+                        userName ?: "",
+                        applyJob.jobTitle,
+                        applyJob.company
+                    )
                 } else {
+                    loadingDialog.dismiss()
                     Toast.makeText(requireContext(), errorMessage.toString(), Toast.LENGTH_SHORT)
                         .show()
                 }
-
-                loadingDialog.dismiss()
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(requireContext(), "An error occurred.", Toast.LENGTH_SHORT).show()
-        }finally {
             loadingDialog.dismiss()
+            Toast.makeText(requireContext(), "An error occurred.", Toast.LENGTH_SHORT).show()
         }
-
     }
 
 
@@ -103,24 +110,24 @@ class ApplicationResponseDialogFragment(private val notification: Notification) 
     ): String {
         return if (status == ACCEPTED) {
             """
-                Dear $name,
+               Dear $name,
                 
-                We are pleased to inform you that your application for the position of $jobTitle has been accepted. Congratulations! Welcome to our team.
+               We are pleased to inform you that your application for the position of $jobTitle has been accepted. Congratulations! Welcome to our team.
     
-                Please stay tuned for further details and instructions regarding the next steps.
+               Please stay tuned for further details and instructions regarding the next steps.
      
      
-                Best regards,
-                $companyName
+               Best regards,
+               $companyName
                 
             """.trimIndent()
         } else {
             """
-               Dear [Applicant's Name],
+              Dear $name,
      
-               We appreciate your interest in the position of $jobTitle at $companyName. After careful consideration, we regret to inform you that your application has not been successful at this time.
+              We appreciate your interest in the position of $jobTitle at $companyName. After careful consideration, we regret to inform you that your application has not been successful at this time.
      
-               We sincerely thank you for your effort and interest in our company. We encourage you to explore other opportunities and wish you success in your future endeavors.
+              We sincerely thank you for your effort and interest in our company. We encourage you to explore other opportunities and wish you success in your future endeavors.
      
      
               Best regards,

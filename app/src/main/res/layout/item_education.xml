@@ -71,6 +71,7 @@
                 android:layout_below="@id/graduationTxt"
                 android:layout_marginStart="@dimen/dimen_10"
                 android:layout_marginEnd="@dimen/dimen_16"
+                android:layout_marginBottom="@dimen/dimen_16"
                 android:layout_toEndOf="@id/educationImageView"
                 android:text="@{education.grade}"
                 android:textColor="@color/black"

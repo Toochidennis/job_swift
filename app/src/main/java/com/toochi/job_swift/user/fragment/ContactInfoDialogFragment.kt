@@ -30,7 +30,6 @@ class ContactInfoDialogFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog)
-
     }
 
     override fun onCreateView(
@@ -57,22 +56,23 @@ class ContactInfoDialogFragment : DialogFragment() {
             loadingDialog.show()
             getUserPersonalDetails { user, exception ->
                 if (user != null) {
+                    loadingDialog.dismiss()
+
                     binding.emailTextView.text = user.email
                     binding.phoneNumberTextField.setText(user.phoneNumber)
                     binding.addressTextField.setText(user.address)
                     binding.birthdayTextField.setText(user.dateOfBirth)
                 } else {
+                    loadingDialog.dismiss()
                     Toast.makeText(requireContext(), exception.toString(), Toast.LENGTH_SHORT)
                         .show()
                 }
 
-                loadingDialog.dismiss()
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(requireContext(), "An error occurred.", Toast.LENGTH_SHORT).show()
-        }finally {
             loadingDialog.dismiss()
+            Toast.makeText(requireContext(), "An error occurred.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -97,7 +97,6 @@ class ContactInfoDialogFragment : DialogFragment() {
 
     private fun processForm() {
         try {
-
             val user = getDataFromForm()
 
             val profileId = sharedPreferences.getString("profile_id", "")
@@ -115,7 +114,9 @@ class ContactInfoDialogFragment : DialogFragment() {
                 ) { success, error ->
                     if (success) {
                         updateSharedPreference(user)
+                        loadingDialog.dismiss()
                         dismiss()
+                        Toast.makeText(requireContext(), getString(R.string.saved_successfully), Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText(requireContext(), error.toString(), Toast.LENGTH_SHORT)
                             .show()
@@ -126,9 +127,8 @@ class ContactInfoDialogFragment : DialogFragment() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-           Toast.makeText(requireContext(), "An error occurred.", Toast.LENGTH_SHORT).show()
-        }finally {
             loadingDialog.dismiss()
+            Toast.makeText(requireContext(), "An error occurred.", Toast.LENGTH_SHORT).show()
         }
     }
 
